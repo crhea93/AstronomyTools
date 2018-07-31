@@ -30,8 +30,10 @@ def calc_size(z,theta_rad,Omega_rel,Omega_mass,Omega_lam,Hubble_const):
 
 
 def main():
-    z = 1.7089
-    theta = 5 #arcsec
+    z = input("Please input a redshift value: ")#1.7089
+    z = float(z)
+    theta = input("Please input a angular distance in arcseconds: ") #kpc
+    theta = float(theta)
 
     Omega_rel = cosmo.Onu0
     Omega_mass = cosmo.Om0
@@ -47,7 +49,6 @@ def main():
     print("   Omega_mass = "+str(Omega_mass))
     print("   Omega_lam = "+str(Omega_lam))
     print("   Hubble_const = "+str(Hubble_const))
-    print("We are looking at redshift z = "+str(z))
-    print("We have an angular distance of theta = "+str(theta)+" arcseconds")
+    print()
     print("The related linear distance of l = "+str(l)+" kpc")
 main()

@@ -4,6 +4,7 @@ INPUTS:
     z -- redshift value
     l -- angular seperation in kpc
 '''
+import sys
 import numpy as np
 import scipy.integrate as spi
 import scipy.constants as spc
@@ -30,8 +31,10 @@ def calc_ang(z,l,Omega_rel,Omega_mass,Omega_lam,Hubble_const):
 
 
 def main():
-    z = 1.7089
-    l = 40 #kpc
+    z = input("Please input a redshift value: ")#1.7089
+    z = float(z)
+    l = input("Please input a linear distance in kpc: ") #kpc
+    l = float(l)
 
     Omega_rel = cosmo.Onu0
     Omega_mass = cosmo.Om0
@@ -46,7 +49,6 @@ def main():
     print("   Omega_mass = "+str(Omega_mass))
     print("   Omega_lam = "+str(Omega_lam))
     print("   Hubble_const = "+str(Hubble_const))
-    print("We are looking at redshift z = "+str(z))
-    print("The related linear distance of l = "+str(l))
+    print()
     print("We have an angular distance of theta = "+str(theta))
 main()

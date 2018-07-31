@@ -1,0 +1,197 @@
+%%% Research Diary - Entry
+%%% Template by Mikhail Klassen, April 2013
+%%% 
+\documentclass[11pt,letterpaper]{article}
+\newcommand{\workingDate}{\textsc{2018 $|$ June}}
+\newcommand{\userName}{Carter Rhea}
+\newcommand{\institution}{Universite de Montreal}
+\usepackage{python}
+
+\usepackage[]{algorithm2e}
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+}
+\lstset{frame=tb,
+	language=Java,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
+\usepackage{researchdiary_png}
+% To add your univeristy logo to the upper right, simply
+% upload a file named "logo.png" using the files menu above.
+
+\begin{document}
+	\univlogo
+	
+	\title{Documentation for WVT}
+	
+	%\begin{python}%
+	%print r"Hello \LaTeX!"
+	%\end{python}%
+	\textit{Documentation for Astrometry Routines}
+	
+	\tableofcontents
+	
+	\newpage
+	
+	
+	\newpage
+\section{LScalc.py}
+This program has a very simple goal: calculate the linear distance of an astronomical object given a redshift and angular view. To do this, I simply utilized the following set of equations to calculate the quantity of intereset, $l$.
+\begin{center}
+	\begin{tabular}{|c|c|}
+		\hline 
+		Parameter & Brief Description \\ 
+		\hline 
+		$l$ & Linear Distance in Kiloparsecs \\ 
+		\hline 
+		$z$ & Redshift \\
+		\hline
+		$d_A(z)$ & Angular Distance \\
+		\hline 
+		$\theta$ & Angular Seperation in arcseconds \\
+		\hline
+		$d_H$ & Hubble Distance \\
+		\hline
+		$c$ & Speed of Light \\
+		\hline
+		$H_0$ & Hubble Constant \\
+		\hline
+		$d_C$ & Comoving Distance \\
+		\hline 
+		$E(z)$ & Energy Function \\
+		\hline 
+		$d_M(z)$ & Moving Distance \\
+		\hline 
+		$\Omega_{rel}$ & Mass Density of Relativistic Particles \\
+		\hline
+		$\Omega_{mass}$ & Mass Density of Baryonic and NonBaryonic Particles \\
+		\hline
+		$\Omega_{\Lambda}$ & Mass Density of Dark Energy \\
+		\hline
+	\end{tabular} 
+\end{center}
+
+
+
+\begin{equation}
+l = d_A(z)*\theta
+\end{equation}
+
+\begin{equation}
+d_A(z) = \frac{d_M(z)}{1+z}
+\end{equation}	
+
+\begin{equation}
+	d_M(z) = \left\{ \begin{array}{ll}
+	\frac{d_H}{\sqrt{\Omega_k}}\sinh\Big({\sqrt{\Omega_k}\frac{d_C(z)}{d_H}}\Big) & \Omega_k > 0 \\
+	d_C(z) & \Omega_k = 0 \\
+	\frac{d_H}{\sqrt{|\Omega_k|}}\sin\Big({\sqrt{|\Omega_k|}\frac{d_C(z)}{d_H}}\Big) & \Omega_k < 0 \\
+	\end{array} \right.	 
+\end{equation}	
+
+\begin{equation}
+	d_C(z) = d_H\int_{0}^{z} \frac{dz'}{E(z')}
+\end{equation}
+
+\begin{equation}
+	E(z) = \sqrt{\Omega_{rel}(1+z)^4+\Omega_{mass}(1+z)^3+\Omega_k(1+z)^2+\Omega_{\Lambda}}
+\end{equation}
+
+\begin{equation}
+	\Omega_k = 1-\Omega_{mass}-\Omega_{\Lambda} 
+\end{equation}
+
+\begin{equation}
+	d_H = \frac{c}{H_0}
+\end{equation}
+
+\section{AScalc.py}
+This program is almost identitical to \textbf{LScalc.py} except that instead of solving for the linear distance we are solving for the angular seperation.
+\begin{center}
+	\begin{tabular}{|c|c|}
+		\hline 
+		Parameter & Brief Description \\ 
+		\hline 
+		$l$ & Linear Distance in Kiloparsecs \\ 
+		\hline 
+		$z$ & Redshift \\
+		\hline
+		$d_A(z)$ & Angular Distance \\
+		\hline 
+		$\theta$ & Angular Seperation in arcseconds \\
+		\hline
+		$d_H$ & Hubble Distance \\
+		\hline
+		$c$ & Speed of Light \\
+		\hline
+		$H_0$ & Hubble Constant \\
+		\hline
+		$d_C$ & Comoving Distance \\
+		\hline 
+		$E(z)$ & Energy Function \\
+		\hline 
+		$d_M(z)$ & Moving Distance \\
+		\hline 
+		$\Omega_{rel}$ & Mass Density of Relativistic Particles \\
+		\hline
+		$\Omega_{mass}$ & Mass Density of Baryonic and NonBaryonic Particles \\
+		\hline
+		$\Omega_{\Lambda}$ & Mass Density of Dark Energy \\
+		\hline
+	\end{tabular} 
+\end{center}
+\begin{equation}
+	\theta = \frac{l}{d_A(z)}
+\end{equation}
+
+\begin{equation}
+	d_A(z) = \frac{d_M(z)}{1+z}
+\end{equation}
+
+\begin{equation}
+d_M(z) = \left\{ \begin{array}{ll}
+\frac{d_H}{\sqrt{\Omega_k}}\sinh\Big({\sqrt{\Omega_k}\frac{d_C(z)}{d_H}}\Big) & \Omega_k > 0 \\
+d_C(z) & \Omega_k = 0 \\
+\frac{d_H}{\sqrt{|\Omega_k|}}\sin\Big({\sqrt{|\Omega_k|}\frac{d_C(z)}{d_H}}\Big) & \Omega_k < 0 \\
+\end{array} \right.	 
+\end{equation}	
+
+\begin{equation}
+d_C(z) = d_H\int_{0}^{z} \frac{dz'}{E(z')}
+\end{equation}
+
+\begin{equation}
+E(z) = \sqrt{\Omega_{rel}(1+z)^4+\Omega_{mass}(1+z)^3+\Omega_k(1+z)^2+\Omega_{\Lambda}}
+\end{equation}
+
+\begin{equation}
+\Omega_k = 1-\Omega_{mass}-\Omega_{\Lambda} 
+\end{equation}
+
+\begin{equation}
+d_H = \frac{c}{H_0}
+\end{equation}
+\end{document}
+

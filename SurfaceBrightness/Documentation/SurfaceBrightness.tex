@@ -1,0 +1,99 @@
+%%% Research Diary - Entry
+%%% Template by Mikhail Klassen, April 2013
+%%% 
+\documentclass[11pt,letterpaper]{article}
+\newcommand{\workingDate}{\textsc{2018}}
+\newcommand{\userName}{Carter Rhea}
+\newcommand{\institution}{Universite de Montreal}
+\usepackage{python}
+
+\usepackage[]{algorithm2e}
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+}
+\lstset{frame=tb,
+	language=Java,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
+\usepackage{researchdiary_png}
+% To add your univeristy logo to the upper right, simply
+% upload a file named "logo.png" using the files menu above.
+
+\begin{document}
+	\univlogo
+	
+	\title{Documentation for Surface Brightness}
+	
+	%\begin{python}%
+	%print r"Hello \LaTeX!"
+	%\end{python}%
+	\textit{Documentation for Surface Brightness Calculations}
+	
+	\tableofcontents
+	
+	\newpage
+	
+	
+	\newpage
+\section{Introduction}
+X-ray astronomy is known for a phenomenon aptly-monikered \textit{photon-starvation}; this is amplified in certain cases when we are looking back at incredibly distant objects. Photon-starvation poses as serious issue when astronomers wish to determine whether or not a galactic cluster is a Cool-Core Cluster or not. With a strong signal-to-noise, one can "simply" use Weighted Voronoi Tesselations to construct an appropriate bin-map and then use \textbf{XSPEC} to develop a temperature map of the region. Unfortunately, for cases in which there is a dissapointingly low signal-to-noise, astronomers must resort to other measures: enter Surface Brightness Concentration Value (SBCV). Using this tool, we can comfortably determine whether or not an object is a CCC even with exceptionally low signal-to-noise. I will not delve into the details regarding the virtues of the SBCV but rather encourage any interested party to read the following papers: \cite{Santos2018} \cite{Santos2018a} \cite{Semler2012}. However, it is necessary to define this parameter:
+
+\begin{equation}
+	SBCV = \frac{F(R<40kpc)}{F(R<400kpc)}
+\end{equation}
+where $F$ is the X-ray Flux and $R$ represents the radius of the annulus.
+
+According to \cite{Semler2012}, we are interested in the following regimes:
+\[ \begin{cases} 
+\texttt{Non Cool Core} & SBCV < 0.075 \\
+\texttt{Moderate Cool Core} & 0.075 < SBCV < 0.155 \\
+\texttt{Strong Cool Core} & SBCV > 0.155 
+\end{cases}
+\] 
+
+\section{Algorithm}
+The algorithm itself is not particularly complicated, but there are several crucial steps which makes it worth detailing.
+
+\begin{algorithm}[H]\label{algo:BA}
+	\caption{Surface Brightness Concentration Value}
+	\KwData{Reprocessed Fits File}
+	\KwResult{Surface Brightness Concentration Value with Bounds}
+	Step 1: Use Astomety tool (\textit{ASCalc.py}) -- located in the \textit{Astrometry} directory -- to calculate the angular seperation for 40kpc and 400 kpc\;
+	Step 2: Use this value (in arcseconds) in \textit{ds9} to generate \textit{.reg} files for 40/400kpc\;
+	Step 3: Run \textit{Precursor.py} -- located in the \textit{GeneralUse} directory -- to generate \textit{.arf} files for 40/400kpc\;
+	Step 4: Calculate Monochromatic Energy AND Surface Brightness Coefficients using \textit{SurfBright.py} which is located in the \textit{SurfaceBrightness} directory\;
+	Step 5: Calculate SBCV and bounds using \textit{CSB.py} which is located in the \textit{SurfaceBrightness} directory\;
+\end{algorithm}
+
+
+
+\newpage
+
+
+\bibliographystyle{plain}
+\bibliography{ref.bib}
+
+\end{document}
+

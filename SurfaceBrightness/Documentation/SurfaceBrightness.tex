@@ -73,25 +73,108 @@ According to \cite{Semler2012}, we are interested in the following regimes:
 \end{cases}
 \] 
 
+It is critical to note that this approach assumes a \textbf{Poisson Distribution} (i.e. the count frequency is not highly variable with time) and thus \textbf{CANNOT} be used with merged observations where the time between observations is significantly different!!
+
 \section{Algorithm}
 The algorithm itself is not particularly complicated, but there are several crucial steps which makes it worth detailing.
 
 \begin{algorithm}[H]\label{algo:BA}
 	\caption{Surface Brightness Concentration Value}
-	\KwData{Reprocessed Fits File}
+	\KwData{Reprocessed Event File}
 	\KwResult{Surface Brightness Concentration Value with Bounds}
 	Step 1: Use Astomety tool (\textit{ASCalc.py}) -- located in the \textit{Astrometry} directory -- to calculate the angular seperation for 40kpc and 400 kpc\;
 	Step 2: Use this value (in arcseconds) in \textit{ds9} to generate \textit{.reg} files for 40/400kpc\;
 	Step 3: Run \textit{Precursor.py} -- located in the \textit{GeneralUse} directory -- to generate \textit{.arf} files for 40/400kpc\;
-	Step 4: Calculate Monochromatic Energy AND Surface Brightness Coefficients using \textit{SurfBright.py} which is located in the \textit{SurfaceBrightness} directory\;
+	Step 4: Calculate Monochromatic Energy AND Surface Brightness Coefficients\;
 	Step 5: Calculate SBCV and bounds using \textit{CSB.py} which is located in the \textit{SurfaceBrightness} directory\;
 \end{algorithm}
+
+I have intentionally neglected to include the associated python file in Step 4 because I have two primary methods of calculating Monochromatic Energy and Energy Flux (i.e. Surface Brightness). For basic use, please employ  \textit{SurfBright.py} which is located in the \textit{SurfaceBrightness} directory. However, if you are interested in the details for calculating each step, see \textit{SBCalc\_complete.py}. While breaking down the \textit{SBCalc\_complete.py} algorithm, I would like to explain how the surface brightness (once all other requisite quantites are calculed) is determined along with error bounds.
+
+
+\subsection{\textit{SBCalc\_complete.py}}
+To begin, we simply need to define the event file, energy range (in $eV$), the region of interest, the background, and finally a boolean dictating whether or not we will use exposure maps\\
+The program truly begins with a calculation of source counts, $n$, source area, $A_s$, background counts, $m$, and background area, $A_b$, using the \texttt{dmextract}\footnote{http://cxc.harvard.edu/ciao/ahelp/dmextract.html} command. We then assume a ideal PSF (Point Spread Function), though subsequent versions of the code may include options for more complicated PSFs; thus we set the PSF fraction in source aperature, $\alpha = 1$, and the PSF fraction in the  background aperature, $\beta = 0$. Additionally, we quickly grab the exposure time from the event file's header ($TSTOP-TSTART$). At this junction we have two options: exposure map or no exposure map...\\
+
+Well, we are going to calculate an exposure map either way because we need it to calculate the average effecetive exposures, $E_s$ and $E_b$. 
+
+If we choose to set \underline{Exposure == \texttt{False}}, then we must calculate average photon energies in source and background aperature, $eng_a$ and $eng_b$, in units of $ergs$ using \texttt{dmtcalc}. This option calculates the net energy flux from average photon energies. In choosing to determine net energy flux in this manner, we set the average of photon energy per effective exposure in the source and background, $flux_s$ and $flux_b$, to $1$.
+
+However, if we choose to set \underline{Exposure == \texttt{True}}, then we set $eng_s=eng_b=1$ and calculate $flux_s$ and $flux_b$ using \texttt{eff2evt}. According to the documentation on computing net counts, flux, etc.\footnote{http://cxc.harvard.edu/ciao/threads/aprates/}, this method is preffered because it wieghts the high energy photons in such a manner so that they do not erroneously dominate the energy flux.
+
+And finally, we supply all of this information (after selecting a confidence contour -- usually $\%90$) to \texttt{aprates}\footnote{http://cxc.harvard.edu/ciao/ahelp/aprates.html} which calculates the fluxes/counts of interest:
+\begin{itemize}
+	\item Net Counts
+	\item Net Count Rates
+	\item Net Photon Flux
+	\item Net Energy Flux 
+	\begin{itemize}
+		\item using average photon energies
+		\item using photon energy per effective exposure
+	\end{itemize} 
+\end{itemize}
+
+
+\subsection{Calculation of Flux and Confidence Intervals}
+\subsubsection{Flux}
+The flux calculations\cite{Primini2007} comes down to solving the following equations simultaneously:
+\begin{equation}
+	n = fs + cb
+\end{equation}
+\begin{equation}
+	m = gs + rcb
+\end{equation}
+
+for the source and background quantities of interest, $s$ and $b$, resp. All other variables are selected based on the quantity of interest.\\
+\underline{Net Counts}
+$$f = \alpha $$
+$$g = \beta $$
+$$c = A_s$$
+$$r = \frac{A_b}{A_s}$$
+
+\underline{Net Count Rates}
+$$f = \alpha T_s$$
+$$g = \beta T_b$$
+$$c = A_s T_s$$
+$$r = \frac{A_bT_b}{A_sT_s}$$
+
+\underline{Net Photon Flux}
+$$f = \alpha E_s$$
+$$g = \beta E_b$$
+$$c = A_s E_s$$
+$$r = \frac{A_bE_b}{A_sE_s}$$
+
+\underline{Net Energy Flux: option A}
+$$f = \alpha \frac{E_s}{eng_s}$$
+$$g = \beta  \frac{E_b}{eng_b}$$
+$$c = A_s  \frac{E_s}{eng_s}$$
+$$r = \frac{A_bE_beng_s}{A_sE_seng_b}$$
+
+\underline{Net Energy Flux: option B}
+$$f = \alpha \frac{E_s}{flux_s}$$
+$$g = \beta  \frac{E_b}{flux_b}$$
+$$c = A_s  \frac{E_s}{flux_s}$$
+$$r = \frac{A_bE_bflux_s}{A_sE_sflux_b}$$
+
+If $eng_s$ or $eng_b$ equal zero, we then set the zero-value equal to the midpoint energy of the given band.
+\subsection{Confidence Intervals}
+Although not discussed in detail here, we calculate an \textit{upper bound} for a given confidence region using a posterior probability distribution function detailed in \cite{Kashyap}.
+
+It is, however, crucial to note how the \textit{lower and upper bounds} is calculated for Net Energy Flux. The \texttt{srcflux} command calculates the lower and upper bounds in the following manner: 
+\begin{enumerate}
+	\item Calculate the upper confidence value using the posterior PDF for \texttt{net\_rate}
+	\item scale the \texttt{energy\_flux} value by the upper and lower \texttt{net\_rate} values to obtain upper and lower limits for \texttt{energy\_flux}  
+\end{enumerate}
+
+As evident, the lower and confidence values are not truly calculated, but rather proxy values.
+
+
+
+
 
 
 
 \newpage
-
-
 \bibliographystyle{plain}
 \bibliography{ref.bib}
 

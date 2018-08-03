@@ -1,0 +1,179 @@
+%%% Research Diary - Entry
+%%% Template by Mikhail Klassen, April 2013
+%%% 
+\documentclass[11pt,letterpaper]{article}
+\newcommand{\workingDate}{\textsc{2018 $|$ June}}
+\newcommand{\userName}{Carter Rhea}
+\newcommand{\institution}{Universite de Montreal}
+\usepackage{python}
+
+\usepackage[]{algorithm2e}
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+}
+\lstset{frame=tb,
+	language=Java,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
+\usepackage{researchdiary_png}
+% To add your univeristy logo to the upper right, simply
+% upload a file named "logo.png" using the files menu above.
+
+\begin{document}
+\univlogo
+
+\title{Documentation for Generating Temperature Maps}
+
+%\begin{python}%
+%print r"Hello \LaTeX!"
+%\end{python}%
+\textit{This document contains the method for creating a temperature map for given chandra data.}
+
+\tableofcontents
+
+\newpage
+
+
+\section{Temperature Maps}
+
+Before we can get to the temperature map (I promise I'm getting there...), we first have to actually use the data we got from the Weighted Voronoi Tessellation Algorithm; we need the pixels binning information.
+\subsection{Intermediate Step: Binning the Data}
+As this subsection's title suggests (look up), we must first go through the process of binning the data (our fits file) based of the recommendation of our WVT algorithm.
+
+
+Instead of describing this in great detail, I will simply include an algorithm outlining the process and point the reader toward the python file (\textit{Bin\_data.py}) for more in depth analysis.
+
+\begin{algorithm}[H]\label{algo:InterMediate}
+	\caption{Binning Algorithm}
+	\KwData{WVT Bins and Fits File}
+	\KwResult{Binned PHA files}
+	initialization $-->$ read in WVT bin information\;
+	\For{bin}{
+		\For{pixel in bin}{
+		Create fits file for pixel\;
+		Generate PI/PHA file\;
+		}
+	Combine Pixel's PI/PHA files\;
+	}
+\end{algorithm}
+
+Clearly the implementation is a little more complicated and uses several \textit{CIAO} tools such as \textit{specextract} and \textit{dmextract}. For more information on these wonderful tools, check out the \textit{CIAO} website:
+
+$$\href{http://cxc.harvard.edu/ciao/}{http://cxc.harvard.edu/ciao/} $$
+
+
+\subsection{Generating Temperature Maps}
+We can now (FINALLY) use our combined pixels to generate a temperature map assuming you have already created a binning of some sort -- I would suggest my Weighted Voronoi Tesselations algorithm\footnote{\href{https://github.com/crhea93/WVT}{https://github.com/crhea93/WVT}}. We will be employing \textit{XSPEC}\footnote{\href{https://heasarc.gsfc.nasa.gov/xanadu/xspec/}{https://heasarc.gsfc.nasa.gov/xanadu/xspec/}} for our modeling needs.
+
+There are two main types of models:
+\begin{itemize}
+	\item Addative: Source of emission i.e. producer of photons
+	\item Multiplicative: Modifies spectrum i.e. acts on photons
+\end{itemize}
+
+Let's examine the major componenets of our model...
+
+\subsection{zpow}
+\texttt{zpow} is a simple photon power law taking into account redshift. This is just classic blackbody goodness...
+
+\begin{equation}
+	A(E) = K[E(1+z)]^{-\alpha}
+\end{equation}
+where $\alpha$ is the dimensionless photon index of the power law, $z$ is our objects redshift, and $K$ is a normalization factor  at $1keV$ in units of $photons/keV/cm^2$. Photon indices of AGN are typically between $1.5 - 2.5$; this value needs to be determined from the literature.
+
+Its worth noting that \texttt{zpow} is an addative model.
+
+\subsubsection{zphabs}
+\texttt{zphabs} is a model for hydrogen column density. Hydrogen column density is the "number of units of matter observed along a line of sight that has an area of observation"\footnote{\href{https://en.wikiversity.org/wiki/Column_densities}{https://en.wikiversity.org/wiki/Column\_densities}}. Basically, it takes into account all the stuff in between us and the object we are looking at (though it could be missing things such as a warm absorber like a galactic cluster which would require another model component -- wabs in this instance). zphabs has a very simple equation:
+\begin{equation}
+	M(E) = e^{-n_H*\sigma(E(1+z))}
+\end{equation}
+where $n_H$ is the equivalent column density in $10^{22} \ atoms \ cm^{-2}$, $\sigma(E)$ is the electron cross section -- not Thompson -- where $z$ is the redshift.
+
+All we specify are $n_H$ and $z$.
+
+\texttt{zphabs} is a multiplicative model
+
+\subsubsection{apec}
+\texttt{apec} is a wonderful model to handle the emission spectrum of a collisionally-drive optically-thin plasma (think AGN). Hence we use it to constrain the temperature of the object. For real details please check out the following website:
+
+$$\href{http://www.atomdb.org/physics.php}{http://www.atomdb.org/physics.php} $$
+
+The most important thing to know is that it does in fact model thermal bremmstrahlung. 
+
+We need only  specify $T \ (KeV)$, as a guess, and $z$ which is our redshift.
+
+\texttt{Apec} is a multiplicative model
+
+\subsubsection{$\chi^2$ statistic}
+We will be using the $\chi^2$ statistic for now (yes yes there are other and potentially better statistics to use...). The $\chi^2$ is defined as the following:
+\begin{equation}
+	\chi^2 = \sum_{i=1}^{N_{el}} \Bigg(  \frac{x_i-\mu_i}{\sigma_i}  \Bigg)^2
+\end{equation}
+Where $x_i$ is the data value at point $i$, $\sigma_i$ is the corresponding error, and $\mu_i$ is the model value.
+
+By calculating the $\chi^2$ we can get a decent  guess on how well our fit is. Optimally, our $\chi^2$ will equal the number of \textbf{degrees of freedom}. We call this ratio the \textbf{Reduced Chi-Squared Statistic}. Hence we can very easily calculate the reduced chi-square if we know the number of degrees of freedom for a model:
+\begin{equation}
+	\chi^2_{red} = \frac{\chi^2}{N_{dof}}
+\end{equation}
+
+So an optimal fit using a reduced $\chi^2$-statistic means $\chi^2_{red} = 1$. Hence for our algorithm, we will try to hit a $\chi^2_{red} = 1$ ... or as close as we can get ... 
+
+
+
+\section{The Algorithm}
+
+\begin{algorithm}[H]\label{algo:BA}
+	\caption{Temperature Map Pipeline}
+	\KwData{Binning Map}
+	\KwResult{Temperature Map and Graphic}
+	Step 1: Bin data using \textit{Bin\_data.py} \;
+	Step 2: Run XSPEC Model on binned data by "simply"\footnote{Like fitting a model is simple..... But seriously this is where a mistake could be made resulting in incorrect Temperature Profiles so play around with the model on a \textit{single} observation to ensure it is a descent fit...} running \textit{XSPEC.py} \;
+	Step 3: Create Visual Map in ParaView using \textit{Cones\_Paraview.py} \;
+\end{algorithm}
+
+Oh yes, you need to have paraview installed. If you are a linux user, its a simple command \texttt{sudo apt-get install paraview}. ParaView is an amazing tool for data rendering. Take a look at the associated website: \href{https://www.paraview.org/}{https://www.paraview.org/}.
+
+
+\newpage
+\section{Additional Python Fun}
+\subsection{Lookback Time}
+\begin{lstlisting}
+from astropy import units as u
+from astropy import cosmology
+from astropy.coordinates import *
+from astropy.cosmology import Planck13, default_cosmology
+default_cosmology.set(Planck13)
+z_RXJ = 0.658
+d_RXJ = Distance(z=z_RXJ, unit=u.kpc)
+\end{lstlisting}
+
+
+\newpage
+
+\section*{Bibliographies}
+\bibliographystyle{plain}
+\bibliography{bib.bib}
+\end{document}

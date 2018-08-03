@@ -122,9 +122,9 @@ def PrimeFitting(dir,file_name,output_file,num_files,redshift,n_H,Temp_guess,plo
     file_to_write.close()
 
 def main():
-    dir = '/home/crhea/Documents/TestData/12036/repro/binned/'
-    file_name = 'simple'
-    output_file = 'Temperature_bins'
+    dir = '%%%'
+    file_name = '%%%'
+    output_file = '%%%'
     num_files = 17
     redshift = 0.01790
     n_H = 1.38e-1

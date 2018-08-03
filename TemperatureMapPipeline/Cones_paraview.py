@@ -85,7 +85,7 @@ def Render_Cones(input_cones,input_field,output,color,colormap):
     return None
 
 def main():
-    input_dir = '/home/crhea/Documents/TestData/'
+    input_dir = '%%%'
     input_cones = input_dir+'WVT_data_bins.txt'
     input_field = input_dir+'WVT_temperature_bins.txt'
     output = input_dir+'WVT_Diagram'

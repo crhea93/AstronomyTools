@@ -179,10 +179,10 @@ def create_spectra(filename,dir,file_to_split,output_dir):
             if item.endswith(("_temp.reg")):
                 os.remove(os.path.join(dir+'/repro/'+output_dir, item))
 def main():
-    filename = '/home/crhea/Documents/TestData/WVT_data.txt'
-    dir = '/home/crhea/Documents/TestData/12036'
-    file_to_split = 'simple'
-    output_dir = 'binned/'
+    filename = '%%%'
+    dir = '%%%'
+    file_to_split = '%%%'
+    output_dir = '%%%'
     create_spectra(filename,dir,file_to_split,output_dir)
 
 main()

@@ -26,6 +26,18 @@ import os
 import subprocess
 import matplotlib.pyplot as plt
 from xspec import *
+
+
+#------------------------------INPUTS------------------------------------------#
+dir = '%%%'
+file_name = '%%%'
+output_file = '%%%'
+num_files = 17
+redshift = 0.01790
+n_H = 1.38e-1
+Temp_guess = 5
+plot_dir = '%%%'
+#------------------------------------------------------------------------------#
 #FitXSPEC
 # Fit spectra
 #   parameters:
@@ -47,16 +59,16 @@ def FitXSPEC(spectrum_file,background_file, arf_file,resp_file,redshift,n_H,Temp
     Xset.chatter = 0
     #XSPEC GOODNESS
     s1 = Spectrum(spectrum_file)
-    m1 = Model("zphabs*(apec+pow)")
+    m1 = Model("zphabs*(apec+zpow)")
     c1 = m1.zphabs
     c2 = m1.apec
-
+    c3 = m1.zpow
     c1.nH = n_H
     c1.nH.frozen = True
     c1.Redshift = redshift
     c2.kT = Temp_guess
     c2.Redshift = redshift
-
+    c3.Redshift = redshift
 
     s1.ignore('0-0.3 10.0-**')
     #AllData.ignore('bad')
@@ -122,14 +134,6 @@ def PrimeFitting(dir,file_name,output_file,num_files,redshift,n_H,Temp_guess,plo
     file_to_write.close()
 
 def main():
-    dir = '%%%'
-    file_name = '%%%'
-    output_file = '%%%'
-    num_files = 17
-    redshift = 0.01790
-    n_H = 1.38e-1
-    Temp_guess = 5
-    plot_dir = '/home/crhea/Desktop/spec/'
     print("--------------------------------FITTING DATA------------------------#")
     PrimeFitting(dir,file_name,output_file,num_files,redshift,n_H,Temp_guess,plot_dir)
 main()

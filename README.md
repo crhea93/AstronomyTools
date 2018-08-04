@@ -15,6 +15,10 @@ GeneralUse Folder:
 	
 	Merge.py -- Merge several observations
 
+	ToolBox.py -- Collection of subroutines used in other scripts (i.e. surface brightness calculations)
+
+	ScaledImage.py -- Create scaled image from image.fits
+
 SurfaceBrightness Folder:
 
 	SurfBright.py -- Calculate Surface Brightness for 40 and 400 kpc using srcflux
@@ -24,3 +28,11 @@ SurfaceBrightness Folder:
 	SBCalc_complete.py -- Calculates Surface Brightness in a rigorous manner using aprates
 
 	SB_BoundsCalc.py -- To be used in conjunction with SBCalc_complete.py to generate error bounds
+
+TemperatureMapPipeline Folder:
+
+	Bin_data.py -- Bins data given binning file (See WVT repository)
+
+	Xspec.py -- Calculates Temperature for each bin
+
+	Cones_paraview.py -- Generates Temperature Map Graphic

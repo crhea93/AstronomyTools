@@ -18,6 +18,13 @@ OUTPUTS:
 '''
 import os
 
+#------------------INPUTS------------------------------------------------------#
+chandra_dir = '%%%'
+region = '%%%'
+quantity_to_calc = '%%%'
+#------------------------------------------------------------------------------#
+os.chdir(chandra_dir)
+
 def calc_bounds(region,quantity_to_calc):
     with open('aprates_'+region+'.par') as f:
         data = []
@@ -50,12 +57,11 @@ def calc_bounds(region,quantity_to_calc):
         upper = val*(src_rates_upper/src_val)
         print("Net Energy Flux is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(val,lower,upper))
 
-    return None
+    return val,lower,upper
 
-def main():
-    chandra_dir = '%%%'
-    os.chdir(chandra_dir)
-    region = '%%%'
-    quantity_to_calc = 'NEFB'
+
+run = input("Do you wish to run SB_BoundsCalc.py as a standalone app: ")
+if run.lower() == 'yes':
     calc_bounds(region,quantity_to_calc)
-main()
+else:
+    print("Not running SB_BoundsCalc as a standalone app :)")

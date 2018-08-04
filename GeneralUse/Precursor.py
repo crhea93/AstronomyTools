@@ -1,12 +1,13 @@
 '''
-File to create files necessary for WVT algorithm
-We only look in the following energy range:
-energy=500:10000
-
+Crate spectrum and exposure map for given region using reprocessed evt2 file
 '''
 import os
 from ciao_contrib.runtool import *
 
+#--------------------------INPUTS----------------------------------------------#
+chandra_dir = '%%%'
+region_name = '%%%'
+#------------------------------------------------------------------------------#
 def get_filenames():
     filenames = dict()
     for file in os.listdir(os.getcwd()+'/repro'):
@@ -34,6 +35,11 @@ def dmcopy_func(filenames,region_name):
     dmcopy()
     dmcopy.infile = region_name+'.fits'
     dmcopy.outfile = region_name+"_image.fits"
+    dmcopy.option = 'image'
+    dmcopy.clobber = True
+    dmcopy()
+    dmcopy.infile = filenames['evt2']+'.fits'
+    dmcopy.outfile = "image.fits"
     dmcopy.option = 'image'
     dmcopy.clobber = True
     dmcopy()
@@ -74,8 +80,6 @@ def process_data(region_name):
 
 
 def main():
-    chandra_dir = '%%%'
-    region_name = '%%%'
     os.chdir(chandra_dir)
     process_data(region_name)
     return None

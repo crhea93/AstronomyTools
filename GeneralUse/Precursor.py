@@ -1,5 +1,9 @@
 '''
 Crate spectrum and exposure map for given region using reprocessed evt2 file
+Also create image.fits for event
+INPUTS:
+    chandra_dir - full path to chandra directory (e.g. '/user/home/Documents/ChandraData')
+    region_name - name of region .reg file without extension (e.g. 'simple')
 '''
 import os
 from ciao_contrib.runtool import *
@@ -38,7 +42,7 @@ def dmcopy_func(filenames,region_name):
     dmcopy.option = 'image'
     dmcopy.clobber = True
     dmcopy()
-    dmcopy.infile = filenames['evt2']+'.fits'
+    dmcopy.infile = filenames['evt2']
     dmcopy.outfile = "image.fits"
     dmcopy.option = 'image'
     dmcopy.clobber = True
@@ -71,9 +75,13 @@ def exposure_map_func(region_name):
 
 
 def process_data(region_name):
+    print("Gathering filenames...")
     filenames = get_filenames()
+    print("Applying dmcopy...")
     dmcopy_func(filenames,region_name)
+    print("Applying specextract...")
     specextract_func(filenames,region_name)
+    print("Creating exposure map...")
     exposure_map_func(region_name)
     return None
 

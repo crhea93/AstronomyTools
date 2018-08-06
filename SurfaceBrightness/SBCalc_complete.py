@@ -17,7 +17,7 @@ OUTPUTS:
 import os
 from astropy.io import fits
 from ciao_contrib.runtool import *
-from ToolBox import calc_effenergy, calc_flux
+from GeneralUse.ToolBox import calc_effenergy, calc_flux
 #------------------INPUTS------------------------------------------------------#
 chandra_dir = '%%%'
 evt_file = '%%%'
@@ -27,10 +27,4 @@ background = '%%%'
 exposure = True
 #------------------------------------------------------------------------------#
 os.chdir(chandra_dir)
-
-
-run = input("Do you wish to run SBCalc_complete.py as a standalone app: ")
-if run.lower() == 'yes':
-    calc_flux(evt_file,energy_range,region,background,exposure)
-else:
-    print("Not running SBCalc_complete as a standalone app :)")
+calc_flux(evt_file,energy_range,region,background,exposure)

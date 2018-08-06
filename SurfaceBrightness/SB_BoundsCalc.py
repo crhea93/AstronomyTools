@@ -60,8 +60,5 @@ def calc_bounds(region,quantity_to_calc):
     return val,lower,upper
 
 
-run = input("Do you wish to run SB_BoundsCalc.py as a standalone app: ")
-if run.lower() == 'yes':
-    calc_bounds(region,quantity_to_calc)
-else:
-    print("Not running SB_BoundsCalc as a standalone app :)")
+
+calc_bounds(region,quantity_to_calc)

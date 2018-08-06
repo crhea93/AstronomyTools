@@ -2,7 +2,9 @@
 Small script to effective energy
 '''
 import os
-from GeneralUse.ToolBox import calc_effenergy
+import sys
+sys.path.append('../GeneralUse')
+from ToolBox import calc_effenergy
 from ciao_contrib.runtool import *
 
 #----------------------INPUTS--------------------------------------------------#

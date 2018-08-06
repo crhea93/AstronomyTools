@@ -29,7 +29,7 @@ import tarfile
 import selenium
 from selenium import webdriver
 from ciao_contrib.runtool import *
-from ToolBox import calc_effenergy,calc_flux,calc_bounds,simulatePSF,read_gmail_info
+import calc_effenergy,calc_flux,calc_bounds,simulatePSF,read_gmail_info
 
 #---------------------INPUTS---------------------------------------------#
 chandra_dir = '%%%'

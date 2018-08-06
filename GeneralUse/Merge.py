@@ -10,6 +10,12 @@ import os
 from astropy.io import fits
 from ciao_contrib.runtool import *
 
+#-------------------INPUTS---------------------#
+chandra_dir = '%%%'
+os.chdir(chandra_dir)
+OBSIDS = ['%%%','%%%']
+Merged_Folder = '%%%'
+#---------------------------------------------#
 
 def merge_objects(Obsids,Merged_Folder,filenames):
     #Lets create the merged folder if necessary
@@ -39,10 +45,6 @@ def merge_objects(Obsids,Merged_Folder,filenames):
     return None
 
 def main():
-    chandra_dir = '%%%'
-    os.chdir(chandra_dir)
-    OBSIDS = ['%%%','%%%']
-    Merged_Folder = '%%%'
     merge_objects(OBSIDS,Merged_Folder)
     return None
 

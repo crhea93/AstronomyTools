@@ -9,6 +9,7 @@ Inputs:
 '''
 import os
 from ciao_contrib.runtool import *
+sys.path.append('../SurfaceBrightness')
 from SBCalc_complete import calc_effenergy,calc_flux
 
 #------------INPUTS------------------------------------------------------------#

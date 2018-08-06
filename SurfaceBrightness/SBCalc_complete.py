@@ -15,9 +15,11 @@ OUTPUTS:
     .par file containing aprates solutions meaning all counts/rates/flux info (e.g. aprates+region.par)
 '''
 import os
+import sys
 from astropy.io import fits
 from ciao_contrib.runtool import *
-from GeneralUse.ToolBox import calc_effenergy, calc_flux
+sys.path.append('../GeneralUse')
+from ToolBox import calc_effenergy
 #------------------INPUTS------------------------------------------------------#
 chandra_dir = '%%%'
 evt_file = '%%%'

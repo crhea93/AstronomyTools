@@ -36,6 +36,16 @@ import numpy as np
 import os
 from ciao_contrib.runtool import *
 from crates_contrib.utils import *
+
+#---------------------INPUTS---------------------#
+filename = '%%%'
+dir = '%%%'
+file_to_split = '%%%'
+output_dir = '%%%'
+#-----------------------------------------------#
+
+
+
 # Get necessary filenames such as evt2,asol1,bpix1, and msk1
 #   parameters:
 #
@@ -179,10 +189,5 @@ def create_spectra(filename,dir,file_to_split,output_dir):
             if item.endswith(("_temp.reg")):
                 os.remove(os.path.join(dir+'/repro/'+output_dir, item))
 def main():
-    filename = '%%%'
-    dir = '%%%'
-    file_to_split = '%%%'
-    output_dir = '%%%'
     create_spectra(filename,dir,file_to_split,output_dir)
-
 main()

@@ -127,7 +127,7 @@ def plot_Bins(Bins,x_min,x_max,y_min,y_max,StN_Target,file_dir,filename):
     plt.ylabel("Number of Bins")
     plt.xlabel("Signal-to-Noise")
     plt.title("Signal-to-Noise per Bin")
-    plt.savefig(file_dir+'histograms/'+filename+".png")
+    plt.savefig(file_dir+'/histograms/'+filename+".png")
     plt.clf()
     SNR_std = stats.stdev(SNR_list)
     SNR_med = np.median(SNR_list)
@@ -471,7 +471,7 @@ def Bin_data(Bins,missing_pixels,min_x,min_y, output_directory, filename):
     file = open(output_directory+'/'+filename+'.txt',"w+")
     file.write("This text file contains information necessary for chandra to bin the pixels appropriately for image.fits \n")
     file.write("pixel_x pixel_y bin \n")
-    file2 = open(output_directory+filename+'_bins.txt','w+')
+    file2 = open(output_directory+'/'+filename+'_bins.txt','w+')
     file2.write("Bin data for paraview script to plot Weighted Voronoi Diagram \n")
     file2.write("centroidx centroidy weight \n")
     binCount = 0

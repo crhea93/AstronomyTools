@@ -36,12 +36,12 @@ import numpy as np
 from matplotlib import cm
 
 #---------------------INPUTS---------------------#
-input_dir = '/home/crhea/Desktop/12036/'
+input_dir = '%%%'
 input_cones = input_dir+'WVT_data_bins.txt'
-input_field = input_dir+'WVT_temperature_bins.txt'
+input_field = input_dir+'Temperature_Bins.txt'
 output = input_dir+'WVT_Diagram'
-color = 'Random'
-colormap = 'plasma'
+color = input_dir+'Temperature_Bins.txt'
+colormap = 'coolwarm'
 #-----------------------------------------------#
 
 
@@ -60,15 +60,14 @@ def Render_Cones(input_cones,input_field,output,color,colormap):
     n_cones = len(lines[2:])
     cmap = cm.get_cmap(colormap)
     if color == 'Random':
-        print(color)
         RGB = [cmap(random.randint(0,256)) for i in range(n_cones)]
     if color != 'Random':
-        print(color)
         field_vals = []#np.linspace(0,256,n_cones)/256 #Have to normalize since There are only 256 color choices....
         with open(input_field, 'r') as f:
             lines_field = f.read().splitlines()
-        for line in lines_field[2:]:
-            field_vals.append(line.split(" ")[1])
+        for line in lines_field[1:]:
+            field_vals.append(float(line.split(" ")[2]))
+        field_vals = (np.max(field_vals)-field_vals)/(np.max(field_vals)-np.min(field_vals))
         RGB = [cmap(norm_fVal) for norm_fVal in field_vals]
     renderView1 = GetActiveViewOrCreate('RenderView')
     renderView1.ViewSize = [4000, 4000]
@@ -81,7 +80,7 @@ def Render_Cones(input_cones,input_field,output,color,colormap):
         c1.Resolution=100
         c1.Center = [x[i],y[i],-1]
         c1.Height = weight[i]
-        c1.Radius = 5.0
+        c1.Radius = 50.0
         c1.Direction = [0,0,1]
         cone = GetActiveSource()
         coneDisplay = GetDisplayProperties(cone, view=renderView1)

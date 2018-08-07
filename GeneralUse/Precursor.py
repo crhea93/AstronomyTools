@@ -4,6 +4,7 @@ Also create image.fits for event
 INPUTS:
     chandra_dir - full path to chandra directory (e.g. '/user/home/Documents/ChandraData')
     region_name - name of region .reg file without extension (e.g. 'simple')
+    bkg_region_name - name of background .reg file without extension (e.g. 'simple_bkg')
 '''
 import os
 from ciao_contrib.runtool import *
@@ -11,6 +12,7 @@ from ciao_contrib.runtool import *
 #--------------------------INPUTS----------------------------------------------#
 chandra_dir = '%%%'
 region_name = '%%%'
+bkg_region_name = '%%%'
 #------------------------------------------------------------------------------#
 def get_filenames():
     filenames = dict()
@@ -28,7 +30,8 @@ def get_filenames():
     os.chdir('repro')
     return filenames
 
-def dmcopy_func(filenames,region_name):
+def dmcopy_func(filenames,region_name,bkg_region_name):
+    #Create region fits file
     dmcopy.infile = filenames['evt2']+"[sky=region("+region_name+".reg)]"
     dmcopy.outfile = region_name+".fits"
     dmcopy.clobber = True
@@ -37,8 +40,18 @@ def dmcopy_func(filenames,region_name):
     dmcopy.outfile = region_name+".fits"
     dmcopy.clobber = True
     dmcopy()
+    dmcopy.infile = filenames['evt2']+"[sky=region("+bkg_region_name+".reg)]"
+    dmcopy.outfile = bkg_region_name+".fits"
+    dmcopy.clobber = True
+    dmcopy()
+    #Make image fits
     dmcopy.infile = region_name+'.fits'
     dmcopy.outfile = region_name+"_image.fits"
+    dmcopy.option = 'image'
+    dmcopy.clobber = True
+    dmcopy()
+    dmcopy.infile = bkg_region_name+'.fits'
+    dmcopy.outfile = bkg_region_name+"_image.fits"
     dmcopy.option = 'image'
     dmcopy.clobber = True
     dmcopy()
@@ -49,10 +62,10 @@ def dmcopy_func(filenames,region_name):
     dmcopy()
     return None
 
-def specextract_func(filenames,region_name):
+def specextract_func(filenames,region_name,bkg_region_name):
     specextract.infile = filenames['evt2']+"[sky=region("+region_name+".reg)]"
     specextract.outroot = region_name
-    specextract.bkgfile = filenames['evt2']+"[sky=region("+region_name+"_bkg.reg)]"
+    specextract.bkgfile = filenames['evt2']+"[sky=region("+bkg_region_name+".reg)]"
     specextract.asp = '../primary/'+filenames['asol1']
     specextract.mskfile = '../secondary/'+filenames['msk1']
     specextract.badpixfile = filenames['bpix1']
@@ -74,13 +87,13 @@ def exposure_map_func(region_name):
     return None
 
 
-def process_data(region_name):
+def process_data(region_name,bkg_region_name):
     print("Gathering filenames...")
     filenames = get_filenames()
     print("Applying dmcopy...")
-    dmcopy_func(filenames,region_name)
+    dmcopy_func(filenames,region_name,bkg_region_name)
     print("Applying specextract...")
-    specextract_func(filenames,region_name)
+    specextract_func(filenames,region_name,bkg_region_name)
     print("Creating exposure map...")
     exposure_map_func(region_name)
     return None
@@ -89,6 +102,6 @@ def process_data(region_name):
 
 def main():
     os.chdir(chandra_dir)
-    process_data(region_name)
+    process_data(region_name,bkg_region_name)
     return None
 main()

@@ -321,7 +321,7 @@ class Pixel:
 #       image_fits = fits image file in string format
 #       image_coord = reg file containing center of box of interest and sizes
 #       exposure_map = exposure map file in string format
-def read_in(fits_file,image_fits,image_coord,exposure_map = None):
+def read_in(fits_file,image_fits,bkg_image_fits,image_coord,exposure_map = None):
     #Collect Pixel Data
     hdu_list = fits.open(fits_file, memmap=True)
     exposure_time = float(hdu_list[0].header["TSTOP"]) - float(hdu_list[0].header["TSTART"])
@@ -345,6 +345,11 @@ def read_in(fits_file,image_fits,image_coord,exposure_map = None):
         hdu_list = fits.open(exposure_map, memmap=True)
         exposure = hdu_list[0].data
         hdu_list.close()
+    bkg_hdu = fits.open(bkg_image_fits, memmap=True)
+    bkg_counts = bkg_hdu[0].data
+    bkg_hdu.close()
+    avg_bkg_counts = np.mean(bkg_counts)
+    bkg_sigma = np.std(bkg_counts)
     Pixels = []
     pixel_count = 0
     for col in range(int(x_len)):
@@ -353,8 +358,8 @@ def read_in(fits_file,image_fits,image_coord,exposure_map = None):
                 flux = counts[row][col]
                 vari = counts[row][col]
             else:
-                flux = counts[row][col]/(exposure[row][col]*exposure_time)
-                vari = counts[row][col]/(exposure[row][col]**2*exposure_time**2)
+                flux = counts[row][col]/(exposure[row][col]*exposure_time) #- avg_bkg_counts/(exposure[row][col]*exposure_time)
+                vari = counts[row][col]/(exposure[row][col]**2*exposure_time**2) #+ bkg_sigma
             Pixels.append(Pixel(pixel_count,x_min+col+1,y_min+row+1,flux,vari)) #Add 1 because of pixel center offset
             pixel_count += 1
     print("We have "+str(len(Pixels))+" Pixels! :)")
@@ -717,7 +722,7 @@ def read_input_file(input_file):
             if '=' in line:
                 inputs[line.split("=")[0].strip().lower()] = line.split("=")[1].strip()
             else: pass
-        if len(inputs) != 11:
+        if len(inputs) != 12:
             print("Please recheck the input file since some parameter is missing...")
             print("Exiting program...")
             exit()
@@ -744,7 +749,7 @@ def main():
     Pixels = []
     pixel_size = inputs['pixel_radius']*2
     print("#----------------Algorithm Part 1----------------#")
-    Pixels,min_x,max_x,min_y,max_y = read_in(inputs['fits_file'],inputs['image_fits'],inputs['image_coord'],inputs['exposure_map'])
+    Pixels,min_x,max_x,min_y,max_y = read_in(inputs['fits_file'],inputs['image_fits'],inputs['bkg_image_fits'],inputs['image_coord'],inputs['exposure_map'])
     Nearest_Neighbors(Pixels)
     Init_bins = Bin_Acc(Pixels,pixel_size,inputs['stn_target'],inputs['roundness_crit'])
     plot_Bins(Init_bins,min_x,max_x,min_y,max_y,inputs['stn_target'],inputs['image_dir'],"bin_acc")

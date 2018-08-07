@@ -7,7 +7,7 @@ Goal: Create binned spectra from Chandra data given
 ---------------------------------------------------
 INPUTS:
     filename - WVT output (e.g.'/home/user/Desktop/WVT_data.txt')
-    dir - Directory with Chandra data (e.g.'/home/usr/CHANDRA/12833/repro/'
+    dir - Directory with Chandra data (e.g.'/home/usr/CHANDRA'
     file_to_split - File to read in and used to create bins in WVT (e.g.'imageA')
     output_dir - Output directory concatenated with dir  (e.g.'binned/')
 ---------------------------------------------------
@@ -40,8 +40,8 @@ from crates_contrib.utils import *
 #---------------------INPUTS---------------------#
 filename = '%%%'
 dir = '%%%'
-file_to_split = '%%%'
-output_dir = '%%%'
+file_to_split = 'simple'
+output_dir = 'binned/'
 #-----------------------------------------------#
 
 
@@ -129,8 +129,8 @@ def split_fits(filenames,file_to_split,output_dir,x_center,y_center,width,height
 #       pixel_y  = pixels y coordinate in image coordinates
 #       file_to_split = file which we will split later (needed to get new coordinates)
 def coord_trans(pixel_x,pixel_y,file_to_split):
-    pixel_x = pixel_x+0.5
-    pixel_y = pixel_y+0.5
+    pixel_x = pixel_x#+0.5
+    pixel_y = pixel_y#+0.5
     tr = SimpleCoordTransform(file_to_split+"_image.fits")
     x_center,y_center = tr.convert("image", "physical", pixel_x, pixel_y)
     x_min,y_min = tr.convert("image", "physical", pixel_x-0.5, pixel_y-0.5)
@@ -178,7 +178,7 @@ def create_spectra(filename,dir,file_to_split,output_dir):
         spec_to_combine = []
         print("We are combining bin number "+str(bin_i+1)+" of "+str(len(bin_unique)))
         for chip_set_num in range(bin.count(bin_i)): #for number of said unique bin
-            x_center,y_center,width,height = coord_trans(pixel_x[total_num],pixel_y[total_num],file_to_split)
+            x_center,y_center,width,height = coord_trans(pixel_x[chip_set_num],pixel_y[chip_set_num],file_to_split)
             x_pixels.append(x_center)
             y_pixels.append(y_center)
             widths.append(width)

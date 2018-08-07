@@ -2,6 +2,7 @@
 #All lines without equals sign are ignored...
 fits_file = simple.fits
 image_fits = simple_image.fits
+bkg_image_fits = simple_bkg_image.fits
 image_coord = simple_imcoord.reg
 exposure_map = flux_broad.expmap
 StN_Target = 10

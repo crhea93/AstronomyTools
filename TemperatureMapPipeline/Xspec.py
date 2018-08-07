@@ -62,7 +62,7 @@ def FitXSPEC(spectrum_file,background_file, arf_file,resp_file,redshift,n_H,Temp
     m1 = Model("zphabs*(apec+zpow)")
     c1 = m1.zphabs
     c2 = m1.apec
-    c3 = m1.zpow
+    c3 = m1.zpowerlw
     c1.nH = n_H
     c1.nH.frozen = True
     c1.Redshift = redshift
@@ -71,9 +71,9 @@ def FitXSPEC(spectrum_file,background_file, arf_file,resp_file,redshift,n_H,Temp
     c3.Redshift = redshift
 
     s1.ignore('0-0.3 10.0-**')
-    #AllData.ignore('bad')
+    AllData.ignore('bad')
     Plot('data')
-    Fit.nIterations = 1000
+    Fit.nIterations = 100
     Fit.statMethod = "cstat"
     Fit.perform()
     Plot('data')

@@ -132,7 +132,8 @@ We will be using the $\chi^2$ statistic for now (yes yes there are other and pot
 \begin{equation}
 	\chi^2 = \sum_{i=1}^{N_{el}} \Bigg(  \frac{x_i-\mu_i}{\sigma_i}  \Bigg)^2
 \end{equation}
-Where $x_i$ is the data value at point $i$, $\sigma_i$ is the corresponding error, and $\mu_i$ is the model value.
+Where $x_i$ is the data value at point $i$, $\sigma_i$ is the corresponding error, and $\mu_i$ is 
+the model value.
 
 By calculating the $\chi^2$ we can get a decent  guess on how well our fit is. Optimally, our $\chi^2$ will equal the number of \textbf{degrees of freedom}. We call this ratio the \textbf{Reduced Chi-Squared Statistic}. Hence we can very easily calculate the reduced chi-square if we know the number of degrees of freedom for a model:
 \begin{equation}
@@ -158,18 +159,23 @@ Oh yes, you need to have paraview installed. If you are a linux user, its a simp
 
 
 \newpage
-\section{Additional Python Fun}
-\subsection{Lookback Time}
-\begin{lstlisting}
-from astropy import units as u
-from astropy import cosmology
-from astropy.coordinates import *
-from astropy.cosmology import Planck13, default_cosmology
-default_cosmology.set(Planck13)
-z_RXJ = 0.658
-d_RXJ = Distance(z=z_RXJ, unit=u.kpc)
-\end{lstlisting}
+\section{Dealing with Merged Data Set}
+How do we create temperature maps for merged data sets? As documented on the \texttt{CIAO} site \footnote{\href{http://cxc.harvard.edu/ciao/caveats/merged_events.html}{http://cxc.harvard.edu/ciao/caveats/merged\_events.html}}, we are not able to create spectra from merged observations. Thus we have to be very careful in the creation of 
+temperature maps for merged data sets. 
 
+The basic steps are as follows:
+\begin{enumerate}
+	\item Merge Observations (Don't worry! We are just going to use the event file and exposure map).
+	\item Create a bin map using your favorite binning algorithm; I suggest using Weighted Voronoi Tesselations.
+	\item For each individual observation do the following:
+	\begin{enumerate}
+		\item Create individual event files for each bin
+		\item Extract spectrum for each bin
+	\end{enumerate}
+	\item Run fitting software on each bin by fitting all datasets simultaneously
+\end{enumerate}
+
+In following these steps, we are able to reconstruct a temperauture map for a merged observation while avoiding the inherent drawbacks of merging data.
 
 \newpage
 

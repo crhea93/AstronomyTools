@@ -22,15 +22,19 @@ GeneralUse Folder:
 
 	ScaledImage.py -- Create scaled image from image.fits
 
+	PSF.py -- Create PSF for an event file using ChaRT
+
+	PSF_fraction.py -- Calculate PSF fractions for regions 
+
 SurfaceBrightness Folder:
 
 	SurfBright.py -- Calculate Surface Brightness for 40 and 400 kpc using srcflux
 
-	CSB.py -- Calculate Surface Brightness Coefficient from srcflux
-
 	SBCalc_complete.py -- Calculates Surface Brightness in a rigorous manner using aprates
 
-	SB_BoundsCalc.py -- To be used in conjunction with SBCalc_complete.py to generate error bounds
+	CSB_bounds.py -- To be used in conjunction with SBCalc_complete.py to generate error bounds
+
+	SBCalc_MERGED.py -- Creates merged directory and calculates surface brightness
 
 	read_input.py -- Read input files 
 

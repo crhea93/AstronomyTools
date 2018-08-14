@@ -157,7 +157,7 @@ $$c = A_s  \frac{E_s}{flux_s}$$
 $$r = \frac{A_bE_bflux_s}{A_sE_sflux_b}$$
 
 If $eng_s$ or $eng_b$ equal zero, we then set the zero-value equal to the midpoint energy of the given band.
-\subsection{Confidence Intervals}
+\subsubsection{Confidence Intervals}
 Although not discussed in detail here, we calculate an \textit{upper bound} for a given confidence region using a posterior probability distribution function detailed in \cite{Kashyap}.
 
 It is, however, crucial to note how the \textit{lower and upper bounds} is calculated for Net Energy Flux. The \texttt{srcflux} command calculates the lower and upper bounds in the following manner: 
@@ -171,8 +171,22 @@ As evident, the lower and confidence values are not truly calculated, but rather
 
 
 
+\subsection{Dealing with Merged Observations}
+The primary concern with calculating the surface brightness concentration for merged observations stems from the inherent difficulties in extracting spectrum from merged images. Since we cannot extract spectra from merged observations, we are unable to make ARF files (Also its worth noting that ARF files are high dependent on the individual observation). The ARF file is necessary to calculate the monochromatic energy in low-count observations which is in turn used to competently calculate the effective energy map (exposure map). A natural question to ask is: why don't we simply approximate the monochromatic energy for the energy band of interest by the peak value while avoiding any cuts\footnote{\href{http://cxc.harvard.edu/ciao/why/monochromatic_energy.html}{http://cxc.harvard.edu/ciao/why/monochromatic\_energy.html}}? Unfortunately, this method neglects the major effect that the monochromatic energy has on the exposure map (i.e. a small error in the monochromatic energy propogates heavily through the exposure map). Therefore, we need to determine a method by which we can calculate the monochromatic energy safetly and in turn use it to calculate the exposure map for a merged image.
 
+\subsubsection{High Number of Counts}
+If we have a high number of counts than the mean energy is a decent-enough approximation of the monochromatic energy. In this case, we can simply use the following command:
+\begin{lstlisting}
+	dmstat "evt2.fits[sky=region(region.reg),energy=energy_band][cols energy]"
+\end{lstlisting}
 
+\subsubsection{Low Number of Counts}
+	Thankfully, \texttt{ciao} contains a tool that allows us to combine arf files! To merge two observations' arf files, simply run the following command:
+	\begin{lstlisting}
+		addresp infile="" arffile="obsid1.arf,obsid2.arf"
+		phafile="obsid1.pi,obsid2.pi" outfile="" outarf=combined.arf
+	\end{lstlisting}
+After running this, we can calculate the monochromatic flux using this arf file followed by the creation of an exposure map by running \textit{merged\_obs infile=... outroot=... bands=energy\_range:MonoEn}. The event file and arf file will naturally have the same root -- a fact that will be capitalized on during the flux calculations. If they do not have the same root, then please edit the source code for \textit{flux\_calc}...
 
 \newpage
 \bibliographystyle{plain}

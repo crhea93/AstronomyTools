@@ -1,39 +1,42 @@
 '''
-Collection of helpful subroutines used in an assortment of calculations
-SUBROUTINES: (in no particular order)
-    read_gmail_info - read gmail account information from secret file
-    calc_effenergy - calculate effective monochromatic energy
-    calc_flux - calculate flux parameters and bounds using aprates
-    calc_bounds - calculate energy flux bounds from .par file
-    simulatePSF - simulate psf on event file to create .psf file
+Calculate Surface Brightness from Scratch for MERGED Images
+
+This involves created merged folders for each region and energy range
+
+PLEASE RUN SPECEXTRACT ON EACH OBSERVATION FOR EACH REGION BEFORE RUNNING
+
+INPUTS:
+    chandra_dir -- full path to data directory (e.g. '/home/user/Documents/Data')
+    output_dir -- name of output directory (e.g. 'Merged_Soft')
+    obs_to_merge -- list of OBSIDs for which we want to calculate the SB (e.g. ['#####'])
+    repro_dir -- name of reprocessed data directory (e.g. 'repro')
+    evt_file -- name of event file without extension (e.g. 'acisf#####_repro_evt2')
+            Also used to calculate on the fly exposure map
+    energy_range -- energy range in electron volts (e.g. '500:2000')
+    region -- name of region file of interest without .reg extension (e.g. 'simple')
+    background -- name of background region file without .reg extension (e.g. 'simple_background')
+    exposure -- Boolean determining method to calculate Net Energy Flux. See
+        Documentation for more information. (e.g. True)
+
+
+OUTPUTS:
+    .par file containing aprates solutions meaning all counts/rates/flux info (e.g. aprates+region.par)
 '''
 import os
-from ciao_contrib.runtool import *
+from shutil import copyfile
 from astropy.io import fits
-
-
-
-#-------------------------------------------------#
-#-------------------------------------------------#
-'''
-Obtain gmail account amd password from secret folder containing such information
-parameters:
-    gmail_info_file -- full path to gmail info file (e.g. '/home/user/Documents/secretFolder/gmail_info.txt')
-        This file needs to be 2 lines only of the following format:
-        gmail_account = account_name
-        gmail_password = password
-outputs:
-    gmail account name (string)
-    gmail password (string)
-'''
-def read_gmail_info(gmail_info_file):
-    with open(gmail_info_file) as f:
-        contents = []
-        for line in f:
-            contents.append(line)
-    gmail_account = contents[0].split("=")[1].strip()
-    gmail_password = contents[1].split("=")[1].strip()
-    return gmail_account, gmail_password
+from ciao_contrib.runtool import *
+#------------------INPUTS------------------------------------------------------#
+chandra_dir = '%%%'
+output_dir = '%%%'
+obs_to_merge = ['#####','#####']
+repro_dir = '%%%'
+evt_file = '%%%'
+energy_range = '####:####' #in electron volts
+regions = ['%%%','%%%'] #set None if for entire image
+background = '%%%'
+exposure = False
+#------------------------------------------------------------------------------#
 #-------------------------------------------------#
 #-------------------------------------------------#
 '''
@@ -83,7 +86,7 @@ Calculate various quantities considered surface brightness such as:
         energy, but if the data set is merged then we must use the evt_file name (see documentation).
         This is handled in the code but be sure to name things appropriately!
 '''
-def calc_flux(evt_file,energy_range,region,background,exposure = False,merged = False,merged_obs = ['']):
+def calc_flux(evt_file,energy_range,region,background,exposure = False,merged_obs = ['']):
     #Rearrange energy ranges
     energies = [float(x) for x in energy_range.split(':')]
     energy_range2 = str(energies[0]/1000)+':'+str(energies[1]/1000) #for effective energy (eV)
@@ -112,43 +115,14 @@ def calc_flux(evt_file,energy_range,region,background,exposure = False,merged = 
     alpha = 1 #PSF fraction in source aperature; 1-perfect
     beta = 0 #PSF fraction in background aperature; 0-perfect
     #Exposure Time
-    if merged == False:
-        hdu = fits.open(evt_file+'.fits')
+    T_s = 0
+    T_b = 0
+    for obsid in  merged_obs:
+        hdu = fits.open(obsid+'.fits')
         hdr = hdu[0].header
-        T_s = hdr['TSTOP']-hdr['TSTART']
-        T_b = T_s
+        T_s += hdr['TSTOP']-hdr['TSTART']
+        T_b += T_s
         hdu.close()
-        #Calculate exposure maps
-        effen = calc_effenergy(region,energy_range2)
-        #Create Exposure Map for the band of interest
-        fluximage.punlearn()
-        fluximage.infile = evt_file+".fits"
-        fluximage.outroot = region+"flux/"
-        fluximage.bands = energy_range2+":"+str(effen)
-        fluximage.binsize = "1"
-        fluximage.units = "default"
-        fluximage.clobber = True
-        fluximage.cleanup = True
-        fluximage()
-        dmstat.punlearn()
-        dmstat.infile = region+"flux/"+energy_range3+'_thresh.expmap[sky=region('+region+'.reg)]'
-        dmstat.centroid = False
-        dmstat()
-        E_s = dmstat.out_mean
-        dmstat.punlearn()
-        dmstat.infile = region+"flux/"+energy_range3+'_thresh.expmap[sky=region('+background+'.reg)]'
-        dmstat.centroid = False
-        dmstat()
-        E_b = dmstat.out_mean
-    if merged == True:
-        T_s = 0
-        T_b = 0
-        for obsid in  merged_obs:
-            hdu = fits.open(obsid+'.fits')
-            hdr = hdu[0].header
-            T_s += hdr['TSTOP']-hdr['TSTART']
-            T_b += T_s
-            hdu.close()
 
     #Calculate average effective exposures
         dmstat.punlearn()
@@ -233,84 +207,60 @@ def calc_flux(evt_file,energy_range,region,background,exposure = False,merged = 
 
     return None
 
-#-------------------------------------------------#
-#-------------------------------------------------#
-'''
-Simulate PSF using marx
-    parameters:
-        evt_file - associated event file (string)
-        psf_file - associated psf fits file (string)
-        outname - name of .psf file to be created (string)
-    outputs:
-        Creates a .psf for event
-'''
-def simulatePSF(evt_file,psf_file,outname):
-    #Get source RA and dec from PSF
-    temp_a = os.popen('dmlist '+psf_file+' header | grep SRC_RA').readlines()
-    ra = temp_a[0].split("[deg]")[0].split("SRC_RA")[1].strip()
-    temp_b = os.popen('dmlist '+psf_file+' header | grep SRC_DEC').readlines()
-    dec = temp_b[0].split("[deg]")[0].split("SRC_DEC")[1].strip()
-    #Simulate PSF
-    simulate_psf.punlearn()
-    simulate_psf.infile = evt_file+'.fits'
-    simulate_psf.outroot = outname
-    simulate_psf.ra = ra
-    simulate_psf.dec = dec
-    simulate_psf.simulator = 'file'
-    simulate_psf.rayfile = psf_file
-    simulate_psf.projector = 'marx'
-    simulate_psf()
-    return None
-#-------------------------------------------------#
-#-------------------------------------------------#
-'''
- Calculate Energy Flux Bounds from .par file created from aprates
-   parameters:
-       region - region of interest for which the .par file was created (string)
-       quantity_to_calc - Net Counts/Rates/Flux option (string)
-            Options for quantity to calculate:
-                NC - Net Counts
-                NCR - Net Count Rates
-                NPF - Net Photon Flux
-                NEFA - Net Energy Flux option A
-                NEFB - Net Energy Flux option B
-   outputs:
-       val - calculated value of parameter of interest (float)
-       lower - lower confidence bound (float)
-       upper - upper confidence bound (float)
-'''
-def calc_bounds(region,quantity_to_calc):
-    with open('aprates_'+region+'.par') as f:
-        data = []
-        count = 0
-        for line in f:
-            if count < 35:
-                data.append(line.split(',')[3])
-            count += 1
-    if quantity_to_calc == 'NC':
-        val = float(data[0])
-        lower = float(data[1])
-        upper = float(data[2])
-        print("Net Counts is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(val,lower,upper))
-    if quantity_to_calc == 'NCR':
-        val = float(data[7])
-        lower = float(data[8])
-        upper = float(data[9])
-        print("Net Count Rate is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(val,lower,upper))
-    if quantity_to_calc == 'NPF':
-        val = float(data[15])
-        lower = float(data[16])
-        upper = float(data[17])
-        print("Net Photon Flux is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(val,lower,upper))
-    if quantity_to_calc == 'NEFA' or quantity_to_calc == 'NEFB':
-        val = float(data[28])
-        src_val = float(data[7])
-        src_rates_lower = float(data[8])
-        src_rates_upper = float(data[9])
-        lower = val*(src_rates_lower/src_val)
-        upper = val*(src_rates_upper/src_val)
-        print("Net Energy Flux is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(val,lower,upper))
+def create_arf(obs_to_merge,region,repro_dir):
+    #Create arf files
+    arf_files = ''
+    pi_files = ''
+    for obsid in obs_to_merge:
+        arf_files += obsid+'/'+repro_dir+'/'+region+'.arf,'
+        pi_files += obsid+'/'+repro_dir+'/'+region+'.pi,'
+    arf_files = arf_files[:-1]#get rid of final comma
+    pi_files = pi_files[:-1]
+    addresp.punlearn()
+    addresp.infile = ''
+    addresp.arffile = arf_files
+    addresp.phafile = pi_files
+    addresp.outfile = ''
+    addresp.outarf = region+'_merged.arf'
+    addresp.clobber = True
+    addresp()
 
-    return val,lower,upper
-#-------------------------------------------------#
-#-------------------------------------------------#
+def merge_observations(obs_to_merge,output_dir,repro_dir,energy_range2,mono_energy):
+    #Merge individual region files
+    merging_files = ''
+    for obsid in obs_to_merge:
+        merging_files += obsid+'/'+repro_dir+'/acisf'+obsid+'_repro_evt2.fits,'
+    merging_files = merging_files[:-1]
+    merge_obs.punlearn()
+    merge_obs.infile = merging_files
+    merge_obs.outroot = output_dir+'/'
+    merge_obs.bands = energy_range2+":"+str(mono_energy)
+    merge_obs.clobber = True
+    merge_obs()
+
+def main():
+    os.chdir(chandra_dir)
+    arfs = input('Do we need to create merged ARF files: ')
+    if arfs.lower() == 'yes' or arfs == '':
+        print("Combining ARF files")
+        for region in regions:
+            create_arf(obs_to_merge,region,repro_dir)
+    if arfs.lower() != 'yes' and arfs != '':
+        print("Combined ARFs not being created")
+    energies = [float(x) for x in energy_range.split(':')]
+    energy_range2 = str(energies[0]/1000)+':'+str(energies[1]/1000)
+    mono_energy = calc_effenergy(region+'_merged',energy_range2)
+    print("")
+    print("We must now created a merged observation file for this energy band...")
+    merge_observations(obs_to_merge,output_dir,repro_dir,energy_range2,mono_energy)
+    #We need to copy the region files over AND each individual event file
+    for region in regions:
+        copyfile(chandra_dir+'/'+obs_to_merge[0]+'/repro/'+region+'.reg',chandra_dir+'/'+output_dir+'/'+region+'.reg')
+    copyfile(chandra_dir+'/'+obs_to_merge[0]+'/repro/'+background+'.reg',chandra_dir+'/'+output_dir+'/'+background+'.reg')
+    for obser in obs_to_merge:
+        copyfile(chandra_dir+'/'+obser+'/repro/acisf'+obser+'_repro_evt2.fits',chandra_dir+'/'+output_dir+'/'+obser+'.fits')
+    os.chdir(chandra_dir+'/'+output_dir)
+    for region in regions:
+        print("Calculating flux for "+region)
+        calc_flux(evt_file,energy_range,region,background,exposure,obs_to_merge)
+main()

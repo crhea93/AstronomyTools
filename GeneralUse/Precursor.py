@@ -1,22 +1,21 @@
 '''
-Crate spectrum and exposure map for given region using reprocessed evt2 file
-Also create image.fits for event
+Run basic specextract and create simple fits images
+We only look at the broad energy range (0.5-10keV)
+
 INPUTS:
-    chandra_dir - full path to chandra directory (e.g. '/user/home/Documents/ChandraData')
-    region_name - name of region .reg file without extension (e.g. 'simple')
-    bkg_region_name - name of background .reg file without extension (e.g. 'simple_bkg')
+    chandra_dir -- full path to chandra data including obsid (e.g. '/home/user/Documents/ChandraData/20940')
+    repro_dir -- name of reprocessed data directory (e.g. 'repro')
+    region_name -- name of region for specextract (e.g. '400kpc')
+    background_name -- name of background region (e.g. 'simple')
+
+
 '''
 import os
 from ciao_contrib.runtool import *
 
-#--------------------------INPUTS----------------------------------------------#
-chandra_dir = '%%%'
-region_name = '%%%'
-bkg_region_name = '%%%'
-#------------------------------------------------------------------------------#
-def get_filenames():
+def get_filenames(repro_dir):
     filenames = dict()
-    for file in os.listdir(os.getcwd()+'/repro'):
+    for file in os.listdir(os.getcwd()+'/'+repro_dir):
         if file.endswith("_evt2.fits"):
             filenames['evt2'] = file
         if file.endswith("_bpix1.fits"):
@@ -27,11 +26,10 @@ def get_filenames():
     for file in os.listdir(os.getcwd()+'/secondary'):
         if file.endswith("_msk1.fits"):
             filenames['msk1'] = file
-    os.chdir('repro')
+    os.chdir(repro_dir)
     return filenames
 
-def dmcopy_func(filenames,region_name,bkg_region_name):
-    #Create region fits file
+def dmcopy_func(filenames,region_name):
     dmcopy.infile = filenames['evt2']+"[sky=region("+region_name+".reg)]"
     dmcopy.outfile = region_name+".fits"
     dmcopy.clobber = True
@@ -40,18 +38,8 @@ def dmcopy_func(filenames,region_name,bkg_region_name):
     dmcopy.outfile = region_name+".fits"
     dmcopy.clobber = True
     dmcopy()
-    dmcopy.infile = filenames['evt2']+"[sky=region("+bkg_region_name+".reg)]"
-    dmcopy.outfile = bkg_region_name+".fits"
-    dmcopy.clobber = True
-    dmcopy()
-    #Make image fits
     dmcopy.infile = region_name+'.fits'
     dmcopy.outfile = region_name+"_image.fits"
-    dmcopy.option = 'image'
-    dmcopy.clobber = True
-    dmcopy()
-    dmcopy.infile = bkg_region_name+'.fits'
-    dmcopy.outfile = bkg_region_name+"_image.fits"
     dmcopy.option = 'image'
     dmcopy.clobber = True
     dmcopy()
@@ -62,10 +50,10 @@ def dmcopy_func(filenames,region_name,bkg_region_name):
     dmcopy()
     return None
 
-def specextract_func(filenames,region_name,bkg_region_name):
+def specextract_func(filenames,region_name,background_name):
     specextract.infile = filenames['evt2']+"[sky=region("+region_name+".reg)]"
     specextract.outroot = region_name
-    specextract.bkgfile = filenames['evt2']+"[sky=region("+bkg_region_name+".reg)]"
+    specextract.bkgfile = filenames['evt2']+"[sky=region("+background_name+"_bkg.reg)]"
     specextract.asp = '../primary/'+filenames['asol1']
     specextract.mskfile = '../secondary/'+filenames['msk1']
     specextract.badpixfile = filenames['bpix1']
@@ -82,26 +70,26 @@ def exposure_map_func(region_name):
     fluximage.binsize = "1"
     fluximage.units = "area"
     fluximage.clobber = True
-    fluximage.cleanup = False
+    fluximage.cleanup = True
     fluximage()
     return None
 
 
-def process_data(region_name,bkg_region_name):
-    print("Gathering filenames...")
-    filenames = get_filenames()
-    print("Applying dmcopy...")
-    dmcopy_func(filenames,region_name,bkg_region_name)
-    print("Applying specextract...")
-    specextract_func(filenames,region_name,bkg_region_name)
-    print("Creating exposure map...")
+def process_data(repro_dir,region_name,background_name):
+    filenames = get_filenames(repro_dir)
+    dmcopy_func(filenames,region_name)
+    specextract_func(filenames,region_name,background_name)
     exposure_map_func(region_name)
     return None
 
 
 
 def main():
+    chandra_dir = '%%%'
+    repro_dir = '%%%'
+    region_name = '%%%'
+    background_name = '%%%'
     os.chdir(chandra_dir)
-    process_data(region_name,bkg_region_name)
+    process_data(repro_dir,region_name,background_name)
     return None
 main()

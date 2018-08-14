@@ -3,6 +3,9 @@ Create PSF
 
 Gotta run marx  bash script first
 
+First must approximate Photon Flux using ideal PSF -- needed for ChaRT input...
+
+
 INPUTS:
     chandra_dir -- full path to data directory (e.g. '/home/user/Documents/Data')
     evt_file -- name of event file without extension (e.g. 'acisf#####_repro_evt2')
@@ -29,18 +32,17 @@ import tarfile
 import selenium
 from selenium import webdriver
 from ciao_contrib.runtool import *
-import calc_effenergy,calc_flux,calc_bounds,simulatePSF,read_gmail_info
+from ToolBox import calc_effenergy,calc_flux,calc_bounds,simulatePSF,read_gmail_info
 
 #---------------------INPUTS---------------------------------------------#
 chandra_dir = '%%%'
 evt_file = '%%%'
 region = '%%%'
 background = '%%%'
-exposure = True
+exposure = False
 source_ra = '%%%'
-source_dec = '%%'
-energy_range = '%%%'
-OBS_ID = '#####'
+source_dec = '%%%'
+energy_range = '%%%' #in electron volts
 gmail_info_file = '%%%'
 #------------------------------------------------------------------------#
 

@@ -95,7 +95,7 @@ There are two main types of models:
 
 Let's examine the major componenets of our model...
 
-\subsection{zpow}
+\subsubsection{zpow}
 \texttt{zpow} is a simple photon power law taking into account redshift. This is just classic blackbody goodness...
 
 \begin{equation}
@@ -128,7 +128,7 @@ We need only  specify $T \ (KeV)$, as a guess, and $z$ which is our redshift.
 \texttt{Apec} is a multiplicative model
 
 \subsubsection{$\chi^2$ statistic}
-We will be using the $\chi^2$ statistic for now (yes yes there are other and potentially better statistics to use...). The $\chi^2$ is defined as the following:
+The $\chi^2$ is defined as the following:
 \begin{equation}
 	\chi^2 = \sum_{i=1}^{N_{el}} \Bigg(  \frac{x_i-\mu_i}{\sigma_i}  \Bigg)^2
 \end{equation}
@@ -142,8 +142,20 @@ By calculating the $\chi^2$ we can get a decent  guess on how well our fit is. O
 
 So an optimal fit using a reduced $\chi^2$-statistic means $\chi^2_{red} = 1$. Hence for our algorithm, we will try to hit a $\chi^2_{red} = 1$ ... or as close as we can get ... 
 
+\subsubsection{C-statistic}
+For low counts (in my opinion most X-ray observations are relatively starved in the photon department), we should instead use the \textit{Cash-statistic}, \textit{c-stat}, beacuse at low counts the variance approaches 0 and thus the $\chi^2$\textit{-statistic} fails. We define the \textit{c-stat} in the following manner:
 
+\begin{equation}
+	c = 2\sum^{n}_{i=1}s_i-N_i+N_iln(N_i/s_i)
+\end{equation}
+where $s$ is the number of counts according to the model, $N_i$ is the number of observed counts, and $n$ is the number of bins. In addition, we are able to calculate a ``goodness of fit" for this statistic, $C_R$:
+\begin{equation}
+	C_R = \frac{C}{n-p}
+\end{equation}
+where $p$ represents the number of free parameters.
 
+In \texttt{XSPEC} we simply need to set \texttt{fit.statistic = `cstat'}.
+\newpage
 \section{The Algorithm}
 
 \begin{algorithm}[H]\label{algo:BA}

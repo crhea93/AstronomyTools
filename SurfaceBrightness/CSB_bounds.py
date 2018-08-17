@@ -3,11 +3,8 @@ Analysis of aprates data to calculate surface brightness concentration bounds
 
 INPUTS:
     chandra_dir -- full path to directory contianing data (i.e. '/home/user/Documents/Data')
-    OBSIDs -- list of obsids to loop through to calculate CSB bounds (e.g. ['#####'])
-    repro_dirs -- list of reprocessed directories to calc CSB bounds (e.g. ['repro','repro_vfaint'])
-    region1 -- name of first region file of interest without .reg extension (e.g. 'simple')
-    region2 -- name of second region file of interest without .reg extension (e.g. 'simple2')
-    quantities_to_calc -- list of string acronyms for quantity to calculate (e.g. ['NEFA'])
+    region -- name of region file of interest without .reg extension (e.g. 'simple')
+    quantity_to_calc -- string acronym for quantity to calculate (e.g. 'NEFA')
 
 Options for quantity to calculate:
     NC - Net Counts
@@ -20,14 +17,15 @@ OUTPUTS:
     Prints value and confidence bounds in terminal
 '''
 import os
-
+from math import ceil
 #------------------INPUTS------------------------------------------------------#
 chandra_dir = '%%%'
+latex_dir = '%%%'
 OBSIDs = ['%%%']
 repro_dirs = ['%%%']
-region1 = '%%'
-region2 = '%%'
-quantities_to_calc = ['%%%','%%%']
+region1 = '40kpc'
+region2 = '400kpc'
+quantities_to_calc = ['NC','NPF','NEFA']
 #------------------------------------------------------------------------------#
 
 def isfloat(value):
@@ -76,7 +74,7 @@ def calc_bounds(region1,region2,quantity_to_calc,fout,fout_all):
         csb_lower = div_with_err(lower_1,upper_2)
         csb_upper = div_with_err(upper_1,lower_2)
         #print("Net Counts Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
-        fout.write("Net Counts Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E "%(csb_val,csb_lower,csb_upper))
+        fout.write("Net Counts,%.3f,%.3f,%.3f "%(ceil(csb_val*1000)/1000,ceil(csb_lower*1000)/1000,ceil(csb_upper*1000)/1000))
         fout.write("\n")
         fout_all.write("    Net Counts Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E "%(csb_val,csb_lower,csb_upper))
         fout_all.write("\n")
@@ -91,7 +89,7 @@ def calc_bounds(region1,region2,quantity_to_calc,fout,fout_all):
         csb_lower = div_with_err(lower_1,upper_2)
         csb_upper = div_with_err(upper_1,lower_2)
         #print("Net Count Rate Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
-        fout.write("Net Count Rate Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
+        fout.write("Net Count Rate,%.3f,%.3f,%.3f "%(ceil(csb_val*1000)/1000,ceil(csb_lower*1000)/1000,ceil(csb_upper*1000)/1000))
         fout.write('\n')
         fout_all.write("    Net Count Rate Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
         fout_all.write("\n")
@@ -106,7 +104,7 @@ def calc_bounds(region1,region2,quantity_to_calc,fout,fout_all):
         csb_lower = div_with_err(lower_1,upper_2)
         csb_upper = div_with_err(upper_1,lower_2)
         #print("Net Photon Flux Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
-        fout.write("Net Photon Flux Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
+        fout.write("Net Photon Flux,%.3f,%.3f,%.3f "%(ceil(csb_val*1000)/1000,ceil(csb_lower*1000)/1000,ceil(csb_upper*1000)/1000))
         fout.write('\n')
         fout_all.write("    Net Photon Flux Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
         fout_all.write("\n")
@@ -121,7 +119,7 @@ def calc_bounds(region1,region2,quantity_to_calc,fout,fout_all):
         csb_lower = div_with_err(lower_1,upper_2)
         csb_upper = div_with_err(upper_1,lower_2)
         #print("Net Energy Flux Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
-        fout.write("Net Energy Flux Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
+        fout.write("Net Energy Flux,%.3f,%.3f,%.3f "%(ceil(csb_val*1000)/1000,ceil(csb_lower*1000)/1000,ceil(csb_upper*1000)/1000))
         fout.write('\n')
         fout_all.write("    Net Energy Flux Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
         fout_all.write("\n")
@@ -142,7 +140,7 @@ def calc_bounds(region1,region2,quantity_to_calc,fout,fout_all):
         csb_lower = div_with_err(lower_1,upper_2)
         csb_upper = div_with_err(upper_1,lower_2)
         #print("Net Energy Flux Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
-        fout.write("Net Energy Flux Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
+        fout.write("Net Energy Flux,%.3f,%.3f,%.3f "%(ceil(csb_val*1000)/1000,ceil(csb_lower*1000)/1000,ceil(csb_upper*1000)/1000))
         fout.write('\n')
         fout_all.write("    Net Energy Flux Concentration is calculated at %.2E with an lower bound of %.2E and an upper bound of %.2E"%(csb_val,csb_lower,csb_upper))
         fout_all.write("\n")
@@ -158,7 +156,8 @@ for OBSID in OBSIDs:
         print("We are on reprocessed directory: "+repro_dir)
         fout_all.write("We are on reprocessed directory: "+repro_dir+" \n")
         os.chdir(chandra_dir+'/'+OBSID+'/'+repro_dir)
-        fout = open('CSB.txt','w')
+        fout = open(latex_dir+'/'+OBSID+"_"+repro_dir+'_CSB.csv','w')
+        fout.write('Brightness,Value,lowerbound,upperbound \n')
         for quantity_to_calc in quantities_to_calc:
             calc_bounds(region1,region2,quantity_to_calc,fout,fout_all)
         fout.close()

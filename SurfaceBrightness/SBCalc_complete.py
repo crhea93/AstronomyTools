@@ -3,12 +3,13 @@ Calculate Surface Brightness from Scratch
 
 
 INPUTS:
-    base_dir -- full path to data directory (e.g. '/home/user/Documents/Data')
-    repro_dir -- name of reprocessed data directory (e.g. 'repro')
-    OBSIDs -- list of OBSIDs for which we want to calculate the SB (e.g. ['#####'])
+    chandra_dir -- full path to data directory (e.g. '/home/user/Documents/Data')
+    evt_file -- name of event file without extension (e.g. 'acisf#####_repro_evt2')
+            Also used to calculate on the fly exposure map
     energy_range -- energy range in electron volts (e.g. '500:2000')
-    regions -- list of region files of interest without .reg extension (e.g. ['simple'])
+    region -- name of region file of interest without .reg extension (e.g. 'simple')
     background -- name of background region file without .reg extension (e.g. 'simple_background')
+    confidence -- confidence level (e.g. 0.9)
     exposure -- Boolean determining method to calculate Net Energy Flux. See
         Documentation for more information. (e.g. True)
     PSF_ideal -- Boolean stating whether or not to assume an ideal PSF (e.g. True)
@@ -26,9 +27,9 @@ repro_dir = '%%%'
 OBSIDs = ['%%%']
 #chandra_dir = '/home/crhea/Documents/MémoireDonnées/'++'/repro/'
 #evt_file = 'acisf21129_repro_evt2'
-energy_range = '###:###' #in electron volts
-regions = ['%%%','%%%'] #set None if for entire image
-background = '%%%'
+energy_range = '500:2000' #in electron volts
+regions = ['40kpc','400kpc'] #set None if for entire image
+background = 'simple_bkg'
 exposure = False
 PSF_ideal = False
 #------------------------------------------------------------------------------#

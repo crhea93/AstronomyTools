@@ -98,7 +98,7 @@ def FitXSPEC(spectrum_file,background_file, arf_file,resp_file,redshift,n_H,Temp
         plt.ylabel(r'counts/cm$^2$/sec/chan')
         plt.title(r'Spectra '+str(spec_count))
         plt.savefig(plot_dir+'spectrum_'+str(spec_count)+'.pdf')
-
+        plt.clf()
     AllData.clear()
     AllModels.clear()
 

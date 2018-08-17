@@ -77,21 +77,7 @@ def Render_Cones(input_cones,input_field,output,color,colormap):
     #renderView1.ViewSize = [4000, 4000]
     renderView1.OrientationAxesVisibility = 0
     renderView1.UseGradientBackground = 1
-    '''for i in range(0,n_cones):
-        if i%10 == 0:
-            print("Plotting Cone Number "+str(i))
-        c1 = Cone()
-        c1.Resolution=100
-        c1.Center = [x[i],y[i],-1]
-        c1.Height = weight[i]
-        c1.Radius = 50.0
-        c1.Direction = [0,0,1]
-        cone = GetActiveSource()
-        coneDisplay = GetDisplayProperties(cone, view=renderView1)
-        #coneDisplay.DiffuseColor = [RGB[i][0], RGB[i][1], RGB[i][2]]
-        Show()
-    renderView1.ResetCamera()
-    Render()'''
+
     bin_with_temptxt = CSVReader(FileName=['Bin_with_temp.txt'])
 
     # Properties modified on bin_with_temptxt

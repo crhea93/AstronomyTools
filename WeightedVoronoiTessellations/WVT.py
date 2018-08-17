@@ -56,17 +56,14 @@ carterrhea93@gmail.com
 #-----------------INPUTS--------------------------#
 import os
 import sys
-import math
 import numpy as np
 import statistics as stats
-from astropy.table import Table
 from astropy.io import fits
 from sklearn.neighbors import NearestNeighbors
-from matplotlib.patches import Rectangle
 from matplotlib.collections import PatchCollection
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from tqdm import tqdm
+from ToolBox.read_input import read_input_file
 #-------------------------------------------------#
 #-------------------------------------------------#
 # Plot Bins
@@ -706,37 +703,9 @@ def WVT(Bin_list_init,Pixel_Full,StN_Target,ToL,pixel_length,image_dir):
     return bins_with_SN
 #-------------------------------------------------#
 #-------------------------------------------------#
-#Read input file
-#   parameters:
-#       input file - .i input file
-def is_number(s):
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
-def read_input_file(input_file):
-    inputs = {}
-    with open(input_file) as f:
-        for line in f:
-            if '=' in line:
-                inputs[line.split("=")[0].strip().lower()] = line.split("=")[1].strip()
-            else: pass
-        if len(inputs) != 12:
-            print("Please recheck the input file since some parameter is missing...")
-            print("Exiting program...")
-            exit()
-        else:
-            print("Successfully read in input file")
-            for key,val in inputs.items():
-                if is_number(val) == True:
-                    inputs[key] = float(val)
-        return inputs
 
-#-------------------------------------------------#
-#-------------------------------------------------#
 def main():
-    inputs = read_input_file(sys.argv[1])
+    inputs = read_input_file(sys.argv[1],float(sys.argv[2]))
     os.chdir(inputs['home_dir'])
     if os.path.isdir(inputs['output_dir']+'/histograms') == False:
         os.mkdir(inputs['output_dir']+'/histograms')

@@ -44,8 +44,6 @@ WVT program WILL NOT RUN if you have ciao bash initiated in the terminal
 ADDITIONAL NOTES:
 Verification: Contains 2 programs
 
-	1 - Combine.py --> Combine binned images
-
 	2 - Verification.ipynb --> Jupyter Notebook to check that
 	residual is zero
 -----------------------------------------------------------------

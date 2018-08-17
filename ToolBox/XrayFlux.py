@@ -1,68 +1,4 @@
 '''
-Calculate Surface Brightness from Scratch for MERGED Images
-
-This involves created merged folders for each region and energy range
-
-PLEASE RUN SPECEXTRACT ON EACH OBSERVATION FOR EACH REGION BEFORE RUNNING
-
-INPUTS:
-    chandra_dir -- full path to data directory (e.g. '/home/user/Documents/Data')
-    evt_file -- name of event file without extension (e.g. 'acisf#####_repro_evt2')
-            Also used to calculate on the fly exposure map
-    energy_range -- energy range in electron volts (e.g. '500:2000')
-    region -- name of region file of interest without .reg extension (e.g. 'simple')
-    background -- name of background region file without .reg extension (e.g. 'simple_background')
-    confidence -- confidence level (e.g. 0.9)
-    exposure -- Boolean determining method to calculate Net Energy Flux. See
-        Documentation for more information. (e.g. True)
-
-
-OUTPUTS:
-    .par file containing aprates solutions meaning all counts/rates/flux info (e.g. aprates+region.par)
-'''
-import os
-from shutil import copyfile
-from astropy.io import fits
-from ciao_contrib.runtool import *
-#------------------INPUTS------------------------------------------------------#
-chandra_dir = '%%%'
-output_dir = '%%%'
-obs_to_merge = ['%%%']
-repro_dir = 'repro'
-evt_file = 'merged_evt'
-energy_range = '500:2000' #in electron volts
-regions = ['40kpc','400kpc'] #set None if for entire image
-background = 'simple_bkg'
-exposure = False
-#------------------------------------------------------------------------------#
-#-------------------------------------------------#
-#-------------------------------------------------#
-'''
-calculate effective monochromatic energy
-    parameter:
-        region - region of interest (e.g. 'simple')
-        energy_range2 - energy range in kiloelectron volts (e.g. '0.5:2.0')
-'''
-def calc_effenergy(region,energy_range2):
-    dmtcalc.infile = region+'.arf'
-    dmtcalc.outfile = "arf_weights"+str(region)
-    dmtcalc.expression = "mid_energy=(energ_lo+energ_hi)/2.0;weights=(mid_energy*specresp)"
-    dmtcalc.clobber =True
-    dmtcalc()
-    dmstat.infile = "arf_weights"+str(region)+"[mid_energy="+str(energy_range2)+"][cols weights]"
-    dmstat.verbose = True
-    dmstat()
-    weight_sum = float(dmstat.out_sum)
-    dmstat.infile = "arf_weights"+str(region)+"[mid_energy="+str(energy_range2)+"][cols specresp]"
-    dmstat.verbose = True
-    dmstat()
-    specresp_sum = float(dmstat.out_sum)
-    eff_energy = weight_sum/specresp_sum
-    print("Our effective energy is: "+str(eff_energy))
-    return eff_energy
-#-------------------------------------------------#
-#-------------------------------------------------#
-'''
 Calculate various quantities considered surface brightness such as:
     - net counts
     - net count Rate
@@ -84,7 +20,10 @@ Calculate various quantities considered surface brightness such as:
         energy, but if the data set is merged then we must use the evt_file name (see documentation).
         This is handled in the code but be sure to name things appropriately!
 '''
-def calc_flux(evt_file,energy_range,region,background,exposure = False,merged_obs = ['']):
+from ciao_contrib.runtool import *
+from astropy.io import fits
+
+def calc_flux(evt_file,energy_range,region,background,exposure = False,merged = False,merged_obs = ['']):
     #Rearrange energy ranges
     energies = [float(x) for x in energy_range.split(':')]
     energy_range2 = str(energies[0]/1000)+':'+str(energies[1]/1000) #for effective energy (eV)
@@ -113,14 +52,43 @@ def calc_flux(evt_file,energy_range,region,background,exposure = False,merged_ob
     alpha = 1 #PSF fraction in source aperature; 1-perfect
     beta = 0 #PSF fraction in background aperature; 0-perfect
     #Exposure Time
-    T_s = 0
-    T_b = 0
-    for obsid in  merged_obs:
-        hdu = fits.open(obsid+'.fits')
+    if merged == False:
+        hdu = fits.open(evt_file+'.fits')
         hdr = hdu[0].header
-        T_s += hdr['TSTOP']-hdr['TSTART']
-        T_b += T_s
+        T_s = hdr['TSTOP']-hdr['TSTART']
+        T_b = T_s
         hdu.close()
+        #Calculate exposure maps
+        effen = calc_effenergy(region,energy_range2)
+        #Create Exposure Map for the band of interest
+        fluximage.punlearn()
+        fluximage.infile = evt_file+".fits"
+        fluximage.outroot = region+"flux/"
+        fluximage.bands = energy_range2+":"+str(effen)
+        fluximage.binsize = "1"
+        fluximage.units = "default"
+        fluximage.clobber = True
+        fluximage.cleanup = True
+        fluximage()
+        dmstat.punlearn()
+        dmstat.infile = region+"flux/"+energy_range3+'_thresh.expmap[sky=region('+region+'.reg)]'
+        dmstat.centroid = False
+        dmstat()
+        E_s = dmstat.out_mean
+        dmstat.punlearn()
+        dmstat.infile = region+"flux/"+energy_range3+'_thresh.expmap[sky=region('+background+'.reg)]'
+        dmstat.centroid = False
+        dmstat()
+        E_b = dmstat.out_mean
+    if merged == True:
+        T_s = 0
+        T_b = 0
+        for obsid in  merged_obs:
+            hdu = fits.open(obsid+'.fits')
+            hdr = hdu[0].header
+            T_s += hdr['TSTOP']-hdr['TSTART']
+            T_b += T_s
+            hdu.close()
 
     #Calculate average effective exposures
         dmstat.punlearn()
@@ -204,61 +172,3 @@ def calc_flux(evt_file,energy_range,region,background,exposure = False,merged_ob
     aprates()
 
     return None
-
-def create_arf(obs_to_merge,region,repro_dir):
-    #Create arf files
-    arf_files = ''
-    pi_files = ''
-    for obsid in obs_to_merge:
-        arf_files += obsid+'/'+repro_dir+'/'+region+'.arf,'
-        pi_files += obsid+'/'+repro_dir+'/'+region+'.pi,'
-    arf_files = arf_files[:-1]#get rid of final comma
-    pi_files = pi_files[:-1]
-    addresp.punlearn()
-    addresp.infile = ''
-    addresp.arffile = arf_files
-    addresp.phafile = pi_files
-    addresp.outfile = ''
-    addresp.outarf = region+'_merged.arf'
-    addresp.clobber = True
-    addresp()
-
-def merge_observations(obs_to_merge,output_dir,repro_dir,energy_range2,mono_energy):
-    #Merge individual region files
-    merging_files = ''
-    for obsid in obs_to_merge:
-        merging_files += obsid+'/'+repro_dir+'/acisf'+obsid+'_repro_evt2.fits,'
-    merging_files = merging_files[:-1]
-    merge_obs.punlearn()
-    merge_obs.infile = merging_files
-    merge_obs.outroot = output_dir+'/'
-    merge_obs.bands = energy_range2+":"+str(mono_energy)
-    merge_obs.clobber = True
-    merge_obs()
-
-def main():
-    os.chdir(chandra_dir)
-    arfs = input('Do we need to create merged ARF files: ')
-    if arfs.lower() == 'yes' or arfs == '':
-        print("Combining ARF files")
-        for region in regions:
-            create_arf(obs_to_merge,region,repro_dir)
-    if arfs.lower() != 'yes' and arfs != '':
-        print("Combined ARFs not being created")
-    energies = [float(x) for x in energy_range.split(':')]
-    energy_range2 = str(energies[0]/1000)+':'+str(energies[1]/1000)
-    mono_energy = calc_effenergy(region+'_merged',energy_range2)
-    print("")
-    print("We must now created a merged observation file for this energy band...")
-    merge_observations(obs_to_merge,output_dir,repro_dir,energy_range2,mono_energy)
-    #We need to copy the region files over AND each individual event file
-    for region in regions:
-        copyfile(chandra_dir+'/'+obs_to_merge[0]+'/repro/'+region+'.reg',chandra_dir+'/'+output_dir+'/'+region+'.reg')
-    copyfile(chandra_dir+'/'+obs_to_merge[0]+'/repro/'+background+'.reg',chandra_dir+'/'+output_dir+'/'+background+'.reg')
-    for obser in obs_to_merge:
-        copyfile(chandra_dir+'/'+obser+'/repro/acisf'+obser+'_repro_evt2.fits',chandra_dir+'/'+output_dir+'/'+obser+'.fits')
-    os.chdir(chandra_dir+'/'+output_dir)
-    for region in regions:
-        print("Calculating flux for "+region)
-        calc_flux(evt_file,energy_range,region,background,exposure,obs_to_merge)
-main()

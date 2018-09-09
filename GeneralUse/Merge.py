@@ -1,16 +1,17 @@
 '''
 Small script to merge objects
-
-INPUTS:
-    chandra_dir -- full path to main chandra data (e.g. '/home/user/Documents/ChandraData')
-    OBSIDS -- list of obsids to merge (e.g. ['#####','#####'])
-    reproccesed_dir -- name of directory containing reprocessed data (e.g. 'repro')
-    Merged_Folder -- name for new merged folder (e.g. 'Merged')
 '''
 import os
 from astropy.io import fits
 from ciao_contrib.runtool import *
 
+#-------------------INPUTS---------------------#
+chandra_dir = '%%%'
+OBSIDS = ['###','###','###','###']
+reproccesed_dir =  'repro_vfaint'
+Merged_Folder = 'Merged_all'
+clean = 'yes' # yes or no
+#----------------------------------------------#
 
 def merge_objects(Obsids,reproccesed_dir,Merged_Folder,clean):
     #Lets create the merged folder if necessary
@@ -41,12 +42,7 @@ def merge_objects(Obsids,reproccesed_dir,Merged_Folder,clean):
     return None
 
 def main():
-    chandra_dir = '%%%'
     os.chdir(chandra_dir)
-    OBSIDS = ['%%%%']
-    reproccesed_dir =  '%%%'
-    Merged_Folder = '%%%'
-    clean = 'no' # yes or no
     merge_objects(OBSIDS,reproccesed_dir,Merged_Folder,clean)
     return None
 

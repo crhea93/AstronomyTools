@@ -23,8 +23,8 @@ from astropy.io import fits
 from ciao_contrib.runtool import *
 #------------------INPUTS------------------------------------------------------#
 base_dir = '%%%'
-repro_dir = '%%%'
-OBSIDs = ['%%%']
+repro_dir = 'repro_vfaint'
+OBSIDs = ['###','###','###','###']
 #chandra_dir = '/home/crhea/Documents/MémoireDonnées/'++'/repro/'
 #evt_file = 'acisf21129_repro_evt2'
 energy_range = '500:2000' #in electron volts

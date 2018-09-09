@@ -26,8 +26,8 @@ from astropy.io import fits
 from ciao_contrib.runtool import *
 #------------------INPUTS------------------------------------------------------#
 chandra_dir = '%%%'
-output_dir = '%%%'
-obs_to_merge = ['%%%']
+output_dir = 'Merged/soft'
+obs_to_merge = ['###','###','###','###']
 repro_dir = 'repro'
 evt_file = 'merged_evt'
 energy_range = '500:2000' #in electron volts

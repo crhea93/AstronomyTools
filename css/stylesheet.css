@@ -1,0 +1,48 @@
+/* Applies to the entire body of the HTML document (except where overridden by more specific
+selectors). */
+body {
+    margin: 25px;
+    background: darkslategray;
+    font-family: arial, sans-serif;
+    font-size: 14px;
+}
+
+/* Applies to all <h1>...</h1> elements. */
+h1 {
+    font-family: 'monospace', Courier;
+    font-size: 35px;
+    font-weight: normal;
+    color: aliceblue;
+    margin-top: 5px;
+}
+
+/* Applies to all elements with <... class="someclass"> specified. */
+.someclass { color: red; }
+
+/* Applies to the element with <... id="someid"> specified. */
+#FedTax { color: rgb(84,107,171); }
+#readin { color: rgb(46,68,130)}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}

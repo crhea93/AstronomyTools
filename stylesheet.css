@@ -1,0 +1,50 @@
+/* Applies to the entire body of the HTML document (except where overridden by more specific
+selectors). */
+body {
+    margin: 25px;
+    /*background-color: rgb(240,240,240);*/
+    height: 2000px;
+    background-color: #cccccc;
+    background-image: repeating-linear-gradient(#13547a,#80d0c7);
+    font-family: arial, sans-serif;
+    font-size: 14px;
+}
+
+/* Applies to all <h1>...</h1> elements. */
+h1 {
+    font-family: 'monospace', Courier;
+    font-size: 35px;
+    font-weight: normal;
+    color: aliceblue;
+    margin-top: 5px;
+}
+p {
+    color: aliceblue;
+}
+/* Applies to all elements with <... class="someclass"> specified. */
+
+/* Applies to the element with <... id="someid"> specified. */
+
+.topnav {
+  overflow: hidden;
+    background-color: lightslategrey;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: steelblue;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: darkseagreen;
+  color: white;
+}

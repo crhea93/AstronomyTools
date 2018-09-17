@@ -12,7 +12,9 @@
     }
 
   </style>
-
+  <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>
 </head>
 <body link="#7fffd4">
 <div class="topnav">
@@ -20,14 +22,14 @@
   <a href="GeneralUse.html">General Use</a>
   <a class="active" href="#Astrometry">Astrometry</a>
 </div>
-<h1 align="center" font="aclonica">ASTROMETRY <a target="_blank" href="https://github.com/crhea93/AstronomyTools/branch/master/Astrometry/"><img src="../css/GitHub-Mark/PNG/GitHub-Mark-32px.png" alt="github"></a></h1>
+<h1 align="center" font="aclonica">ASTROMETRY <a target="_blank" href="https://github.com/crhea93/AstronomyTools/tree/master/Astrometry"><img src="../css/GitHub-Mark/PNG/GitHub-Mark-32px.png" alt="github"></a></h1>
 <!---<p align="center">
   <button onclick=
                   "show_image('http://google.com/images/logo.gif',
                  276,
                  110,
                  'Google Logo');">Create Scaled Image</button>
-</p>--->
+</p>
 
 <style>
   .thumb {
@@ -36,7 +38,7 @@
     margin: 10px 5px 0 0;
   }
 </style>
-<!---
+
 <div id="inputImage" align="center">
     <button type=button onclick='show_image()'>Display</button>
     <select id="Telescope">
@@ -44,9 +46,72 @@
         <option value="1">Hubble Space Telescope</option>
     </select>
     <input type=file name=filename id=file><br>
+</div>
 --->
 
+    <h2> Documentation </h2>
+<h3>LScalc.py <a target="_blank" href="https://github.com/crhea93/AstronomyTools/blob/master/Astrometry/LSCalc.py"><img src="../css/GitHub-Mark/PNG/GitHub-Mark-32px.png" alt="github"></a></h3>
+    <p>
+      This program has a very simple goal: calculate the linear distance of an astronomical object given a redshift and angular view.
+      To do this, I simply utilized the following set of equations to calculate the quantity of interest. Note that we have to
+      correct for the acceleration and expansion of the universe.
+        \begin{array}{|c|c|c|c|}
+          \hline
+          Parameter & Brief \ Description \\
+          \hline
+          l & Linear \ Distance \ in \ Kiloparsecs \\
+          \hline
+          z & Redshift \\
+          \hline
+          d_A(z) & Angular \ Distance \\
+          \hline
+          \theta & Angular \ Seperation \ in \ arcseconds \\
+          \hline
+          d_H & Hubble \ Distance \\
+          \hline
+          c & Speed \ of \ Light \\
+          \hline
+          H_0 & Hubble \ Constant \\
+          \hline
+          d_C & Comoving \ Distance \\
+          \hline
+          E(z) & Energy \ Function \\
+          \hline
+          d_M(z) & Moving \ Distance \\
+          \hline
+          \Omega_{rel} & Mass \ Density \ of \ Relativistic \ Particles \\
+          \hline
+          \Omega_{mass} & Mass \ Density \ of \ Baryonic \ and \ NonBaryonic \ Particles \\
+          \hline
+          \Omega_{\Lambda} & Mass \ Density \ of \ Dark \ Energy \\
+          \hline
+        \end{array}
+      <div id="eqns" align="center">
+        Our set of equations are as follows:
+         $$l = d_A(z)*\theta$$
+          $$d_A(z) = \frac{d_M(z)}{1+z}$$
+          $$d_M(z) = \left\{ \begin{array}{ll}
+                \frac{d_H}{\sqrt{\Omega_k}}\sinh\Big({\sqrt{\Omega_k}\frac{d_C(z)}{d_H}}\Big) & \Omega_k > 0 \\
+                d_C(z) & \Omega_k = 0 \\
+                \frac{d_H}{\sqrt{|\Omega_k|}}\sin\Big({\sqrt{|\Omega_k|}\frac{d_C(z)}{d_H}}\Big) & \Omega_k < 0 \\
+          \end{array} \right. $$
+          $$
+          d_C(z) = d_H\int_{0}^{z} \frac{dz'}{E(z')}
+          $$
 
-  </div>
-</body>
+          $$
+          E(z) = \sqrt{\Omega_{rel}(1+z)^4+\Omega_{mass}(1+z)^3+\Omega_k(1+z)^2+\Omega_{\Lambda}}
+          $$
+
+          $$
+          \Omega_k = 1-\Omega_{mass}-\Omega_{\Lambda}
+          $$
+
+          $$
+          d_H = \frac{c}{H_0}
+          $$
+
+      </div>
+    </p>
+  </body>
 </html>

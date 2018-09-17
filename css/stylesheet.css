@@ -3,6 +3,7 @@ selectors). */
 body {
     margin: 25px;
     /*background-color: rgb(240,240,240);*/
+    color: aliceblue;
     height: 2000px;
     background-color: #cccccc;
     background-image: repeating-linear-gradient(#13547a,#80d0c7);
@@ -18,6 +19,9 @@ h1 {
     color: aliceblue;
     margin-top: 5px;
 }
+h2 {
+    color: aliceblue;
+}
 p {
     color: aliceblue;
     font-size: 25px;
@@ -26,6 +30,11 @@ p {
 /* Applies to all elements with <... class="someclass"> specified. */
 
 /* Applies to the element with <... id="someid"> specified. */
+.eqns {
+    color: aliceblue;
+    font-size: 25px;
+    margin: 25px 100px 75px 100px;
+}
 
 .topnav {
   overflow: hidden;

@@ -2,7 +2,10 @@
 selectors). */
 body {
     margin: 25px;
-    background: darkslategray;
+    /*background-color: rgb(240,240,240);*/
+    height: 2000px;
+    background-color: #cccccc;
+    background-image: repeating-linear-gradient(#13547a,#80d0c7);
     font-family: arial, sans-serif;
     font-size: 14px;
 }
@@ -10,22 +13,23 @@ body {
 /* Applies to all <h1>...</h1> elements. */
 h1 {
     font-family: 'monospace', Courier;
-    font-size: 35px;
+    font-size: 45px;
     font-weight: normal;
     color: aliceblue;
     margin-top: 5px;
 }
-
+p {
+    color: aliceblue;
+    font-size: 25px;
+    margin: 25px 100px 75px 100px;
+}
 /* Applies to all elements with <... class="someclass"> specified. */
-.someclass { color: red; }
 
 /* Applies to the element with <... id="someid"> specified. */
-#FedTax { color: rgb(84,107,171); }
-#readin { color: rgb(46,68,130)}
 
 .topnav {
   overflow: hidden;
-  background-color: #333;
+    background-color: lightslategrey;
 }
 
 .topnav a {
@@ -38,11 +42,11 @@ h1 {
 }
 
 .topnav a:hover {
-  background-color: #ddd;
+  background-color: steelblue;
   color: black;
 }
 
 .topnav a.active {
-  background-color: #4CAF50;
+  background-color: darkseagreen;
   color: white;
 }

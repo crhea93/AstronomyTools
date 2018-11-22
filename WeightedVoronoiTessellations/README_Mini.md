@@ -3,7 +3,6 @@ Weighted Voronoi Tessellations in Python for X-ray image analysis
 
 Additional modules to download (using pip install module_name OR pip3 install module_name)
 
-	tqdm
 
 	sklearn
 
@@ -16,7 +15,7 @@ The data used in testing came from a fits file provided by Chandra (OBSID 12833)
 
 TO RUN:
 
-	python WVT.py input.i
+	python WVT.py input.i 
 
 If you are like me, then you may have to run:
 	
@@ -31,8 +30,7 @@ http://cxc.harvard.edu/ciao/download/
 
 ####
 
-1 - find region of interest! Please save in IMAGE Coordinates when saving the .reg file
-	Also create a _bkg.reg file for the background region (background of interest)
+
 
 ####
 

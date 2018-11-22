@@ -6,10 +6,8 @@ canabilized for any other application necessitating WVT.
 ---------------------------------------------------
 ---------------------------------------------------
 Inputs:
-    fits_file - Name of Fits File (e.g.'simple.fits')
-    image_fits - Name of Image Fits File (e.g. "simple_image.fits")
+    fits_file - Name of Fits IMAGE File (e.g.'simple.fits')
     exposure_map - Name of exposure map -- optional -- (e.g. 'flux_broad.expmap')
-    image_coord - Name of .reg file containing IMAGE coordinates (e.g. 'simple_imcoord.reg')
     StN_Target - Target Signal-to-Noise (e.g. 50)
     pixel_size - Pixel radius in degrees (e.g. 0.492 for CHANDRA AXIS I)
     ToL - Tolerance Level (e.g. 1e-16)
@@ -64,6 +62,8 @@ from matplotlib.collections import PatchCollection
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from ToolBox.read_input import read_input_file
+#-------------------------------------------------#
+#-------------------------------------------------#
 #-------------------------------------------------#
 #-------------------------------------------------#
 # Plot Bins
@@ -318,35 +318,36 @@ class Pixel:
 #       image_fits = fits image file in string format
 #       image_coord = reg file containing center of box of interest and sizes
 #       exposure_map = exposure map file in string format
-def read_in(fits_file,image_fits,bkg_image_fits,image_coord,exposure_map = None):
+def read_in(image_fits,exposure_map = None):
     #Collect Pixel Data
-    hdu_list = fits.open(fits_file, memmap=True)
-    exposure_time = float(hdu_list[0].header["TSTOP"]) - float(hdu_list[0].header["TSTART"])
-    hdu_list.close()
     hdu_list = fits.open(image_fits, memmap=True)
+    exposure_time = float(hdu_list[0].header["TSTOP"]) - float(hdu_list[0].header["TSTART"])
     counts = hdu_list[0].data
     #print(counts.shape)
     y_len = counts.shape[0]
     x_len = counts.shape[1]
     hdu_list.close()
-    with open(image_coord, 'r') as f:
-        lines = f.read().splitlines()
-        last_line = lines[-1]
-    x_center = float(last_line.split(",")[0][4:]) #first four characters are box(
-    y_center = float(last_line.split(",")[1])
-    x_min = round(x_center - x_len/2)
-    y_min = round(y_center - y_len/2)
-    x_max = round(x_center + x_len/2)
-    y_max = round(y_center + y_len/2)
+    #with open(image_coord, 'r') as f:
+    #    lines = f.read().splitlines()
+    #    last_line = lines[-1]
+    #x_center = float(last_line.split(",")[0][4:]) #first four characters are box(
+    #y_center = float(last_line.split(",")[1])
+    #x_min = round(x_center - x_len/2)
+    #y_min = round(y_center - y_len/2)
+    #x_max = round(x_center + x_len/2)
+    #y_max = round(y_center + y_len/2)
+    x_min = 0; y_min = 0;
+    x_max = x_len; y_max = y_len;
     if exposure_map != None:
         hdu_list = fits.open(exposure_map, memmap=True)
         exposure = hdu_list[0].data
         hdu_list.close()
-    bkg_hdu = fits.open(bkg_image_fits, memmap=True)
+    #Currently Do not bother reading background information
+    '''bkg_hdu = fits.open(bkg_image_fits, memmap=True)
     bkg_counts = bkg_hdu[0].data
     bkg_hdu.close()
     avg_bkg_counts = np.mean(bkg_counts)
-    bkg_sigma = np.std(bkg_counts)
+    bkg_sigma = np.std(bkg_counts)'''
     Pixels = []
     pixel_count = 0
     for col in range(int(x_len)):
@@ -685,7 +686,7 @@ def WVT(Bin_list_init,Pixel_Full,StN_Target,ToL,pixel_length,image_dir):
     Bin_list_prev = Bin_list_init[:]
     converged = False
     its_to_conv = 0
-    while converged == False and its_to_conv<20:
+    while converged == False and its_to_conv<5:
         print("We are on step "+str(its_to_conv+1))
         bins_with_SN = Rebin_Pixels(Bin_list_prev,Pixel_Full,pixel_length,StN_Target)[:]
         converged = converged_met(bins_with_SN,ToL)
@@ -703,9 +704,33 @@ def WVT(Bin_list_init,Pixel_Full,StN_Target,ToL,pixel_length,image_dir):
     return bins_with_SN
 #-------------------------------------------------#
 #-------------------------------------------------#
-
+#Read input file
+#   parameters:
+#       input file - .i input file
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+def read_input_file(input_file):
+    inputs = {}
+    with open(input_file) as f:
+        for line in f:
+            if '=' in line:
+                inputs[line.split("=")[0].strip().lower()] = line.split("=")[1].strip()
+            else: pass
+        for key,val in inputs.items():
+            if is_number(val) == True:
+                inputs[key] = float(val)
+            else: pass
+        return inputs
+#-------------------------------------------------#
+#-------------------------------------------------#
+#-------------------------------------------------#
+#-------------------------------------------------#
 def main():
-    inputs = read_input_file(sys.argv[1],float(sys.argv[2]))
+    inputs = read_input_file(sys.argv[1])
     os.chdir(inputs['home_dir'])
     if os.path.isdir(inputs['output_dir']+'/histograms') == False:
         os.mkdir(inputs['output_dir']+'/histograms')
@@ -718,7 +743,7 @@ def main():
     Pixels = []
     pixel_size = inputs['pixel_radius']*2
     print("#----------------Algorithm Part 1----------------#")
-    Pixels,min_x,max_x,min_y,max_y = read_in(inputs['fits_file'],inputs['image_fits'],inputs['bkg_image_fits'],inputs['image_coord'],inputs['exposure_map'])
+    Pixels,min_x,max_x,min_y,max_y = read_in(inputs['image_fits'],inputs['exposure_map'])
     Nearest_Neighbors(Pixels)
     Init_bins = Bin_Acc(Pixels,pixel_size,inputs['stn_target'],inputs['roundness_crit'])
     plot_Bins(Init_bins,min_x,max_x,min_y,max_y,inputs['stn_target'],inputs['image_dir'],"bin_acc")

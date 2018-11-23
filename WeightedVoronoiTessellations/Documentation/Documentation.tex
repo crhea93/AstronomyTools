@@ -8,7 +8,7 @@
 \usepackage{python}
 
 \usepackage[]{algorithm2e}
-
+\usepackage{subcaption}
 \usepackage{listings}
 \usepackage{color}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
@@ -248,7 +248,67 @@ Now we move on to the other inputs....
 \end{itemize}
 \newpage
 
+\section{Merged Observations}
+If the observations are merged we have to simply use the file created when \texttt{merge\_obs} is run\footnote{Be sure to set \texttt{binsize=1}}; We must also have a region file (i.e. \textit{region.reg}). Finally we can create our image for the region with the following command:
+$$dmcopy "evt.fits[EVENTS][sky=region(region.reg)]" region.img opt=image$$ 
 
+Then you can feed \textit{region.img} into the WVT input file.
+
+\subsection{\textbf{NGC4636}}
+The remainder of this section is an example using \textbf{NGC4636}. All the relavent files necessary to run this example can be found in \textbf{WVT/Verifications/NGC4636}.
+\subsubsection{Data Cleaning}
+We downloaded the \textit{Chandra} data for \textbf{NGC4636} which correspond to OBSIDS 323 and 324 using \texttt{download\_chandra\_obsid 323,324}. We then reprocessed the data using \texttt{chandra\_repro}; since we are not interested in the actual science we did not subtract background flares. We then chose a region which well captured the cluster called \textit{center.reg}. Finally we created the \textit{center.img} file with the procedure described above. 
+\subsubsection{Input file}
+\begin{lstlisting}
+	#Sample input file for WVT.py
+	#All lines without equals sign are ignored...
+	image_fits = center.img
+	exposure_map = none
+	StN_Target = 20
+	pixel_radius = 0.5
+	ToL = 1e-4
+	roundness_crit = 0.3
+	home_dir = /home/carterrhea/Desktop/WVT_test/Merged_unbinned
+	image_dir = /home/carterrhea/Desktop/WVT_test/Merged_unbinned
+	output_dir = /home/carterrhea/Desktop/WVT_test/Merged_unbinned
+\end{lstlisting}
+\subsubsection{Results}
+Here we demonstrate the resulting image and statistics after the bin accretion step and after the final step.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\linewidth]{pictures/bin_acc}
+		\caption{Bin Mosaic}
+		\label{fig:sub1}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\linewidth]{pictures/bin_acc_scatter}
+		\caption{Signal-to-Noise Scatter}
+		\label{fig:sub2}
+	\end{subfigure}
+	\caption{Bin Accretion Step}
+	\label{fig:test}
+\end{figure}
+\begin{figure}
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\linewidth]{pictures/final}
+		\caption{Bin Mosaic}
+		\label{fig:sub1}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\linewidth]{pictures/final_scatter}
+		\caption{Signal-to-Noise Scatter}
+		\label{fig:sub2}
+	\end{subfigure}
+	\caption{Final Step}
+	\label{fig:test}
+\end{figure}
 
 \newpage
 \section*{Bibliographies}

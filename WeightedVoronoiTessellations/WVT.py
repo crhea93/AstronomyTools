@@ -6,7 +6,7 @@ canabilized for any other application necessitating WVT.
 ---------------------------------------------------
 ---------------------------------------------------
 Inputs:
-    fits_file - Name of Fits IMAGE File (e.g.'simple.fits')
+    image_fits - Name of Image Fits File (e.g. "simple_image.fits")
     exposure_map - Name of exposure map -- optional -- (e.g. 'flux_broad.expmap')
     StN_Target - Target Signal-to-Noise (e.g. 50)
     pixel_size - Pixel radius in degrees (e.g. 0.492 for CHANDRA AXIS I)
@@ -61,7 +61,7 @@ from sklearn.neighbors import NearestNeighbors
 from matplotlib.collections import PatchCollection
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from ToolBox.read_input import read_input_file
+from read_input import read_input_file
 #-------------------------------------------------#
 #-------------------------------------------------#
 #-------------------------------------------------#
@@ -87,7 +87,7 @@ def plot_Bins(Bins,x_min,x_max,y_min,y_max,StN_Target,file_dir,filename):
     StN_list = [bin.StN[0] for bin in Bins]
     median_StN = np.median(StN_list)
     stand_dev = stats.stdev(StN_list)
-    mini_pallete = ['mediumspringgreen','salmon','cyan','orchid','yellow']
+    mini_pallete = ['mediumspringgreen','salmon','cyan','orchid','yellow','blue','red','magenta','black','white']
     binNumber  = 0
     for bin in Bins:
         bin_nums.append(bin.bin_number)
@@ -97,16 +97,26 @@ def plot_Bins(Bins,x_min,x_max,y_min,y_max,StN_Target,file_dir,filename):
             x_coord = pixel.pix_x
             y_coord = pixel.pix_y
             #patches.append(Rectangle((x_coord,y_coord),1,1))
-            if binNumber%5 == 0:
+            if binNumber%10 == 0:
                 color = mini_pallete[0]
-            if binNumber%5 == 1:
+            if binNumber%10 == 1:
                 color = mini_pallete[1]
-            if binNumber%5 == 2:
+            if binNumber%10 == 2:
                 color = mini_pallete[2]
-            if binNumber%5 == 3:
+            if binNumber%10 == 3:
                 color = mini_pallete[3]
-            if binNumber%5 == 4:
+            if binNumber%10 == 4:
                 color = mini_pallete[4]
+            if binNumber%10 == 5:
+                color = mini_pallete[5]
+            if binNumber%10 == 6:
+                color = mini_pallete[6]
+            if binNumber%10 == 7:
+                color = mini_pallete[7]
+            if binNumber%10 == 8:
+                color = mini_pallete[8]
+            if binNumber%10 == 9:
+                color = mini_pallete[9]
             #Shift because x_coord,y_coord are the center points
             rectangle = plt.Rectangle((x_coord,y_coord),1,1, fc=color)
             ax.add_patch(rectangle)
@@ -323,19 +333,9 @@ def read_in(image_fits,exposure_map = None):
     hdu_list = fits.open(image_fits, memmap=True)
     exposure_time = float(hdu_list[0].header["TSTOP"]) - float(hdu_list[0].header["TSTART"])
     counts = hdu_list[0].data
-    #print(counts.shape)
     y_len = counts.shape[0]
     x_len = counts.shape[1]
     hdu_list.close()
-    #with open(image_coord, 'r') as f:
-    #    lines = f.read().splitlines()
-    #    last_line = lines[-1]
-    #x_center = float(last_line.split(",")[0][4:]) #first four characters are box(
-    #y_center = float(last_line.split(",")[1])
-    #x_min = round(x_center - x_len/2)
-    #y_min = round(y_center - y_len/2)
-    #x_max = round(x_center + x_len/2)
-    #y_max = round(y_center + y_len/2)
     x_min = 0; y_min = 0;
     x_max = x_len; y_max = y_len;
     if exposure_map != None:
@@ -358,10 +358,10 @@ def read_in(image_fits,exposure_map = None):
             else:
                 flux = counts[row][col]/(exposure[row][col]*exposure_time) #- avg_bkg_counts/(exposure[row][col]*exposure_time)
                 vari = counts[row][col]/(exposure[row][col]**2*exposure_time**2) #+ bkg_sigma
-            Pixels.append(Pixel(pixel_count,x_min+col+1,y_min+row+1,flux,vari)) #Add 1 because of pixel center offset
+            Pixels.append(Pixel(pixel_count,x_min+col,y_min+row,flux,vari)) #Bottom Left Corner!
             pixel_count += 1
-    print("We have "+str(len(Pixels))+" Pixels! :)")
-    return Pixels, x_min+1, x_max+1, y_min+1, y_max+1
+    #print("We have "+str(pixel_count)+" Pixels! :)")
+    return Pixels, x_min, x_max, y_min, y_max
 #-------------------------------------------------#
 #-------------------------------------------------#
 # CALCULATE NearestNeighbors -- REALLY AN ADJACENCY LIST
@@ -704,33 +704,9 @@ def WVT(Bin_list_init,Pixel_Full,StN_Target,ToL,pixel_length,image_dir):
     return bins_with_SN
 #-------------------------------------------------#
 #-------------------------------------------------#
-#Read input file
-#   parameters:
-#       input file - .i input file
-def is_number(s):
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
-def read_input_file(input_file):
-    inputs = {}
-    with open(input_file) as f:
-        for line in f:
-            if '=' in line:
-                inputs[line.split("=")[0].strip().lower()] = line.split("=")[1].strip()
-            else: pass
-        for key,val in inputs.items():
-            if is_number(val) == True:
-                inputs[key] = float(val)
-            else: pass
-        return inputs
-#-------------------------------------------------#
-#-------------------------------------------------#
-#-------------------------------------------------#
-#-------------------------------------------------#
+
 def main():
-    inputs = read_input_file(sys.argv[1])
+    inputs = read_input_file(sys.argv[1],float(sys.argv[2]))
     os.chdir(inputs['home_dir'])
     if os.path.isdir(inputs['output_dir']+'/histograms') == False:
         os.mkdir(inputs['output_dir']+'/histograms')

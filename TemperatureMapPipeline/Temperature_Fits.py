@@ -39,7 +39,7 @@ logger = logging.getLogger("sherpa")
 logger.setLevel(logging.WARN)
 logger.setLevel(logging.ERROR)
 #------------------------------INPUTS------------------------------------------#
-base_directory = '/home/carterrhea/Documents/'
+base_directory = '/home/user/Documents/NGC4636/'
 fold_ext = 'repro/binned'
 dir = [base_directory+'323/'+fold_ext,base_directory+'324/'+fold_ext]
 file_name = 'center'

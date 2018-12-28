@@ -8,12 +8,13 @@ import matplotlib.pyplot as plt
 import matplotlib.colorbar as cbar
 from matplotlib.collections import PatchCollection
 #-----------------------------------INPUTS------------------------------------------#
-base_dir = '/home/user/Documents/'
+base_dir = '/home/user/Documents/NGC4636/'
 bin_file = 'Merged_unbinned/WVT_data.txt'
 temp_file = 'Temp_bin.txt'
 output_dir = base_dir
-output_name = 'Temperature_Map'
+output_name = 'NGC4636_temperature'
 color_map = 'jet'
+num_ticks = 5
 #-----------------------------------------------------------------------------------#
 
 #-------------------------------------------------#
@@ -95,6 +96,12 @@ def plot_Bins(Bins,x_min,x_max,y_min,y_max,file_dir,filename,color_map):
     cax, _ = cbar.make_axes(ax)
     cb2 = cbar.ColorbarBase(cax, cmap=cmap, norm=norm)
     cb2.set_label('Temperature (KeV)')
+    tick_list = np.linspace(min(temp_norm_list),max(temp_norm_list),num_ticks)
+    ticklabel_list = np.linspace(min(temp_list),max(temp_list),num_ticks)
+    ticklabel_list = [np.round(val,1) for val in ticklabel_list]
+    cb2.set_ticks(tick_list)
+    cb2.set_ticklabels(ticklabel_list)
+    cb2.update_ticks()
 
     plt.savefig(file_dir+'/'+filename+".png")
     return None
@@ -108,7 +115,6 @@ def read_in(bin_data,temp_data):
     pixels = []
     pixel_num = 0
     #Create bins and add pixels
-    print("Reading in Pixels...")
     for line in bin_d:
         if int(line.split(" ")[2]) not in [bin.bin_number for bin in bins]:
             bins.append(Bin(int(line.split(" ")[2])))
@@ -135,7 +141,6 @@ def read_in(bin_data,temp_data):
 def main():
     os.chdir(base_dir)
     bins, min_x, max_x, min_y, max_y = read_in(bin_file,temp_file)
-    print("Plotting Temperature...")
     plot_Bins(bins, min_x, max_x, min_y, max_y,output_dir,output_name,color_map)
     return None
 

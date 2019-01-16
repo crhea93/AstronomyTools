@@ -42,11 +42,11 @@ from ciao_contrib.runtool import *
 from crates_contrib.utils import *
 
 #---------------------INPUTS---------------------#
-filename = '/home/carterrhea/Documents/Research/Myriam/WVT_data.txt'
-base_directory = '/home/carterrhea/Documents/Research/Myriam'
-OBSIDS = ['10481','17233','18825']
-source_file = 'source'
-background = 'blank'
+filename = '/home/user/Documents/AstronomyTools/Tests/NGC4636/Merged_unbinned/WVT_data.txt'
+base_directory = '/home/user/Documents//AstronomyTools/Tests/NGC4636'
+OBSIDS = ['323/repro','324/repro']
+source_file = 'center'
+background = 'bkg'
 output_dir = 'binned/'
 #-----------------------------------------------#
 #-------------------------------------------------#
@@ -226,7 +226,7 @@ def create_reg_comb(pix_in_bin,file_to_split,output_dir):
                             continue_extension = False #fail!!!!
                     if new_box == True:#now we make a new box!
                         x_coord1,y_coord1 = coord_trans((x+.5)+xwi*.5,(y+.5)+ywi*.5,file_to_split)
-                        file.write("box(%.16f,%.16f,%i,%i) \n"%(x_coord1-0.25,y_coord1,xwi,ywi)) #Have to subtract 0.25 from x to make it align -- non permanent
+                        file.write("box(%.16f,%.16f,%i,%i) \n"%(x_coord1,y_coord1,xwi,ywi)) #Have to subtract 0.25 from x to make it align -- non permanent
                 else:
                     #value not in list of pixels
                     pass

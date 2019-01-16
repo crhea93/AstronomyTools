@@ -39,7 +39,7 @@ logger = logging.getLogger("sherpa")
 logger.setLevel(logging.WARN)
 logger.setLevel(logging.ERROR)
 #------------------------------INPUTS------------------------------------------#
-base_directory = '/home/user/Documents/NGC4636/'
+base_directory = '/home/user/Documents/AstronomyTools/Tests/NGC4636/'
 fold_ext = 'repro/binned'
 dir = [base_directory+'323/'+fold_ext,base_directory+'324/'+fold_ext]
 file_name = 'center'
@@ -77,14 +77,15 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,spec_count,
     ignore(energy_max,)
     group_counts(1,grouping);group_counts(2,grouping)
     #Set source with background
-    set_source(1 , xsphabs.abs1*(xsapec.apec1))
-    set_source(2 , abs1*(xsapec.apec2))
+    set_source(1 , xsphabs.abs1*(xsmekal.mekal1))
+    set_source(2 , abs1*(xsmekal.mekal2))
     abs1.nH = 1.91e-2
     freeze(abs1.nH)
-    apec1.kT = Temp_guess
-    apec2.kT = apec1.kT
-    apec1.redshift = redshift
-    apec2.redshift = redshift
+    mekal1.nH = abs1.nH; mekal2.nH = abs1.nH
+    mekal1.kT = Temp_guess
+    mekal2.kT = apec1.kT
+    mekal1.redshift = redshift
+    mekal2.redshift = redshift
     fit()
     plot("fit", 1, "fit", 2)
     print_window(plot_dir+"%s.ps"%spec_count,['clobber','yes'])

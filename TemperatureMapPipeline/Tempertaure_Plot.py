@@ -13,7 +13,7 @@ bin_file = 'Merged_unbinned/WVT_data.txt'
 temp_file = 'Temp_bin.txt'
 output_dir = base_dir
 output_name = 'NGC4636_temperature'
-color_map = 'jet'
+color_map = 'cool'
 num_ticks = 5
 #-----------------------------------------------------------------------------------#
 

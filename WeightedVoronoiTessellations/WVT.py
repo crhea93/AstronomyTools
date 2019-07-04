@@ -705,8 +705,7 @@ def WVT(Bin_list_init,Pixel_Full,StN_Target,ToL,pixel_length,image_dir):
 #-------------------------------------------------#
 #-------------------------------------------------#
 
-def main():
-    inputs = read_input_file(sys.argv[1],float(sys.argv[2]))
+def wvt_main(inputs):
     os.chdir(inputs['home_dir'])
     if os.path.isdir(inputs['output_dir']+'/histograms') == False:
         os.mkdir(inputs['output_dir']+'/histograms')
@@ -730,4 +729,3 @@ def main():
     #plot_Bins_SN(Final_Bins,min_x,max_x,min_y,max_y,inputs['image_dir'],"WVT_SN")
     Bin_data(Final_Bins,Pixels,min_x,min_y,inputs['output_dir'],"WVT_data")
     print("#----------------Information Stored--------------#")
-main()

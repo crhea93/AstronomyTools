@@ -10,13 +10,16 @@ import os
 
 
 
-def profiles(scaling,flux=False):
+def profiles(scaling,flux=False,model_type='single'):
     # Create basic profile
     if flux == False:
         load_data(1,'rprofile_r_data.fits', 3, ["R_NEW","SUR_BRI","SUR_BRI_ERR"])
-    if flux == True:
+    elif flux == True:
         load_data(1,'rprofile_r_data.fits', 3, ["R_NEW","SUR_FLUX","SUR_FLUX_ERR"])
-    set_source("beta1d.src1+beta1d.src2")
+    if model_type == 'single':
+        set_source("beta1d.src1")
+    elif model_type == 'double':
+        set_source("beta1d.src1+beta1d.src2")
     data = get_data()
     data.x = data.x*scaling #now in kpc
     plot_data()

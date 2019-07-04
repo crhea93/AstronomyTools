@@ -38,21 +38,41 @@ import logging
 logger = logging.getLogger("sherpa")
 logger.setLevel(logging.WARN)
 logger.setLevel(logging.ERROR)
+def set_log_sherpa():
+    p = get_data_plot_prefs()
+    p["xlog"] = True
+    p["ylog"] = True
+    return None
 #------------------------------INPUTS------------------------------------------#
-base_directory = '/home/user/Documents/AstronomyTools/Tests/NGC4636/'
-fold_ext = 'repro/binned'
-dir = [base_directory+'323/'+fold_ext,base_directory+'324/'+fold_ext]
-file_name = 'center'
-output_file = 'Temp_bin'
-num_files = 177
-redshift = 0.003129
-n_H = 1.91-2
-Temp_guess = 1
-energy_min = 0.5
-energy_max = 8.0
-grouping = 10
-statistic = 'chi2gehrels'
-plot_dir = base_directory+'FitPlots/'
+
+#------------------------------------------------------------------------------#
+#Dynamically set source for OBSID
+def obsid_set(src_model_dict,bkg_model_dict,obsid, obs_count,redshift,nH_val,Temp_guess):
+    load_pha(obs_count,obsid) #Read in
+    if obs_count == 1:
+        src_model_dict[obsid] = xsphabs('abs'+str(obs_count)) * xsapec('apec'+str(obs_count)) #set model and name
+        # Change src model component values
+        get_model_component('apec' + str(obs_count)).kT = Temp_guess
+        get_model_component('apec' + str(obs_count)).redshift = redshift  # need to tie all together
+        get_model_component('apec' + str(obs_count)).Abundanc = 0.3
+        thaw(get_model_component('apec' + str(obs_count)).Abundanc)
+        get_model_component('abs1').nH = nH_val  # change preset value
+        freeze(get_model_component('abs1'))
+    else:
+        src_model_dict[obsid] = get_model_component('abs1') * xsapec('apec' + str(obs_count))
+        get_model_component('apec'+str(obs_count)).kT = get_model_component('apec1').kT #link to first kT
+        get_model_component('apec' + str(obs_count)).redshift = redshift
+        get_model_component('apec' + str(obs_count)).Abundanc = get_model_component('apec1').Abundanc  # link to first kT
+
+    bkg_model_dict[obsid] = xsapec('bkgApec'+str(obs_count))+get_model_component('abs1')*xsbremss('brem'+str(obs_count))
+    set_source(obs_count, src_model_dict[obsid]) #set model to source
+    set_bkg_model(obs_count,bkg_model_dict[obsid])
+    #Change bkg model component values
+    get_model_component('bkgApec' + str(obs_count)).kT = 0.18
+    freeze(get_model_component('bkgApec'+str(obs_count)).kT)
+    get_model_component('brem' + str(obs_count)).kT = 40.0
+    freeze(get_model_component('brem' + str(obs_count)).kT)
+    return None
 #------------------------------------------------------------------------------#
 #FitXSPEC
 # Fit spectra
@@ -64,29 +84,21 @@ plot_dir = base_directory+'FitPlots/'
 #       redshift = redshift of object
 #       n_H = Hydrogen Equivalent Column Density
 #       Temp_guess = Guess for Temperature value
-def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,spec_count,plot_dir):
+def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,spec_count,plot_dir):
     #FIX HEADER
-    set_stat(statistic)
+    set_stat('chi2gehrels')
+    set_method('levmar')
     hdu_number = 1  #Want evnts so hdu_number = 1
-    count = 0
-    pha1 = load_pha(1, spectrum_files[0], use_errors=True)
-    pha2 = load_pha(2, spectrum_files[1], use_errors=True)
-    bkg1 = load_bkg(1, background_files[0])
-    bkg2 = load_bkg(2, background_files[1])
-    ignore(0,energy_min)
-    ignore(energy_max,)
-    group_counts(1,grouping);group_counts(2,grouping)
-    #Set source with background
-    set_source(1 , xsphabs.abs1*(xsmekal.mekal1))
-    set_source(2 , abs1*(xsmekal.mekal2))
-    abs1.nH = 1.91e-2
-    freeze(abs1.nH)
-    mekal1.nH = abs1.nH; mekal2.nH = abs1.nH
-    mekal1.kT = Temp_guess
-    mekal2.kT = apec1.kT
-    mekal1.redshift = redshift
-    mekal2.redshift = redshift
+    src_model_dict = {}; bkg_model_dict = {}
+    obs_count = 1
+    for spec_pha in spectrum_files:
+        obsid_set(src_model_dict, bkg_model_dict, spec_pha, obs_count, redshift, n_H, Temp_guess)
+        obs_count += 1
+    for ob_num in range(obs_count-1):
+        group_counts(ob_num+1,grouping)
+        notice_id(ob_num+1,0.5,8.0)
     fit()
+    set_log_sherpa()
     plot("fit", 1, "fit", 2)
     print_window(plot_dir+"%s.ps"%spec_count,['clobber','yes'])
     Temperature = apec1.kT.val
@@ -107,7 +119,13 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,spec_count,
 #       redshift = redshift of object
 #       n_H = Hydrogen Equivalent Column Density
 #       Temp_guess = Guess for Temperature value
-def PrimeFitting(dir,file_name,output_file,num_files,redshift,n_H,Temp_guess,plot_dir):
+def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess):
+    energy_min = 0.5
+    energy_max = 8.0
+    grouping = 10
+    statistic = 'chi2gehrels'
+    plot_dir = base_directory+'/FitPlots/'
+    output_file = 'Temp_bin'
     os.chdir(base_directory)
     if plot_dir != '':
         if not os.path.exists(plot_dir):
@@ -116,7 +134,7 @@ def PrimeFitting(dir,file_name,output_file,num_files,redshift,n_H,Temp_guess,plo
         os.remove(file_name) #remove it
     file_to_write = open(output_file+".txt",'w+')
     file_to_write.write("BinNumber Temperature ReducedChiSquare \n")
-
+    print(base_directory)
     for i in range(num_files):
         print("Fitting model to spectrum number "+str(i))
         spectrum_files = []
@@ -124,14 +142,17 @@ def PrimeFitting(dir,file_name,output_file,num_files,redshift,n_H,Temp_guess,plo
         arf_files = []
         resp_file = []
         for directory in dir:
-            spectrum_files.append(directory+'/'+file_name+"_"+str(i)+".pi")
-            background_files.append(directory+'/'+file_name+"_"+str(i)+"_bkg.pi")
-            #resp_file = file_name+"_"+str(i)+".rmf"
-        Temperature,reduced_chi_sq = FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,i,plot_dir)
-        file_to_write.write(str(i) + " " + str(Temperature) + " " + str(reduced_chi_sq) + " \n")
-    file_to_write.close()
+            try:
+                spectrum_files.append(directory+'/repro/binned/'+file_name+"_"+str(i)+".pi")
+                background_files.append(directory+'/repro/binned/'+file_name+"_"+str(i)+"_bkg.pi")
+            except:
+                pass
 
-def main():
-    print("--------------------------------FITTING DATA------------------------#")
-    PrimeFitting(dir,file_name,output_file,num_files,redshift,n_H,Temp_guess,plot_dir)
-main()
+        try:
+            Temperature,reduced_chi_sq = FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
+            file_to_write.write(str(i) + " " + str(Temperature) + " " + str(reduced_chi_sq) + " \n")
+        except:
+            print("No spectra was fit")
+
+
+    file_to_write.close()

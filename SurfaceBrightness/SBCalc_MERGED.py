@@ -25,14 +25,14 @@ from shutil import copyfile
 from astropy.io import fits
 from ciao_contrib.runtool import *
 #------------------INPUTS------------------------------------------------------#
-chandra_dir = '%%%'
-output_dir = 'Merged/soft'
-obs_to_merge = ['###','###','###','###']
+chandra_dir = '/home/carterrhea/Desktop/PipelineClusters/Data/M87'
+output_dir = 'M87/SurfaceBrightness'
+obs_to_merge = ['2203','9897']
 repro_dir = 'repro'
 evt_file = 'merged_evt'
 energy_range = '500:2000' #in electron volts
 regions = ['40kpc','400kpc'] #set None if for entire image
-background = 'simple_bkg'
+background = 'bkg'
 exposure = False
 #------------------------------------------------------------------------------#
 #-------------------------------------------------#

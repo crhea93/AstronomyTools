@@ -92,6 +92,7 @@ def calc_flux(evt_file,energy_range,region,background,exposure = False,PSF_ideal
     hdr = hdu[0].header
     T_s = hdr['TSTOP']-hdr['TSTART']
     T_b = T_s
+    print(T_s)
     hdu.close()
     #Calculate exposure maps
     effen = calc_effenergy(region,energy_range2)

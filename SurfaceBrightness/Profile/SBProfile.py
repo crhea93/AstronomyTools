@@ -14,6 +14,7 @@ ra = '##:##:##.###'
 dec = '+/-##:##:##.###'
 z = 1
 Flux = True
+model_type = 'single'
 #Defaults
 evt_file = 'merged_evt.fits'
 exposure_map = 'broad_thresh.expmap'

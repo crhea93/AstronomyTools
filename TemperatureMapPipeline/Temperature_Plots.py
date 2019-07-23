@@ -56,9 +56,9 @@ def plot_Bins(bin_file,temp_file,file_dir,filename,color_map,stn,wcs_image):
     std_temp = np.std([bin.temp for bin in Bins])
     Bins_flush = [] #Bins that passed the sigma screening
     Bins_fail = [] #Bins that failed the sigma screening
-    step_val = 2
+    step_val = 1
     for bin in Bins:
-        if bin.temp < median_temp +step_val*std_temp and bin.temp > median_temp - step_val*std_temp:
+        if bin.temp < 15:#median_temp +step_val*std_temp and bin.temp > median_temp - step_val*std_temp:
             Bins_flush.append(bin)
         else:
             Bins_fail.append(bin)
@@ -115,13 +115,13 @@ def plot_Bins(bin_file,temp_file,file_dir,filename,color_map,stn,wcs_image):
     #fig = plt.figure()
     #fig.add_subplot(111)#,projection=wcs)
 
-    plt.xlabel("X")
-    plt.ylabel("Y")
+    plt.xlabel("RA")
+    plt.ylabel("DEC")
     plt.title("Temperature Map for "+filename)
     norm = mpl.colors.Normalize(min(temp_norm_list),max(temp_norm_list))
     cax, _ = cbar.make_axes(ax)
     cb2 = cbar.ColorbarBase(cax, cmap=cmap, norm=norm)
-    cb2.set_label('Temperature (KeV)')
+    cb2.set_label('Temperature [KeV]')
     tick_list = np.linspace(min(temp_norm_list),max(temp_norm_list),num_ticks)
     ticklabel_list = np.linspace(min(temp_list),max(temp_list),num_ticks)
     ticklabel_list = [np.round(val,1) for val in ticklabel_list]

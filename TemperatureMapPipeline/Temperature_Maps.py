@@ -11,7 +11,7 @@ import sys
 from read_input import read_input_file
 from binned_spectra import create_spectra
 from Temperature_Fits import PrimeFitting
-from Temperature_Plots import plot_Bins
+from Temperature_Plots import plot_Bins, plot_Ab
 from WVT import wvt_main
 #-----------------------------------------------READ IN--------------------------------------------------#
 inputs = read_input_file(sys.argv[1])
@@ -32,3 +32,4 @@ if inputs['fit_spec'].lower() == 'true':
 #-----------------------------------------------PLOT FITS-----------------------------------------------#
 if inputs['plot'].lower() == 'true':
     plot_Bins(base+'/'+inputs['WVT_data'],inputs['base_dir']+'/'+'Temp_bin.txt',base,inputs['Name'],inputs['Colormap'],inputs['stn_target'],base+'/'+inputs['source_file']+'.img')
+    plot_Ab(base+'/'+inputs['WVT_data'],inputs['base_dir']+'/'+'Temp_bin.txt',base,inputs['Name'],inputs['Colormap'],inputs['stn_target'],base+'/'+inputs['source_file']+'.img')

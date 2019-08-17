@@ -8,7 +8,7 @@ roundness_crit = 0.3
 #--------------------------FITTING---------------------------#
 #----------INPUT DATA------------#
 base_dir = /home/carterrhea/Desktop/PipelineClusters/Data/MACSJ1447
-Name = Merged
+Name = Merge_unbinned
 ObsIDs = 10481,17233,18825
 WVT_data = WVT_data.txt
 source_file = source

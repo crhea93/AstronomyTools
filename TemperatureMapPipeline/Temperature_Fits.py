@@ -102,12 +102,13 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,sp
     plot("fit", 1, "fit", 2)
     print_window(plot_dir+"%s.ps"%spec_count,['clobber','yes'])
     Temperature = apec1.kT.val
+    Abundance = apec1.Abundanc.val
     f = get_fit_results()
     reduced_chi_sq = f.rstat
     reset(get_model())
     reset(get_source())
     clean()
-    return Temperature,reduced_chi_sq
+    return Temperature,Abundance,reduced_chi_sq
 
 #PrimeFitting
 # Step through spectra to fit
@@ -133,7 +134,7 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess)
     if os.path.isfile(file_name) == True:
         os.remove(file_name) #remove it
     file_to_write = open(output_file+".txt",'w+')
-    file_to_write.write("BinNumber Temperature ReducedChiSquare \n")
+    file_to_write.write("BinNumber Temperature Abundance ReducedChiSquare \n")
     print(base_directory)
     for i in range(num_files):
         print("Fitting model to spectrum number "+str(i))
@@ -149,8 +150,8 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess)
                 pass
 
         try:
-            Temperature,reduced_chi_sq = FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
-            file_to_write.write(str(i) + " " + str(Temperature) + " " + str(reduced_chi_sq) + " \n")
+            Temperature,Abundance,reduced_chi_sq = FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
+            file_to_write.write(str(i) + " " + str(Temperature) + " " + str(Abundance) + " " + str(reduced_chi_sq) + " \n")
         except:
             print("No spectra was fit")
 

@@ -6,15 +6,16 @@ Given: Temperature, Luminosity, and Volume
 import numpy as np
 import scipy.integrate as spi
 import scipy.constants as spc
+import astropy.constants as cst
 from astropy.cosmology import Planck13 as cosmo
 
 #--------------------------INPUT PARAMETERS-----------------------------#
 r_in = 0 #in arcsec
-r_out = 17.73 #in arcsec
-Temp = 5.8
-Norm = 5.4e-5 #average of apec norms
-Flux = -13.65#log10 of flux
-redshift = 1.7091
+r_out = 42 #in arcsec
+Temp = 6.07
+Norm = 7.7e-3 #average of apec norms
+Flux = -12.3#log10 of flux
+redshift = 0.702
 #-----------------------------------------------------------------------#
 
 #------------------------------CLASS------------------------------------#
@@ -34,6 +35,7 @@ class fit:
         self.vol = 0
         self.Da = 0
         self.dl = 0
+        self.m_acc_dot = 0
     def calc_D(self,z):
         '''
         Calculate comoving distance in kpc
@@ -79,6 +81,19 @@ class fit:
         for i in range(3):
             t_sec = (5/2)*((1.91*self.dens[i]*self.temp_ergs[i])/(self.lum/self.vol))
             self.t_cool.append(t_sec*(1/3.15e16))#3.17098e-8*1e-9) #year -> Gigayears
+    def calc_M_acc_dot(self,z):
+        '''
+        Calculate Accreiton Rate
+        '''
+        pho = 1.91*self.dens[1]*0.6*(1.00784*cst.u.value)
+        alpha = 1.4 #from 1904.08942
+        dist_out = ls_calc(z,self.r_out)*3.086e21 #conversion to cm from kpc
+        dist_in = ls_calc(z,self.r_in)*3.086e21 #conversion to cm from kpc
+        num = (4*np.pi*(dist_out**3-dist_in**3)*pho)/cst.M_sun.value #needs to be in solar masses
+        den = alpha*(self.t_cool[1]*3.17098e8) #needs to be in years
+        macc = (num/den)
+        self.m_acc_dot = num/den
+
 
 #----------------------------------FUNCTIONS---------------------------------#
 def Energy_func_inv(z,Omega_mass,Omega_lam,Omega_k):
@@ -122,7 +137,7 @@ def ls_calc(z,theta):
     '''
     Omega_mass = 0.3#cosmo.Om0
     Omega_lam = 0.7#cosmo.Ode0
-    Hubble_const = 68#cosmo.H0
+    Hubble_const = 70#cosmo.H0
     theta_rad = theta*(np.pi/648000)
     d_A = calc_size(z,Omega_mass,Omega_lam,Hubble_const)
     return d_A*theta_rad
@@ -135,7 +150,7 @@ def ds_calc(z):
     '''
     Omega_mass = 0.3#cosmo.Om0
     Omega_lam = 0.7#cosmo.Ode0
-    Hubble_const = 68#cosmo.H0
+    Hubble_const = 70#cosmo.H0
     d_A = calc_size(z,Omega_mass,Omega_lam,Hubble_const)
     d_l = d_A*(1+z)**2
     return d_A, d_l
@@ -152,12 +167,18 @@ def calc_params(r_in,r_out,Temp,Norm,Flux):
     best_fit.calc_press()
     best_fit.calc_entropy()
     best_fit.calc_tcool()
+    best_fit.calc_M_acc_dot(redshift)
     return best_fit
 
 def main():
+    print("Using the bolometric Luminosity we find:")
     best_fit = calc_params(r_in,r_out,Temp,Norm,Flux)
-    print("The Electron Density is %.2E"%best_fit.dens[1])
-    print("The cooling time is %.2E Gyr"%best_fit.t_cool[1])
-    print("The Entropy is %.2E"%best_fit.entropy[1])
+    print(" The Electron Density is %.2E"%best_fit.dens[1])
+    print(" The Entropy is %.2E"%best_fit.entropy[1])
+    print(" The Luminosity is %.2E"%best_fit.lum)
+    print(" The cooling time is %.2E Gyr"%best_fit.t_cool[1])
+    print(" The Mass Accretion Rate is %.2E M_sol/yr"%best_fit.m_acc_dot)
+
+
     return None
 main()

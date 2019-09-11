@@ -136,15 +136,15 @@ def make_radial_mask(img_array,radii,center_pixel):
     return mask
 
 def main():
-    img_dir = '/home/carterrhea/Documents/M87/Xray/'
-    infile = '/home/carterrhea/Documents/M87/Xray/M87_exp.img'
+    img_dir = '/home/carterrhea/Documents/M87/X-ray/'
+    infile = '/home/carterrhea/Documents/M87/X-ray/broad_f_unbinned.img'
     rcParams['figure.figsize'] = 32,16
     filtered = []
     radii_ = np.array([0,250,1000,2500,4000])/0.492
-    #center_ = (1394,1451) #broad_f_unbinned
-    center_ = (836,832) #broad_un_cen.img
+    center_ = (1394,1451) #broad_f_unbinned
+    #center_ = (836,832) #broad_un_cen.img
     for sigma in [1,2,4,6]:
-        outfile = '/home/carterrhea/Documents/M87/Xray/M87_sig'+str(sigma)
+        outfile = '/home/carterrhea/Documents/M87/X-ray/M87_sig'+str(sigma)
         filtered.append(ggf1(infile,outfile,sigma))
     combine_ggf(img_dir,filtered, radii_, [[1,1,1,0,0],[0,4,4,4,0],[0,0,8,8,8],[0,0,0,32,32]], center_, infile)
 main()

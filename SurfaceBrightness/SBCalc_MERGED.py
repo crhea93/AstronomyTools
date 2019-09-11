@@ -25,13 +25,13 @@ from shutil import copyfile
 from astropy.io import fits
 from ciao_contrib.runtool import *
 #------------------INPUTS------------------------------------------------------#
-chandra_dir = '/home/carterrhea/Desktop/PipelineClusters/Data/M87'
-output_dir = 'M87/SurfaceBrightness'
-obs_to_merge = ['2203','9897']
+chandra_dir = '/media/carterrhea/1895813a-f52b-4ccc-9bab-1ee15fee024b/carterrhea/Pipeline-Clusters/Data/SPT-CLJ0000-5748/SPT-CLJ0000-5748/SurfaceBrightness'
+output_dir = ''
+obs_to_merge = ['9335']
 repro_dir = 'repro'
 evt_file = 'merged_evt'
 energy_range = '500:2000' #in electron volts
-regions = ['40kpc','400kpc'] #set None if for entire image
+regions = ['400kpc'] #set None if for entire image
 background = 'bkg'
 exposure = False
 #------------------------------------------------------------------------------#
@@ -247,10 +247,10 @@ def main():
         print("Combined ARFs not being created")
     energies = [float(x) for x in energy_range.split(':')]
     energy_range2 = str(energies[0]/1000)+':'+str(energies[1]/1000)
-    mono_energy = calc_effenergy(region+'_merged',energy_range2)
+    #mono_energy = calc_effenergy(region+'_merged',energy_range2)
     print("")
     print("We must now created a merged observation file for this energy band...")
-    merge_observations(obs_to_merge,output_dir,repro_dir,energy_range2,mono_energy)
+    merge_observations(obs_to_merge,output_dir,repro_dir,energy_range2,1.5)
     #We need to copy the region files over AND each individual event file
     for region in regions:
         copyfile(chandra_dir+'/'+obs_to_merge[0]+'/repro/'+region+'.reg',chandra_dir+'/'+output_dir+'/'+region+'.reg')

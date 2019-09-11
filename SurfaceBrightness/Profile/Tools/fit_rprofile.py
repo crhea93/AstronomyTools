@@ -12,17 +12,22 @@ import os
 
 def profiles(scaling,flux=False,model_type='single'):
     # Create basic profile
-    if flux == False:
-        load_data(1,'rprofile_r_data.fits', 3, ["R_NEW","SUR_BRI","SUR_BRI_ERR"])
-    elif flux == True:
-        load_data(1,'rprofile_r_data.fits', 3, ["R_NEW","SUR_FLUX","SUR_FLUX_ERR"])
+    #if flux == False:
+    load_data(1,'rprofile_rmid_data.fits', 3, ["RMID","SUR_BRI","SUR_BRI_ERR"])
+    #elif flux == True:
+    #    load_data(1,'rprofile_rmid_data.fits', 3, ["RMID","SUR_FLUX","SUR_FLUX_ERR"])
     if model_type == 'single':
         set_source("beta1d.src1")
     elif model_type == 'double':
         set_source("beta1d.src1+beta1d.src2")
     data = get_data()
-    data.x = data.x*scaling #now in kpc
+
+    set_data(1,data)
+    set_method('moncar')
+    set_stat('cstat')
+    fit()
     plot_data()
+
     set_plot_xlabel("R (kpc)")
     set_plot_title("Surface Brightness Profile")
     set_plot_ylabel("photons s^{-1} cm^{-2} arcsec^{-2}")

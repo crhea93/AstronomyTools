@@ -15,40 +15,68 @@ Astrometry Folder:
 
 	AScalc -- Calculate the angular seperation given redshift and linear distance
 
+	Correction -- Calculate astrometric correction given reference and target coordinates
+
 GeneralUse Folder:
 
-	Precursor.py -- Run specextract given folder and region of interest	
-	
-	Merge.py -- Merge several observations
+	ChandraCleaning Folder:
 
-	ToolBox.py -- Collection of subroutines used in other scripts (i.e. surface brightness calculations)
+		Astrometric -- Apply Astrometric correction given target location
 
-	ScaledImage.py -- Create scaled image from image.fits
+		BadPixel -- Apply Badpixel filtering from CIAO
 
-	PSF.py -- Create PSF for an event file using ChaRT
+		Destreak -- Take out streak events using CIAO
 
-	PSF_fraction.py -- Calculate PSF fractions for regions 
+		Flares -- Take out flaring events using CIAO
 
-SurfaceBrightness Folder:
+		Process -- Apply reprocessing using CIAO
 
-	SurfBright.py -- Calculate Surface Brightness for 40 and 400 kpc using srcflux
+		FaintCleaning -- Wrapper for complete reduction
 
-	SBCalc_complete.py -- Calculates Surface Brightness in a rigorous manner using aprates
+		BackgroundFlare Folder:
 
-	CSB_bounds.py -- To be used in conjunction with SBCalc_complete.py to generate error bounds
+			Unzip -- Unzip fits files after download_chandra_obsid
 
-	SBCalc_MERGED.py -- Creates merged directory and calculates surface brightness
+			CCD_split -- Split fits file into each CCD
 
-	read_input.py -- Read input files 
+			CreateLightcurves -- Use lc_sigma_clean from CIAO to create the background good time interval file
 
-TemperatureMapPipeline Folder:
+		ChandraFitting Folder:
 
-	Bin_data.py -- Bins data given binning file (See WVT repository)
+			Sherpa_mini -- Basic and generalized sherpa fitting using the Apec thermal model
 
-	Xspec.py -- Calculates Temperature for each bin
+	Misc Folder:
 
-	Cones_paraview.py -- Generates Temperature Map Graphic
+		Precursor.py -- Run specextract given folder and region of interest
 
-WeightedVoronoiTessellations Folder:
-	
-	WVT.py -- Weighted Voronoi Tesselations Algorithm
+		Merge.py -- Merge several observations
+
+		ScaledImage.py -- Create scaled image from image.fits
+
+		PSF.py -- Create PSF for an event file using ChaRT
+
+		PSF_fraction.py -- Calculate PSF fractions for regions
+
+	SurfaceBrightness Folder:
+
+		SurfBright.py -- Calculate Surface Brightness for 40 and 400 kpc using srcflux
+
+		SBCalc_complete.py -- Calculates Surface Brightness in a rigorous manner using aprates
+
+		CSB_bounds.py -- To be used in conjunction with SBCalc_complete.py to generate error bounds
+
+		SBCalc_MERGED.py -- Creates merged directory and calculates surface brightness
+
+		read_input.py -- Read input files
+
+	TemperatureMapPipeline Folder:
+
+		Bin_data.py -- Bins data given binning file (See WVT repository)
+
+		Xspec.py -- Calculates Temperature for each bin
+
+		Cones_paraview.py -- Generates Temperature Map Graphic
+
+	WeightedVoronoiTessellations Folder:
+
+		WVT.py -- Weighted Voronoi Tesselations Algorithm

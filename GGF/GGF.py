@@ -24,13 +24,6 @@ def ggf1(infile,outfile,sigma):
     data_log =  np.arcsinh(data)#np.log(data) #log data
     #data_log = np.ma.array(data_log,mask=np.isnan(data_log))
     data_filtered = scim.gaussian_gradient_magnitude(data_log, sigma) #filter data
-    '''V = data_log.copy()
-    V[np.isnan(data_log)] = 0
-    VV = scim.gaussian_gradient_magnitude(V,sigma)
-    W = 0*data_log.copy() + 1
-    W[np.isnan(data_log)] = 0
-    WW = scim.gaussian_gradient_magnitude(W,sigma)
-    data_filtered = VV/WW'''
     #Update fits file to save new filtered data
     file_temp[0].data = data_filtered
     if os.path.isfile(outfile+'.img'):
@@ -105,9 +98,6 @@ def combine_ggf(img_dir,infiles,radius_bins,weight_bins,center_pixel,fits_file):
     plt.imshow(final_img.T)
     plt.colorbar()
     plt.savefig(img_dir+'coadded.png')
-    '''plt.imshow(im_blend)
-    plt.colorbar(
-    plt.savefig(img_dir + 'blended.png')'''
     #Save as fits file
     fits_temp = fits.open(fits_file)
     fits_temp[0].data = final_img.T

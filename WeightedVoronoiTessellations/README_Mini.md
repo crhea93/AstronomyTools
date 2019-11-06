@@ -15,10 +15,10 @@ The data used in testing came from a fits file provided by Chandra (OBSID 12833)
 
 TO RUN:
 
-	python WVT.py input.i 
+	python WVT.py input.i
 
 If you are like me, then you may have to run:
-	
+
 	python3 WVT.py input.i
 
 input.i contains all necessary input information (see example file)
@@ -35,13 +35,7 @@ http://cxc.harvard.edu/ciao/download/
 ####
 
 These steps are outlined in detail with generic commands in the documentation
-WVT program WILL NOT RUN if you have ciao bash initiated in the terminal
 -----------------------------------------------------------------
 
------------------------------------------------------------------
-ADDITIONAL NOTES:
-Verification: Contains 2 programs
 
-	2 - Verification.ipynb --> Jupyter Notebook to check that
-	residual is zero
 -----------------------------------------------------------------

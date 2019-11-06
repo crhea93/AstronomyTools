@@ -49,6 +49,8 @@ def correction(ref_file,target_file,target_fits,outfile):
 
 def select_coords(fits_file):
     '''
+    NOT FINISHED
+
     Allow the user to interactively select the point sources using matplotlib
     :param fits_file: input fits file
     :return: sky coordinates of selected sources

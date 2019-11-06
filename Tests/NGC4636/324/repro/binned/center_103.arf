@@ -1,205 +1,0 @@
-SIMPLE  =                    T / file does conform to FITS standard             BITPIX  =                   16 / number of bits per data pixel                  NAXIS   =                    0 / number of data axes                            EXTEND  =                    T / FITS dataset may contain extensions            COMMENT   FITS (Flexible Image Transport System) format is defined in 'AstronomyCOMMENT   and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H HDUNAME = 'PRIMARY '                                                            ORIGIN  = 'ASC     '           / Source of FITS file                            CREATOR = 'mkwarf - Version CIAO 4.11' / tool that created this output          MJD_OBS =  5.1516991687510E+04 / Modified Julian date of observation            DS_IDENT= 'ADS/Sa.CXO#obs/00324' / dataset identifier                           CHECKSUM= 'ZaaHgTVEZYZEfYZE'   / HDU checksum updated 2019-03-22T19:05:40       DATASUM = '        '           / data unit checksum updated 2019-03-22T19:05:32 DATE    = '2019-03-22T19:05:40' / Date and time of file creation                DATE-OBS= '1999-12-04T23:48:01' / Observation start date                        DATE-END= '1999-12-05T03:21:36' / Observation end date                          TIMESYS = 'TT      '           / Time system                                    MJDREF  =  5.0814000000000E+04 / MJD zero point for times                       TIMEZERO=  0.0000000000000E+00 / Clock correction                               TIMEUNIT= 's       '           / Time unit                                      CLOCKAPP=                    T / default                                        TSTART  =  6.0738481800880E+07 / Observation start time                         TSTOP   =  6.0751296863843E+07 / Observation end time                           MISSION = 'AXAF    '           / Mission                                        TELESCOP= 'CHANDRA '           / Telescope                                      INSTRUME= 'ACIS    '           / Instrument                                     OBS_ID  = '324     '           / Observation id                                 OBI_NUM =                    0 / Obi number                                     SEQ_NUM = '600084  '           / Sequence number                                END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             XTENSION= 'BINTABLE'           / binary table extension                         BITPIX  =                    8 / 8-bit bytes                                    NAXIS   =                    2 / 2-dimensional binary table                     NAXIS1  =                   12 / width of table in bytes                        NAXIS2  =                 1070 / number of rows in table                        PCOUNT  =                    0 / size of special data area                      GCOUNT  =                    1 / one data group (required keyword)              TFIELDS =                    3 / number of fields in each row                   EXTNAME = 'SPECRESP'           / name of this binary table extension            HDUNAME = 'SPECRESP'           / ASCDM block name                               TTYPE1  = 'ENERG_LO'           / Min Energy                                     TFORM1  = '1E      '           / format of field                                TUNIT1  = 'keV     '                                                            TTYPE2  = 'ENERG_HI'           / Max Energy                                     TFORM2  = '1E      '           / format of field                                TUNIT2  = 'keV     '                                                            TTYPE3  = 'SPECRESP'           / Effective Area                                 TFORM3  = '1E      '           / format of field                                TUNIT3  = 'cm**2   '                                                            ORIGIN  = 'ASC     '           / Source of FITS file                            CREATOR = 'mkwarf - Version CIAO 4.11' / tool that created this output          ASCDSVER= 'CIAO 4.11'          / ASCDS version number                           MJD_OBS =  5.1516991687510E+04 / Modified Julian date of observation            DS_IDENT= 'ADS/Sa.CXO#obs/00324' / dataset identifier                           REVISION=                    3 / Processing version of data                     CHECKSUM= '0EMP3CMP0CMP0CMP'   / HDU checksum updated 2019-03-22T19:05:40       DATASUM = '2926240780'         / data unit checksum updated 2019-03-22T19:05:40 RAND_SKY=  0.0000000000000E+00                                                  RAND_PI =  1.0000000000000E+00                                                  EQUINOX =  2.0000000000000E+03 / default                                        DATE    = '2019-03-22T19:05:40' / Date and time of file creation                DATE-OBS= '1999-12-04T23:48:01' / Observation start date                        OBS_MODE= 'POINTING'           / Observation mode                               DATE-END= '1999-12-05T03:21:36' / Observation end date                          TIMESYS = 'TT      '           / Time system                                    MJDREF  =  5.0814000000000E+04 / MJD zero point for times                       TIMEZERO=  0.0000000000000E+00 / Clock correction                               TIMEUNIT= 's       '           / Time unit                                      BTIMNULL=  5.9102301916778E+07 / Basic Time offset (s)                          DATACLAS= 'OBSERVED'           / default                                        BTIMRATE=  2.5625000924161E-01 / Basic Time clock rate (s / VCDUcount)          BTIMDRFT=  4.5486745737970E-18 / Basic Time clock drift (s / VCDUcount^2)       BTIMCORR=  0.0000000000000E+00 / Correction applied to Basic Time rate (s)      TIMEREF = 'LOCAL   '           / Time reference (barycenter/local)              TASSIGN = 'SATELLITE'          / Time assigned by clock                         CLOCKAPP=                    T / default                                        SIM_X   = -7.8090834371673E-01 / SIM focus pos (mm)                             SIM_Y   =  0.0000000000000E+00 / SIM orthogonal axis pos (mm)                   SIM_Z   = -2.3358743446083E+02 / SIM translation stage pos (mm)                 FOC_LEN =  1.0070000000000E+04 / HRMA focal length (mm)                         TIERRELA=  1.0000000000000E-09 / default                                        TIERABSO=  5.0000000000000E-05 / default                                        TIMVERSN= 'ASC-FITS-2'         / Timing system definition                       TSTART  =  6.0738481800880E+07 / Observation start time                         GRATING = 'NONE    '           / Grating                                        DETNAM  = 'ACIS-01237'         / Detector                                       RA_PNT  =  1.9071106368854E+02 / Pointing RA                                    DEC_PNT =  2.6914697083973E+00 / Pointing Dec                                   ROLL_PNT=  6.3686509910515E+01 / Pointing Roll                                  RA_TARG =  1.9070708300000E+02 / Observer's specified target RA                 DEC_TARG=  2.6881110000000E+00 / Observer's specified target Dec                DEFOCUS =  1.4398718632593E-03 / SIM defocus (mm)                               RA_NOM  =  1.9071106368854E+02 / Nominal RA                                     DEC_NOM =  2.6914697083973E+00 / Nominal Dec                                    ROLL_NOM=  6.3686509910515E+01 / Nominal Roll                                   TSTOP   =  6.0751296863843E+07 / Observation end time                           STARTMJF=                49916 / Major frame ctr value at start of data         STARTMNF=                   84 / Start minor frame ctr at start of data         STARTOBT=  0.0000000000000E+00 / On-Board MET close to STARTMJF and STARTMNF    STOPMJF =                50262 / Major frame ctr value at stop of data          STOPMNF =                  117 / Stop minor frame ctr at end of data            TIMEPIXR=  5.0000000000000E-01 / default                                        TIMEDEL =  3.2410400000000E+00 / timedel Lev1 (in seconds)                      CTI_CORR=                    F                                                  CTI_APP = 'NNNNNNNNNN'                                                          MISSION = 'AXAF    '           / Mission                                        TELESCOP= 'CHANDRA '           / Telescope                                      INSTRUME= 'ACIS    '           / Instrument                                     READMODE= 'TIMED   '           / Read mode                                      DATAMODE= 'VFAINT  '           / Data mode                                      FLSHTIME=  0.0000000000000E+00 / Inferred duration of each flush. (s)           CYCLE   = 'P       '           / events from which exps? Prim/Second/Both       TITLE   = 'BRIGHT ELLIPTICAL GALAXIES AND HIGH REDSHIFT CLUSTERS' / Proposal titOBSERVER= 'DR Richard Mushotzky' / Principal investigator                       OBJECT  = 'NGC 4636'           / Source name                                    OBS_ID  = '324     '           / Observation id                                 OBI_NUM =                    0 / Obi number                                     SEQ_NUM = '600084  '           / Sequence number                                ONTIME  =  8.4849375600144E+03 / [s] Sum of GTIs                                ONTIME3 =  8.4849375600144E+03 / [s] Sum of GTIs                                ONTIME7 =  9.5609397699088E+03 / [s] Sum of GTIs                                ONTIME0 =  8.4687323649898E+03 / [s] Sum of GTIs                                ONTIME1 =  8.5173475111872E+03 / [s] Sum of GTIs                                ONTIME2 =  8.4395635486767E+03 / [s] Sum of GTIs                                LIVETIME=  8.3774961716135E+03 / [s] Livetime                                   LIVTIME3=  8.3774961716135E+03 / [s] Livetime                                   LIVTIME7=  9.4398733936354E+03 / [s] Livetime                                   LIVTIME0=  8.3614961765259E+03 / [s] Livetime                                   LIVTIME1=  8.4094957284696E+03 / [s] Livetime                                   LIVTIME2=  8.3326967133283E+03 / [s] Livetime                                   EXPOSURE=  8.3774961716135E+03 / [s] Exposure time                              EXPOSUR3=  8.3774961716135E+03 / [s] Exposure time                              EXPOSUR7=  9.4398733936354E+03 / [s] Exposure time                              EXPOSUR0=  8.3614961765259E+03 / [s] Exposure time                              EXPOSUR1=  8.4094957284696E+03 / [s] Exposure time                              EXPOSUR2=  8.3326967133283E+03 / [s] Exposure time                              DTCOR   =  9.8733739787229E-01 / Dead time correction                           ASPTYPE = 'KALMAN  '                                                            FP_TEMP =  1.6395204163000E+02 / [K] Focal Plane Temperature                    DY_AVG  =  9.1157495854000E-03 / [mm] Mean DY during observation                DZ_AVG  =  1.9442269055000E-01 / [mm] Mean DZ during observation                DTH_AVG =  4.7818042590000E-03 / [mm] Mean DTHETA during observation            RADESYS = 'ICRS    '           / default                                        HDUCLASS= 'OGIP    '                                                            HDUCLAS1= 'RESPONSE'                                                            HDUCLAS2= 'SPECRESP'                                                            HDUVERS = '1.1.0   '           / HDU version                                    HDUVERS1= '1.0.0   '           / HDU version                                    HDUVERS2= '1.1.0   '           / HDU version                                    CHANTYPE= 'PI      '           / Channel Type                                   DETCHANS=                 1070 / Number of detector channels                    ARFVERSN= '1992a   '           / RMF version number                             CONTENT = 'SPECRESP'                                                            THRSHLD =  0.0000000000000E+00 / FEF contrib percentage cutoff                  HISTNUM =                  118                                                  HISTORY  TOOL  :mkwarf   2019-03-22T19:05:40                            ASC00001HISTORY  PARM  :infile=/tmp/tmppd1dh624_tdet[wmap]                      ASC00002HISTORY  PARM  :outfile=/home/carterrhea/Documents/AstronomyTools/Tests/ASC00003HISTORY  CONT  :NGC4636/324/repro/binned/center_103.arf                 ASC00004HISTORY  PARM  :weightfile=/tmp/tmpf06w1l23.wfef                        ASC00005HISTORY  PARM  :spectrumfile=                                           ASC00006HISTORY  PARM  :egridspec=0.3:11.0:0.01                                 ASC00007HISTORY  PARM  :pbkfile=                                                ASC00008HISTORY  PARM  :threshold=0                                             ASC00009HISTORY  PARM  :feffile=CALDB                                           ASC00010HISTORY  PARM  :mskfile=acisf00324_000N003_msk1.fits                    ASC00011HISTORY  PARM  :asolfile=                                               ASC00012HISTORY  PARM  :mirror=HRMA                                             ASC00013HISTORY  PARM  :detsubsysmod=                                           ASC00014HISTORY  PARM  :dafile=CALDB                                            ASC00015HISTORY  PARM  :ardlibpar=ardlib                                        ASC00016HISTORY  PARM  :geompar=geom                                            ASC00017HISTORY  PARM  :clobber=yes                                             ASC00018HISTORY  PARM  :verbose=1                                               ASC00019LONGSTRN= 'OGIP 1.0'           / The HEASARC Long String Convention may be used.COMMENT   This FITS file may contain long string keyword values that are        COMMENT   continued over multiple keywords.  The HEASARC convention uses the &  COMMENT   character at the end of each substring which is then continued        COMMENT   on the next keyword which has the name CONTINUE.                      FEFFILE = '/home/carterrhea/Applications/ciao-4.11/CALDB/data/chandra/acis/fef&'CONTINUE  '_pha/acisD1999-09-16fef_phaN0002.fits' / FITS Embedded function file HISTORY  PARM  :ARDLIB Version: 0.8.7-2                                 ASC00020HISTORY  PARM  :File used for CALDB info: /tmp/tmppd1dh624_tdet[wmap]   ASC00021HISTORY  PARM  :Parameter file: /home/carterrhea/cxcds_param4/ardlib.parASC00022HISTORY  PARM  :Vignetting File: /home/carterrhea/Applications/ciao-4.11ASC00023HISTORY  CONT  :/CALDB/data/chandra/default/vignet/hrmaD1996-12-20vignetASC00024HISTORY  CONT  :N0003.fits[1]                                           ASC00025HISTORY  PARM  :Onaxis Area File: /home/carterrhea/Applications/ciao-4.1ASC00026HISTORY  CONT  :1/CALDB/data/chandra/default/axeffa/hrmaD1996-12-20axeffASC00027HISTORY  CONT  :aN0008.fits[1]                                          ASC00028HISTORY  PARM  :ACIS QE File: /home/carterrhea/Applications/ciao-4.11/CAASC00029HISTORY  CONT  :LDB/data/chandra/acis/qe/acisD1997-04-17qeN0006.fits[3] ASC00030HISTORY  PARM  :ACIS Uniformity File: /home/carterrhea/Applications/ciaoASC00031HISTORY  CONT  :-4.11/CALDB/data/chandra/acis/qeu/acisD1999-09-16qeuN000ASC00032HISTORY  CONT  :2.fits[3]                                               ASC00033HISTORY  PARM  :ACIS Contamination File: /home/carterrhea/Applications/cASC00034HISTORY  CONT  :iao-4.11/CALDB/data/chandra/acis/contam/acisD1999-08-13cASC00035HISTORY  CONT  :ontamN0012.fits[3]                                      ASC00036HISTORY  PARM  :ACIS 2 Badpix File: /home/carterrhea/Documents/AstronomyASC00037HISTORY  CONT  :Tools/Tests/NGC4636/324/repro/acisf00324_repro_bpix1.fitASC00038HISTORY  CONT  :s[BADPIX2]                                              ASC00039HISTORY  PARM  :ACIS QE File: /home/carterrhea/Applications/ciao-4.11/CAASC00040HISTORY  CONT  :LDB/data/chandra/acis/qe/acisD1997-04-17qeN0006.fits[4] ASC00041HISTORY  PARM  :ACIS Uniformity File: /home/carterrhea/Applications/ciaoASC00042HISTORY  CONT  :-4.11/CALDB/data/chandra/acis/qeu/acisD1999-09-16qeuN000ASC00043HISTORY  CONT  :2.fits[4]                                               ASC00044HISTORY  PARM  :ACIS Contamination File: /home/carterrhea/Applications/cASC00045HISTORY  CONT  :iao-4.11/CALDB/data/chandra/acis/contam/acisD1999-08-13cASC00046HISTORY  CONT  :ontamN0012.fits[4]                                      ASC00047HISTORY  PARM  :ACIS 3 Badpix File: /home/carterrhea/Documents/AstronomyASC00048HISTORY  CONT  :Tools/Tests/NGC4636/324/repro/acisf00324_repro_bpix1.fitASC00049HISTORY  CONT  :s[BADPIX3]                                              ASC00050HISTORY  PARM  :File used for CALDB info: /tmp/tmppd1dh624_tdet[wmap]   ASC00051HISTORY  PARM  :File used for CALDB info: /tmp/tmppd1dh624_tdet[wmap]   ASC00052HISTORY  PARM  :PIXLIB Version: 4.0.0                                   ASC00053HISTORY  PARM  :******     PIXLIB Parameter File      *****             ASC00054HISTORY  PARM  :/home/carterrhea/Applications/ciao-4.11/param/geom.par: ASC00055HISTORY  PARM  :instruments  = /home/carterrhea/Applications/ciao-4.11/CASC00056HISTORY  CONT  :ALDB/data/chandra/default/geom/telD1999-07-23geomN0006.fASC00057HISTORY  CONT  :its(CALDB)                                              ASC00058HISTORY  PARM  :aimpoints    = /home/carterrhea/Applications/ciao-4.11/CASC00059HISTORY  CONT  :ALDB/data/chandra/default/aimpts/telD1999-07-23aimptsN00ASC00060HISTORY  CONT  :02.fits(CALDB)                                          ASC00061HISTORY  PARM  :tdet         = /home/carterrhea/Applications/ciao-4.11/CASC00062HISTORY  CONT  :ALDB/data/chandra/default/tdet/telD1999-07-23tdetN0001.fASC00063HISTORY  CONT  :its(CALDB)                                              ASC00064HISTORY  PARM  :sky          = /home/carterrhea/Applications/ciao-4.11/CASC00065HISTORY  CONT  :ALDB/data/chandra/default/sky/telD1999-07-23skyN0002.fitASC00066HISTORY  CONT  :s(CALDB)                                                ASC00067HISTORY  PARM  :shell        = /home/carterrhea/Applications/ciao-4.11/CASC00068HISTORY  CONT  :ALDB/data/chandra/default/sgeom/telD1999-07-23sgeomN0001ASC00069HISTORY  CONT  :.fits(CALDB)                                            ASC00070HISTORY  PARM  :obsfile      = nowT00:00:00()                           ASC00071HISTORY  PARM  :******     PIXLIB System Configuration      ******      ASC00072HISTORY  PARM  :Telescope = Chandra                                     ASC00073HISTORY  PARM  :Focal Length (mm) = 10070.000                           ASC00074HISTORY  PARM  :Detector = ACIS                                         ASC00075HISTORY  PARM  :Focal Plane Sys. = FP-1.1                               ASC00076HISTORY  PARM  :Tiled Detector Plane Sys. = ACIS-2.2                    ASC00077HISTORY  PARM  :SIM Offset (mm) = (0.684 0.75 236.552)                  ASC00078HISTORY  PARM  :Aim Point(NONE) (mm) = (-0.780908 0 -233.587)           ASC00079HISTORY  PARM  :Grating Arm = HEG                                       ASC00080HISTORY  PARM  :Grating Order =  1                                      ASC00081HISTORY  PARM  :Dispersion Plane Sys. = ASC-GDP-1.1                     ASC00082HISTORY  PARM  :Rowland Circle (mm) = 8632.48                           ASC00083HISTORY  PARM  :Stage Ang (arc-mins) = (0.286908 0 0)                   ASC00084HISTORY  PARM  :Stage Pos (mm) = (0 -0.00911575 -0.194423)              ASC00085HISTORY  PARM  :Pitch-Yaw (arc-mins) = (0 0           )                 ASC00086COMMENT specextract version 11 May 2018                                         HISTORY  TOOL  :specextract   2019-03-22T19:05:40                       ASC00087HISTORY  PARM  :infile=/home/carterrhea/Documents/AstronomyTools/Tests/NASC00088HISTORY  CONT  :GC4636/324/repro/center.fits[sky=region(binned/temp.reg)ASC00089HISTORY  CONT  :]                                                       ASC00090HISTORY  PARM  :outroot=/home/carterrhea/Documents/AstronomyTools/Tests/ASC00091HISTORY  CONT  :NGC4636/324/repro/binned//center_103_                   ASC00092HISTORY  PARM  :bkgfile=acisf00324_repro_evt2.fits[sky=region(bkg.reg)] ASC00093HISTORY  PARM  :asp=pcadf060739649N003_asol1.fits                       ASC00094HISTORY  PARM  :dtffile=                                                ASC00095HISTORY  PARM  :mskfile=acisf00324_000N003_msk1.fits                    ASC00096HISTORY  PARM  :rmffile=CALDB                                           ASC00097HISTORY  PARM  :badpixfile=acisf00324_repro_bpix1.fits                  ASC00098HISTORY  PARM  :dafile=CALDB                                            ASC00099HISTORY  PARM  :bkgresp=yes                                             ASC00100HISTORY  PARM  :weight=yes                                              ASC00101HISTORY  PARM  :weight_rmf=no                                           ASC00102HISTORY  PARM  :refcoord=                                               ASC00103HISTORY  PARM  :correctpsf=no                                           ASC00104HISTORY  PARM  :combine=no                                              ASC00105HISTORY  PARM  :grouptype=NUM_CTS                                       ASC00106HISTORY  PARM  :binspec=1                                               ASC00107HISTORY  PARM  :bkg_grouptype=NONE                                      ASC00108HISTORY  PARM  :bkg_binspec=                                            ASC00109HISTORY  PARM  :energy=0.3:11.0:0.01                                    ASC00110HISTORY  PARM  :channel=1:1024:1                                        ASC00111HISTORY  PARM  :energy_wmap=500:14000                                   ASC00112HISTORY  PARM  :binarfcorr=1                                            ASC00113HISTORY  PARM  :binwmap=tdet=8                                          ASC00114HISTORY  PARM  :binarfwmap=1                                            ASC00115HISTORY  PARM  :tmpdir=/tmp                                             ASC00116HISTORY  PARM  :clobber=yes                                             ASC00117HISTORY  PARM  :verbose=1                                               ASC00118END                                                                             >™™š>ž¸R?U¸O>ž¸R>£×
-@31>£×
->¨õÃ@Zù>¨õÃ>®{@œ!Ú>®{>³33@Ö8Ø>³33>¸QìA	ö–>¸Qì>½p¤A(õ0>½p¤>Â\AU@Ý>Â\>Ç®A…‰>Ç®>ÌÌÍA¢$A>ÌÌÍ>Ñë…A‹óz>Ñë…>×
-=A··ˆ>×
-=>Ü(öAä-`>Ü(ö>áG®B"®>áG®>æffB!h>æff>ë…B8è­>ë…>ð£×BPa®>ð£×>õÂBiCo>õÂ>úáHB‚'>úáH?   B¹?   ?\BŸ™x?\?¸B±5Þ?¸?®B¿µè?®?
-=qB†¥4?
-=q?ÌÍB
-2’?ÌÍ?\)B4@'?\)?ë…B.,?ë…?záBt¾?zá?
-=B‰¾Ñ?
-=?™šB”¸¢?™š?(öB›®+?(ö?¸RB£Uº?¸R?!G®B²Ø+?!G®?#×
-BÂ­?#×
-?&ffBÐz;?&ff?(õÃBàvô?(õÃ?+…Bñ{B?+…?.{C â¢?.{?0£×C«¾?0£×?333Cñh?333?5ÂCª
-?5Â?8QìCºø?8Qì?:áHC#1?:áH?=p¤C*‡à?=p¤?@  C1À«?@  ?B\C9O?B\?E¸C@;?E¸?G®CGˆ§?G®?J=qCNðé?J=q?LÌÍCV›?LÌÍ?O\)C^t?O\)?Që…Ce‰a?Që…?TzáCl÷?Tzá?W
-=Ct õ?W
-=?Y™šC{e@?Y™š?\(öC ê?\(ö?^¸RC„©,?^¸R?aG®C‡óR?aG®?c×
-C‹KÊ?c×
-?fffCŽ¤^?fff?hõÃC‘á?hõÃ?k…C”ä@?k…?n{C—ï…?n{?p£×Cšíç?p£×?s33Cè­?s33?uÂC Ù¡?uÂ?xQìC£Èü?xQì?záHC¦¸­?záH?}p¤C©ŠF?}p¤?€  C¬2Õ?€  ?G®C®í?G®?‚\C±Ë!?‚\?ƒ×
-C´ª‰?ƒ×
-?…¸C·‹ø?…¸?†ffCº¶?†ff?‡®C¼‚s?‡®?ˆõÃC¾ð?ˆõÃ?Š=qCÁXà?Š=q?‹…CÃ³»?‹…?ŒÌÍCÅÐþ?ŒÌÍ?Ž{CÇò]?Ž{?\)CÊ0Ô?\)?£×CÌ_À?£×?‘ë…CÎ|?‘ë…?“33CÐž	?“33?”záCÒð?”zá?•ÂCÔcQ?•Â?—
-=CÖ5°?—
-=?˜QìCØï?˜Qì?™™šCÙæ”?™™š?šáHCÛ´à?šáH?œ(öCÝv?œ(ö?p¤Cß»?p¤?ž¸RCà†…?ž¸R?   Câ??   ?¡G®Cãv¾?¡G®?¢\Cäï/?¢\?£×
-Cæk®?£×
-?¥¸CçÞF?¥¸?¦ffCéF¯?¦ff?§®Cê˜?§®?¨õÃCë³â?¨õÃ?ª=qCìà£?ª=q?«…CîÀ?«…?¬ÌÍCïWe?¬ÌÍ?®{CðÁ?®{?¯\)CñÎ>?¯\)?°£×Có|?°£×?±ë…CôT?±ë…?³33Cõrb?³33?´záCöi­?´zá?µÂC÷g9?µÂ?·
-=Cøgµ?·
-=?¸QìCùlÿ?¸Qì?¹™šCúg¥?¹™š?ºáHCûVb?ºáH?¼(öCüBŸ?¼(ö?½p¤Cý+Á?½p¤?¾¸RCþ?¾¸R?À  Cÿ²?À  ?ÁG®CÿÒ¾?ÁG®?Â\D C–?Â\?Ã×
-D ¢?Ã×
-?Å¸D õØ?Å¸?ÆffD°?Æff?Ç®CèÖÒ?Ç®?ÈõÃCÍ<?ÈõÃ?Ê=qC×9º?Ê=q?Ë…CßŸ?Ë…?ÌÌÍCÙ˜Õ?ÌÌÍ?Î{CÜûí?Î{?Ï\)CãA»?Ï\)?Ð£×CáL?Ð£×?Ñë…Cà~+?Ñë…?Ó33Cáu?Ó33?ÔzáCäÏ<?Ôzá?ÕÂCåð˜?ÕÂ?×
-=Cå”Û?×
-=?ØQìCå)Ñ?ØQì?Ù™šCå÷u?Ù™š?ÚáHCçˆÒ?ÚáH?Ü(öCè£q?Ü(ö?Ýp¤Céz˜?Ýp¤?Þ¸RCêˆ?Þ¸R?à  CêC<?à  ?áG®Cê³5?áG®?â\CëÕ?â\?ã×
-Cì‹O?ã×
-?å¸CíTm?å¸?æffCík)?æff?ç®Cí¦û?ç®?èõÃCîž?èõÃ?ê=qCî=8?ê=q?ë…Cî=õ?ë…?ìÌÍC–Ùê?ìÌÍ?î{C‘O?î{?ï\)C©”?ï\)?ð£×C¤ò?ð£×?ñë…C¥t„?ñë…?ó33C¥ ©?ó33?ôzáC£.X?ôzá?õÂC©Ð-?õÂ?÷
-=C¨×Þ?÷
-=?øQìC¨æH?øQì?ù™šCªš§?ù™š?úáHC«³Ý?úáH?ü(öC«›á?ü(ö?ýp¤C­z)?ýp¤?þ¸RC¯ú?þ¸R@   C¯+?@   @ £×C®@ £×@G®C«àF@G®@ë…C¨åÖ@ë…@\C¦g£@\@33C¡y»@33@×
-C“ê€@×
-@záCƒÞ0@zá@¸C\Ñ@¸@ÂCK§F@Â@ffCQÄ£@ff@
-=CTËã@
-=@®CUÂ@®@QìCL[-@Qì@õÃCDm<@õÃ@	™šC>"ñ@	™š@
-=qC4‘@
-=q@
-áHC8mN@
-áH@…C@N(@…@(öCAŸé@(ö@ÌÍCFßo@ÌÍ@p¤CK:@p¤@{CQÚ¹@{@¸RCUÜì@¸R@\)CY4j@\)@  CZí›@  @£×CZI@£×@G®C\¤ê@G®@ë…Cbe'@ë…@\Cf¹ÿ@\@33Ci¾Û@33@×
-CjŸn@×
-@záCkÇa@zá@¸CkG©@¸@ÂCn@å@Â@ffCr	Ø@ff@
-=CtŠz@
-=@®Cwï7@®@QìCy°ž@Qì@õÃCyõÀ@õÃ@™šCy½_@™š@=qCzÔ@=q@áHC}Q@áH@…CIò@…@(öC€G&@(ö@ÌÍC€Õˆ@ÌÍ@p¤Cgˆ@p¤@{Cü@{@¸RC=°@¸R@\)Cõ@\)@   C€ä@   @ £×C€áP@ £×@!G®C€è@!G®@!ë…C€P?@!ë…@"\C|}
-@"\@#33CmŒ@#33@#×
-Ck›â@#×
-@$záCu®&@$zá@%¸CyK˜@%¸@%ÂC{e…@%Â@&ffC~p)@&ff@'
-=Cž@'
-=@'®C3…@'®@(QìC‚9í@(Qì@(õÃCƒ6é@(õÃ@)™šCƒ¬(@)™š@*=qC„a@*=q@*áHC„Œ@*áH@+…C…Õ@+…@,(öC…¼Ô@,(ö@,ÌÍC†`@,ÌÍ@-p¤C†íg@-p¤@.{C‡U‹@.{@.¸RC‡Ü³@.¸R@/\)CˆhQ@/\)@0  CˆÝ)@0  @0£×C‰fJ@0£×@1G®C‰ùå@1G®@1ë…CŠbž@1ë…@2\CŠ¦²@2\@333CŠÑ®@333@3×
-CŠøm@3×
-@4záC‹.½@4zá@5¸C‹„ˆ@5¸@5ÂC‹þú@5Â@6ffCŒz¼@6ff@7
-=CŒÛ@7
-=@7®C@7®@8QìCŒò@8Qì@8õÃCŒ‹@8õÃ@9™šC‹¡[@9™š@:=qC‰IÉ@:=q@:áHC‰åf@:áH@;…C‹HG@;…@<(öC‹ý8@<(ö@<ÌÍCŒó@<ÌÍ@=p¤CŒíZ@=p¤@>{C45@>{@>¸RCž0@>¸R@?\)CŽ*@?\)@@  CŽ³±@@  @@£×Cø@@£×@AG®Ct"@AG®@Aë…CØ.@Aë…@B\C Î@B\@C33Cg@C33@C×
-C³;@C×
-@DzáCíþ@Dzá@E¸C‘©@E¸@EÂC‘RE@EÂ@FffC‘n@Fff@G
-=C‘Ó@G
-=@G®C’@G®@HQìC’St@HQì@HõÃC’h'@HõÃ@I™šC’UZ@I™š@J=qC’†@J=q@JáHC‘q¨@JáH@K…ClJ@K…@L(öC¤@L(ö@LÌÍClŽ@LÌÍ@Mp¤C‘'@Mp¤@N{C‘d¨@N{@N¸RC’"}@N¸R@O\)C’„ç@O\)@P  C’¸.@P  @P£×C“c@P£×@QG®C“gÖ@QG®@Që…C“Â9@Që…@R\C”	*@R\@S33C”P"@S33@S×
-C”‚¤@S×
-@TzáC” ”@Tzá@U¸C”¾R@U¸@UÂC•R@UÂ@VffC•\d@Vff@W
-=C•®µ@W
-=@W®C–N@W®@XQìC–YÖ@XQì@XõÃC–|é@XõÃ@Y™šC–Ÿö@Y™š@Z=qC–ÌÙ@Z=q@ZáHC—ƒ@ZáH@[…C—<@[…@\(öC—D @\(ö@\ÌÍC—LH@\ÌÍ@]p¤C—aŠ@]p¤@^{C—„@^{@^¸RC—¦N@^¸R@_\)C—Ëd@_\)@`  C—ð…@`  @`£×C˜R@`£×@aG®C˜7@aG®@aë…C˜Yj@aë…@b\C˜n@b\@c33C˜‚®@c33@c×
-C˜™„@c×
-@dzáC˜²Š@dzá@e¸C˜Ëi@e¸@eÂC˜×º@eÂ@fffC˜ä @fff@g
-=C˜÷Á@g
-=@g®C™Õ@g®@hQìC™-¨@hQì@hõÃC™:ª@hõÃ@i™šC™Gv@i™š@j=qC™Rt@j=q@jáHC™[·@jáH@k…C™dµ@k…@l(öC™y[@l(ö@lÌÍC™û@lÌÍ@mp¤C™ž“@mp¤@n{C™¦…@n{@n¸RC™®9@n¸R@o\)C™¦À@o\)@p  C™ŸD@p  @p£×C™šÏ@p£×@qG®C™™h@qG®@që…C™—Ð@që…@r\C™˜™@r\@s33C™™\@s33@s×
-C™”Å@s×
-@tzáC™Š²@tzá@u¸C™€€@u¸@uÂC™‰©@uÂ@vffC™’Ë@vff@w
-=C™ò@w
-=@w®C™„@w®@xQìC™w@xQì@xõÃC™qB@xõÃ@y™šC™kŠ@y™š@z=qC™bŒ@z=q@záHC™VW@záH@{…C™Iç@{…@|(öC™U=@|(ö@|ÌÍC™`’@|ÌÍ@}p¤C™l@}p¤@~{C™w»@~{@~¸RC™ƒB@~¸R@\)C™Š£@\)@€  C™‘ñ@€  @€QìC™ŸC@€Qì@€£×C™²ˆ@€£×@€õÃC™Åª@€õÃ@G®C™¦S@G®@™šC™€ @™š@ë…C™aM@ë…@‚=qC™J@‚=q@‚\C™2±@‚\@‚áHC™•@‚áH@ƒ33C˜öe@ƒ33@ƒ…C˜Ù¢@ƒ…@ƒ×
-C˜¾I@ƒ×
-@„(öC˜¢Ê@„(ö@„záC˜}@„zá@„ÌÍC˜WW@„ÌÍ@…¸C˜3Ö@…¸@…p¤C˜ƒ@…p¤@…ÂC—ñ@…Â@†{C—Î@†{@†ffC—ªê@†ff@†¸RC—†L@†¸R@‡
-=C—`@‡
-=@‡\)C—9±@‡\)@‡®C—w@‡®@ˆ  C–ë)@ˆ  @ˆQìC–Ä-@ˆQì@ˆ£×C–g@ˆ£×@ˆõÃC–v…@ˆõÃ@‰G®C–FŠ@‰G®@‰™šC–Œ@‰™š@‰ë…C•èâ@‰ë…@Š=qC•½[@Š=q@Š\C•‘Â@Š\@ŠáHC•nÆ@ŠáH@‹33C•KÁ@‹33@‹…C•5@‹…@‹×
-C”ÜK@‹×
-@Œ(öC”˜ã@Œ(ö@ŒzáC”iê@Œzá@ŒÌÍC”:ï@ŒÌÍ@¸C”u@¸@p¤C“Àb@p¤@ÂC“~N@Â@Ž{C“H‚@Ž{@ŽffC“»@Žff@Ž¸RC’Ôv@Ž¸R@
-=C’€@
-=@\)C’F”@\)@®C’É@®@  C‘Ó@  @QìC‘•ˆ@Qì@£×C‘T9@£×@õÃC‘ß@õÃ@‘G®CÓ@‘G®@‘™šC“.@‘™š@‘ë…CIy@‘ë…@’=qCõŸ@’=q@’\C¡æ@’\@’áHCV@’áH@“33C
-O@“33@“…CŽ»»@“…@“×
-CŽjE@“×
-@”(öCŽÔ@”(ö@”záCÖ@”zá@”ÌÍC“n@”ÌÍ@•¸CE@•¸@•p¤CŒêy@•p¤@•ÂCŒ‡ù@•Â@–{CŒ;©@–{@–ffC‹ïQ@–ff@–¸RC‹›£@–¸R@—
-=C‹@a@—
-=@—\)CŠå=@—\)@—®CŠ—@—®@˜  CŠ:@˜  @˜QìC‰à¢@˜Qì@˜£×C‰ƒ`@˜£×@˜õÃC‰&)@˜õÃ@™G®CˆÍu@™G®@™™šCˆtÉ@™™š@™ë…Cˆ:@™ë…@š=qC‡«¡@š=q@š\C‡C$@š\@šáHC†ïp@šáH@›33C†›Â@›33@›…C†<à@›…@›×
-C…Ò«@›×
-@œ(öC…h£@œ(ö@œzáC…¦@œzá@œÌÍC„°Ù@œÌÍ@¸C„Mh@¸@p¤Cƒâc@p¤@ÂCƒwp@Â@ž{CƒF@ž{@žffC‚­7@žff@ž¸RC‚A¤@ž¸R@Ÿ
-=CÓ’@Ÿ
-=@Ÿ\)Ceª@Ÿ\)@Ÿ®C€ñ÷@Ÿ®@   C€~p@   @ QìC€§@ Qì@ £×C!X@ £×@ õÃC~1¾@ õÃ@¡G®C}Fð@¡G®@¡™šC|\„@¡™š@¡ë…C{nÄ@¡ë…@¢=qCz}¯@¢=q@¢\Cy
-@¢\@¢áHCx“²@¢áH@£33Cwš»@£33@£…Cv§õ@£…@£×
-Cu»J@£×
-@¤(öCtÏ@¤(ö@¤záCsÞ-@¤zá@¤ÌÍCríÄ@¤ÌÍ@¥¸Cqóe@¥¸@¥p¤CpïJ@¥p¤@¥ÂCoë©@¥Â@¦{Cnõl@¦{@¦ffCmÿ¯@¦ff@¦¸RCm
-@¦¸R@§
-=Cl¼@§
-=@§\)Cks@§\)@§®Cjµ@§®@¨  Chî@¨  @¨QìCgß @¨Qì@¨£×CfÔ'@¨£×@¨õÃCeÉò@¨õÃ@©G®Cd·,@©G®@©™šCc¤ò@©™š@©ë…Cb”@©ë…@ª=qCa„@ª=q@ª\C`u—@ª\@ªáHC_a.@ªáH@«33C^Mc@«33@«…C]9‹@«…@«×
-C\&@«×
-@¬(öC[@¬(ö@¬záCYìu@¬zá@¬ÌÍCXÆ‡@¬ÌÍ@­¸CW«h@­¸@­p¤CV›-@­p¤@­ÂCU‹@­Â@®{CTƒ$@®{@®ffCS{2@®ff@®¸RCRlX@®¸R@¯
-=CQVÂ@¯
-=@¯\)CPAÙ@¯\)@¯®COHM@¯®@°  CNGx@°  @°QìCM1@°Qì@°£×CL×@°£×@°õÃCJæ÷@°õÃ@±G®CIìÊ@±G®@±™šCHóM@±™š@±ë…CGì@±ë…@²=qCF×‰@²=q@²\CEÃ±@²\@²áHCD»@²áH@³33CC³@³33@³…CB¬Ø@³…@³×
-CA¨ç@³×
-@´(öC@¥˜@´(ö@´záC?§M@´zá@´ÌÍC>©§@´ÌÍ@µ¸C=±Ô@µ¸@µp¤C<À<@µp¤@µÂC;Ï%@µÂ@¶{C:Ý@¶{@¶ffC9ë”@¶ff@¶¸RC9î@¶¸R@·
-=C8#4@·
-=@·\)C7D@·\)@·®C6[@·®@¸  C5r“@¸  @¸QìC4×@¸Qì@¸£×C3¶(@¸£×@¸õÃC2ÕÛ@¸õÃ@¹G®C1Þ=@¹G®@¹™šC0ç2@¹™š@¹ë…C/ü@¹ë…@º=qC/Ë@º=q@º\C.>(@º\@ºáHC-V­@ºáH@»33C,o¿@»33@»…C+`@»…@»×
-C*¯¡@»×
-@¼(öC)Ò‰@¼(ö@¼záC(ôN@¼zá@¼ÌÍC(¡@¼ÌÍ@½¸C'Põ@½¸@½p¤C&£U@½p¤@½ÂC%ö3@½Â@¾{C%u@¾{@¾ffC$n@¾ff@¾¸RC#%j@¾¸R@¿
-=C"Ir@¿
-=@¿\)C!n7@¿\)@¿®C ¯@¿®@À  C³±@À  @ÀQìCßõ@ÀQì@À£×Cp@À£×@ÀõÃCEº@ÀõÃ@ÁG®Cv@ÁG®@Á™šC¦Î@Á™š@Áë…CÔ@Áë…@Â=qCýÿ@Â=q@Â\C(›@Â\@ÂáHCZå@ÂáH@Ã33C´@Ã33@Ã…CÀt@Ã…@Ã×
-CóD@Ã×
-@Ä(öC&©@Ä(ö@ÄzáCK@Äzá@ÄÌÍCp.@ÄÌÍ@Å¸C¢@Å¸@Åp¤Cà¡@Åp¤@ÅÂC×@ÅÂ@Æ{CD,@Æ{@ÆffCi@Æff@Æ¸RCšÚ@Æ¸R@Ç
-=CÙc@Ç
-=@Ç\)C@Ç\)@Ç®C>=@Ç®@È  Cdd@È  @ÈQìC
-Šp@ÈQì@È£×C	³Ú@È£×@ÈõÃCÝö@ÈõÃ@ÉG®C¤@ÉG®@É™šCCÎ@É™š@Éë…CvÚ@Éë…@Ê=qC©Â@Ê=q@Ê\CÝn@Ê\@ÊáHCÂ@ÊáH@Ë33C:¸@Ë33@Ë…Ca‡@Ë…@Ë×
-C€J@Ë×
-@Ì(öC Ÿß@Ì(ö@ÌzáBÿ“‰@Ìzá@ÌÌÍBýèŽ@ÌÌÍ@Í¸BüOû@Í¸@Íp¤BúÉ»@Íp¤@ÍÂBùDÙ@ÍÂ@Î{B÷ˆ @Î{@ÎffBõÍ×@Îff@Î¸RBôà@Î¸R@Ï
-=BòcÊ@Ï
-=@Ï\)Bð²j@Ï\)@Ï®Bîï‹@Ï®@Ð  Bí-Ù@Ð  @ÐQìBë} @ÐQì@Ð£×Béße@Ð£×@ÐõÃBèCd@ÐõÃ@ÑG®Bæxg@ÑG®@Ñ™šBä®Î@Ñ™š@Ñë…Bâ÷0@Ñë…@Ò=qBáQa@Ò=q@Ò\Bß«Ö@Ò\@ÒáHBÝñ¿@ÒáH@Ó33BÜ9 @Ó33@Ó…BÚ‰5@Ó…@Ó×
-BØâ@Ó×
-@Ô(öB×<ˆ@Ô(ö@ÔzáBÕŠá@Ôzá@ÔÌÍBÓ×Ù@ÔÌÍ@Õ¸BÒ1@Õ¸@Õp¤BÐ–}@Õp¤@ÕÂBÎý~@ÕÂ@Ö{BÍA2@Ö{@ÖffBË†d@Öff@Ö¸RBÉÙœ@Ö¸R@×
-=BÈ:Ü@×
-=@×\)BÆÎ@×\)@×®BÄñ@×®@Ø  BÃEÚ@Ø  @ØQìBÁ¢‹@ØQì@Ø£×BÀ$@Ø£×@ØõÃB¾wk@ØõÃ@ÙG®B¼Àw@ÙG®@Ù™šB»&@Ù™š@Ùë…B¹c@Ùë…@Ú=qB·Ík@Ú=q@Ú\B¶:h@Ú\@ÚáHB´¬8@ÚáH@Û33B³€@Û33@Û…B±:@Û…@Û×
-B¯û}@Û×
-@Ü(öB®it@Ü(ö@ÜzáB¬Ï<@Üzá@ÜÌÍB«6@ÜÌÍ@Ý¸B©«ú@Ý¸@Ýp¤B¨-P@Ýp¤@ÝÂB¦®ê@ÝÂ@Þ{B¥0â@Þ{@ÞffB£´U@Þff@Þ¸RB¢=u@Þ¸R@ß
-=B ÌE@ß
-=@ß\)BŸ]*@ß\)@ß®B÷5@ß®@à  Bœ’«@à  @àQìB› 2@àQì@à£×B™ 	@à£×@àõÃB˜!@àõÃ@áG®B–»#@áG®@á™šB•V@á™š@áë…B“ö®@áë…@â=qB’œ²@â=q@â\B‘DL@â\@âáHBæu@âáH@ã33BŽŠ@ã33@ã…B0[@ã…@ã×
-B‹Ùf@ã×
-@ä(öBŠ„@ä(ö@äzáB‰.)@äzá@äÌÍB‡ÙÐ@äÌÍ@å¸B†˜•@å¸@åp¤B…jU@åp¤@åÂB„=k@åÂ@æ{B‚å#@æ{@æffBŽk@æff@æ¸RB€Uï@æ¸R@ç
-=B~vë@ç
-=@ç\)B|Dš@ç\)@ç®ByÓs@ç®@è  Bwe>@è  @èQìBu	­@èQì@è£×BrÀ•@è£×@èõÃBpzS@èõÃ@éG®Bn	Ô@éG®@é™šBkœ?@é™š@éë…BiB±@éë…@ê=qBfý@ê=q@ê\BdºQ@ê\@êáHBbs@êáH@ë33B`/£@ë33@ë…B]çë@ë…@ë×
-B[œi@ë×
-@ì(öBYSÜ@ì(ö@ìzáBW4@ìzá@ìÌÍBUË@ìÌÍ@í¸BRçi@í¸@íp¤BP¦@íp¤@íÂBNgq@íÂ@î{BLmY@î{@îffBJu”@îff@î¸RBHpU@î¸R@ï
-=BF]ª@ï
-=@ï\)BDM¶@ï\)@ï®BB6¡@ï®@ð  B@"M@ð  @ðQìB>%*@ðQì@ð£×B<>ö@ð£×@ðõÃB:[
-@ðõÃ@ñG®B8_?@ñG®@ñ™šB6eå@ñ™š@ñë…B4™ô@ñë…@ò=qB2úõ@ò=q@ò\B1]Ó@ò\@òáHB/+¸@òáH@ó33B,üe@ó33@ó…B+Þ@ó…@ó×
-B);¯@ó×
-@ô(öB'wž@ô(ö@ôzáB%«ë@ôzá@ôÌÍB#âv@ôÌÍ@õ¸B",W@õ¸@õp¤B ‰~@õp¤@õÂBè @õÂ@ö{B3Ô@ö{@öffB&@öff@ö¸RBÕ|@ö¸R@÷
-=B0”@÷
-=@÷\)Bž@÷\)@÷®Bø@÷®@ø  Bx+@ø  @øQìBê®@øQì@ø£×BY~@ø£×@øõÃBÊ @øõÃ@ùG®B/@ùG®@ù™šB–@ù™š@ùë…B
-¿@ùë…@ú=qB¼ã@ú=q@ú\B`a@ú\@úáHBüö@úáH@û33B›@û33@û…B5q@û…@û×
-BÌ-@û×
-@ü(öB do@ü(ö@üzáAþLs@üzá@üÌÍAûÒ @üÌÍ@ý¸AùYL@ý¸@ýp¤Aöà@ýp¤@ýÂAôi7@ýÂ@þ{Aò8@þ{@þffAï¨h@þff@þ¸RAí_N@þ¸R@ÿ
-=Aë%ë@ÿ
-=@ÿ\)AèîU@ÿ\)@ÿ®Aæš@ÿ®A   AäGøA   A (öAâºA (öA QìAàA QìA záAÞ7A záA £×AÜßA £×A ÌÍAÚ’A ÌÍA õÃAØ/ØA õÃA¸AÖj®A¸AG®AÔ¦ÓAG®Ap¤AÒ¾dAp¤A™šAÐ×ØA™šAÂAÏ2AÂAë…AÍ@rAë…A{AËgA{A=qAÉÙA=qAffAÈ4wAffA\AÆž|A\A¸RAÅØA¸RAáHAÃ§AáHA
-=AÂbA
-=A33AÀÌA33A\)A¿}A\)A…A½~½A…A®A»ö¡A®A×
-AºŽ3A×
-A  A¹'XA  A(öA·ÀQA(öAQìA¶YAQìAzáA´óAzáA£×A³«#A£×AÌÍA²d AÌÍAõÃA±"XAõÃA¸A¯änA¸AG®A®§ŒAG®Ap¤A­MÚAp¤A™šA«õÄA™šAÂAª­ãAÂAë…A©uúAë…A{A¨?>A{A=qA§ýA=qAffA¥Æ<AffA\A¤ŽˆA\A¸RA£ZÅA¸RAáHA¢*ÜAáHA
-=A¡ÍA
-=A33AŸöA33A\)AžÚöA\)A…A¾wA…A®Aœ¢ýA®A×
-A›•&A×
-A  AšˆcA  A(öA™|[A(öAQìA˜píAQìAzáA—f{AzáA£×A–cA£×AÌÍA•`íAÌÍAõÃA”_ºAõÃA	¸A“_”A	¸A	G®A’`LA	G®A	p¤A‘fØA	p¤A	™šAn{A	™šA	ÂAoØA	ÂA	ë…AŽjÿA	ë…A
-{Ag&A
-{A
-=qAŒ…A
-=qA
-ffA‹¤A
-ffA
-\AŠ½ÒA
-\A
-¸RA‰Ò“A
-¸RA
-áHAˆè.A
-áHA
-=A‡ú…A
-=A33A‡ýA33A\)A†$
-A\)A…A…<…A…A®A„UíA®A×
-AƒzmA×
-A  A‚ŸæA  A(öAÂ…A(öAQìA€âFAQìAzáA€êAzáA£×A~JéA£×AÌÍA|’4AÌÍAõÃAzÞ¯AõÃA¸Ay0ˆA¸AG®AwƒöAG®Ap¤AuËAp¤A™šAt@A™šAÂArl‡AÂAë…ApÒ¾Aë…A{Ao:A{A=qAm©xA=qAffAl7AffA\Ajp´A\A¸RAh­
-A¸RAáHAfëcAáHA
-=Aeo·A
-=A33AcõÚA33A\)AbjçA\)A…A`ÎûA…A®A_4°A®A×
-A]eúA×
-A  A[™¤A  A(öAYÝ‰A(öAQìAX1*AQìAzáAV†ÐAzáA£×AUËA£×AÌÍAS¤eAÌÍAõÃAR>1AõÃA¸APá©A¸AG®AO†•AG®Ap¤AMä:Ap¤A™šALDA™šAÂAJ¬[AÂAë…AI¿Aë…A{AGA{A=qAF5IA=qAffADÝ-AffA\ACo³A\A¸RAAìØA¸RAáHA@kêAáHA
-=A>÷A
-=A33A=„9A33A\)A<ŒA\)A…A:§ÃA…A®A9<ØA®A×
-A7–JA×
-A  A5òkA  A(öA4yA(öAQìA3/8AQìAzáA1æüAzáA£×A0]˜A£×AÌÍA.Ö›AÌÍAõÃA-S~AõÃA¸A+ÔA¸AG®A*VÎAG®Ap¤A(ÛAp¤A™šA'b¬A™šAÂA%çWAÂAë…A$iQAë…A{A"í«A{A=qA!zœA=qAffA 	ìAffA\AˆÀA\A¸RA÷A¸RAáHAhAáHA
-=AßvA
-=A33AY‹A33A\)AÐ1A\)A…AC,A…A®A¹
-A®A×
-A>¿A×
-A  AÇ1A  A(öAEA(öAQìA¸|AQìAzáA.õAzáA£×A
-––A£×AÌÍA	jAÌÍAõÃAuÕAõÃA¸AóUA¸AG®AsÖAG®Ap¤AÝ:Ap¤A™šAIõA™šAÂ@ÿqøAÂAë…@üTAë…A{@ù<ÏA{A=q@öILA=qAff@ó\AffA\@ðY6A\A¸R@í8”A¸RAáH@êÌAáHA
-=@çA
-=A33@ä!A33A\)@àû„A\)A…@ÝÂvA…A®@ÚÙA®A×
-@×‚A×
-A  @ÔyûA  A(ö@Ñ[0A(öAQì@Î&AQìAzá@Êø}AzáA£×@ÇÕøA£×AÌÍ@ÄºëAÌÍAõÃ@Á¡{AõÃA¸@¾‰XA¸AG®@»x9AG®Ap¤@¸hTAp¤A™š@µ_A™šAÂ@²VõAÂAë…@¯NˆAë…A{@¬M,A{A=q@©HðA=qAff@¦KáAffA\@£e+A\A¸R@ “èA¸RAáH@ÈÓAáHA
-=@›A
-=A33@˜[nA33A\)@•þA\)A…@’×A…A®@{A®A×
-@s A×
-A   @ŠÖ¡A   A (ö@ˆn4A (öA Qì@†7•A QìA zá@„[A záA £×@ÁØA £×A ÌÍ@	žA ÌÍA õÃ@z”8A õÃA!¸@v#œA!¸A!G®@q·2A!G®A!p¤@mxA!p¤A!™š@h~WA!™šA!Â@cü9A!ÂA!ë…@_’A!ë…A"{@[,2A"{A"=q@VÈA"=qA"ff@Rh=A"ffA"\@NÎA"\A"¸R@IåXA"¸RA"áH@E²EA"áHA#
-=@A|A#
-=A#33@=KKA#33A#\)@9µA#\)A#…@4ÕïA#…A#®@0œ‘A#®A#×
-@,Í1A#×
-A$  @)­A$  A$(ö@%MA$(öA$Qì@!¯!A$QìA$zá@A$záA$£×@PfA$£×A$ÌÍ@»A$ÌÍA$õÃ@ 8A$õÃA%¸@¡¾A%¸A%G®@FµA%G®A%p¤@©¨A%p¤A%™š@A%™šA%Â@cÖA%ÂA%ë…?ûGIA%ë…A&{?óÏ'A&{A&=q?îþA&=qA&ff?è?ýA&ffA&\?âhùA&\A&¸R?ÜzVA&¸RA&áH?Ö‘áA&áHA'
-=?ÐkîA'
-=A'33?ÊL¶A'33A'\)?Ä7A'\)A'…?¾-„A'…A'®?¸*ŸA'®A'×
-?²°%A'×
-A(  ?­;`A(  A((ö?§ºsA((öA(Qì?¢-ˆA(QìA(zá?œ¦ÀA(záA(£×?—–,A(£×A(ÌÍ?’‹A(ÌÍA(õÃ?mØA(õÃA)¸?ˆ?­A)¸A)G®?ƒ¾A)G®A)p¤?}nA)p¤A)™š?t?A)™šA)Â?k%¥A)ÂA)ë…?b{ A)ë…A*{?YÙ¼A*{A*=q?RŠ:A*=qA*ff?KB®A*ffA*\?DR0A*\A*¸R?=·öA*¸RA*áH?7'äA*áHA+
-=?1ãA+
-=A+33?+áôA+33A+\)?&óA+\)A+…?!…™A+…A+®?‚A+®A+×
-?­ÏA+×
-A,  ?ÞA,  A,(ö?ž†A,(öA,Qì?
-îA,QìA,zá?A¢A,záA,£×?éA,£×A,ÌÍ>ÿŒPA,ÌÍA,õÃ>øZ\A,õÃA-¸>ñm±A-¸A-G®>êˆHA-G®A-p¤>ä2A-p¤A-™š>ÝçDA-™šA-Â>×½:A-ÂA-ë…>Ñ²0A-ë…A.{>Ë­eA.{A.=q>ÆùA.=qA.ff>ÀŒeA.ffA.\>»$€A.\A.¸R>µá5A.¸RA.áH>°£A.áHA/
-=>«±0A/
-=A/33>¦Ä²A/33A/\)>¡ÊtA/\)A/…>œÂ¢A/…A/®>—À2A/®A/×
->’ÓÚA/×
-A0  >ìÀ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

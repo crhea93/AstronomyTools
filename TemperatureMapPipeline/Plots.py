@@ -111,13 +111,6 @@ def plot_Ab(bin_file,temp_file,file_dir,filename,color_map,stn,wcs_image):
             patches.append(rectangle)
             ax.add_patch(rectangle)
 
-    #p = PatchCollection(patches, cmap=cmap)
-    #p.set_array(np.array(colors))
-    #ax.add_collection(p)
-    #cbar = fig.colorbar(p, ax=ax)
-    #now for the actual ploting
-    #fig = plt.figure()
-    #fig.add_subplot(111)#,projection=wcs)
 
     plt.xlabel("RA")
     plt.ylabel("DEC")
@@ -147,6 +140,7 @@ def plot_Bins(bin_file,temp_file,file_dir,filename,color_map,stn,wcs_image):
     hdu = fits.open(wcs_image)[0]
     wcs = WCS(hdu.header)
     Bins, x_min, x_max, y_min, y_max = read_in(bin_file,temp_file)
+    create_image_fits(wcs_image,file_dir,x_min,x_max,y_min,y_max,Bins,filename,stn)
     fig = plt.figure()
     fig.set_size_inches(7, 7)
     ax = plt.axes(xlim=(x_min,x_max), ylim=(y_min,y_max),projection=wcs)
@@ -173,10 +167,7 @@ def plot_Bins(bin_file,temp_file,file_dir,filename,color_map,stn,wcs_image):
         temp_norm = bin.temp / max_temp
         temp_list.append(bin.temp)
         temp_norm_list.append(temp_norm)
-
     colors = cmap(temp_norm_list)
-
-
     #Create rectanges
     rect_step = 0
     for bin in Bins_flush:
@@ -209,13 +200,6 @@ def plot_Bins(bin_file,temp_file,file_dir,filename,color_map,stn,wcs_image):
             patches.append(rectangle)
             ax.add_patch(rectangle)
 
-    #p = PatchCollection(patches, cmap=cmap)
-    #p.set_array(np.array(colors))
-    #ax.add_collection(p)
-    #cbar = fig.colorbar(p, ax=ax)
-    #now for the actual ploting
-    #fig = plt.figure()
-    #fig.add_subplot(111)#,projection=wcs)
 
     plt.xlabel("RA")
     plt.ylabel("DEC")
@@ -261,3 +245,24 @@ def read_in(bin_data,temp_data):
     min_y = np.min([pixel.pix_y for pixel in pixels])
     max_y = np.max([pixel.pix_y for pixel in pixels])
     return bins, min_x, max_x, min_y, max_y
+#-------------------------------------------------#
+#-------------------------------------------------#
+def create_image_fits(fits_img,outroot,min_x,max_x,min_y,max_y,bins,filename,stn):
+    # Create image array
+    x_len = int(max_x-min_x)
+    y_len = int(max_y-min_y)
+    temp_array = np.zeros((x_len,y_len))
+    abund_array = np.zeros((x_len,y_len))
+    for bin in bins:
+        for pixel in bin.pixels:
+            temp_array[int(pixel.pix_x-1),int(pixel.pix_y-1)] = bin.temp
+            abund_array[int(pixel.pix_x-1),int(pixel.pix_y-1)] = bin.abund
+    # Copy header
+    fits_ = fits.open(fits_img)
+    hdr = header=fits_[0].header
+    # Change image
+    hdu = fits.PrimaryHDU(temp_array)
+    hdul = fits.HDUList([hdu])
+    fits.writeto(outroot+'/temp_WVT'+filename+'_'+str(stn)+'.fits', temp_array.T, hdr, overwrite=True)
+    hdu = fits.PrimaryHDU(abund_array)
+    fits.writeto(outroot+'/abund_WVT'+filename+'_'+str(stn)+'.fits', abund_array.T, hdr, overwrite=True)

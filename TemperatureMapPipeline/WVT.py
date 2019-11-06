@@ -705,7 +705,7 @@ def WVT(Bin_list_init,Pixel_Full,stn_target,tol,pixel_length,image_dir):
 #-------------------------------------------------#
 #-------------------------------------------------#
 
-def wvt_main(inputs,base):
+def wvt_main(inputs,base,output_name):
     os.chdir(base)
     if os.path.isdir(base+'/histograms') == False:
         os.mkdir(base+'/histograms')
@@ -726,5 +726,5 @@ def wvt_main(inputs,base):
     print("#----------------Algorithm Complete--------------#")
     plot_Bins(Final_Bins,min_x,max_x,min_y,max_y,inputs['stn_target'],base,"final")
     #plot_Bins_SN(Final_Bins,min_x,max_x,min_y,max_y,inputs['image_dir'],"WVT_SN")
-    Bin_data(Final_Bins,Pixels,min_x,min_y,base,"WVT_data")
+    Bin_data(Final_Bins,Pixels,min_x,min_y,base,output_name)
     print("#----------------Information Stored--------------#")

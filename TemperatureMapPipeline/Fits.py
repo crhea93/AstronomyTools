@@ -148,18 +148,18 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,sp
         obsid_set(src_model_dict, bkg_model_dict, spec_pha, background_files[int(obs_count-1)], obs_count, redshift, n_H, Temp_guess)
         obs_count += 1
     for ob_num in range(obs_count-1):
-        #group_counts(ob_num+1,grouping)
+        group_counts(ob_num+1,grouping)
         notice_id(ob_num+1,0.5,8.0)
     fit()
     set_log_sherpa()
     #plot("fit", 1, "fit", 2)
     #print_window(plot_dir+"%s.ps"%spec_count,['clobber','yes'])
-    set_covar_opt("sigma",3)
-    covar(get_model_component('apec1').kT,get_model_component('apec1').Abundanc)
+    #set_covar_opt("sigma",3)
+    #covar(get_model_component('apec1').kT,get_model_component('apec1').Abundanc)
     #with open(os.getcwd()+'/Fits/Params/%s_err_agn_%s.out'%(spec_count,agn_ct),'w+') as res_out:
     #    res_out.write(str(get_covar_results()))
     #----------Calculate min/max values---------#
-    mins = list(get_covar_results().parmins)
+    '''mins = list(get_covar_results().parmins)
     maxes = list(get_covar_results().parmaxes)
     for val in range(len(mins)):
         if isFloat(mins[val]) == False:
@@ -167,17 +167,17 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,sp
         if isFloat(maxes[val]) == False:
             maxes[val] = 0.0
         else:
-            pass
+            pass'''
     #Get important values
     Temperature = apec1.kT.val
-    Temp_min = Temperature+mins[0]
-    Temp_max = Temperature+maxes[0]
+    Temp_min = Temperature#+mins[0]
+    Temp_max = Temperature#+maxes[0]
     Abundance = apec1.Abundanc.val;
-    Ab_min = Abundance+mins[1];
-    Ab_max = Abundance+maxes[1]
+    Ab_min = Abundance#+mins[1];
+    Ab_max = Abundance#+maxes[1]
     #Calculate norm as average value
     Norm = 0; Norm_min = 0; Norm_max = 0
-    for id_ in range(len(spectrum_files)):
+    '''for id_ in range(len(spectrum_files)):
         Norm += get_model_component('apec'+str(id_+1)).norm.val #add up values
         #get errors
         covar(get_model_component('apec'+str(id_+1)).norm)
@@ -194,7 +194,7 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,sp
         Norm_max += maxes[0]
     Norm = Norm/len(spectrum_files)
     Norm_min = Norm+Norm_min/len(spectrum_files)
-    Norm_max = Norm+Norm_max/len(spectrum_files)
+    Norm_max = Norm+Norm_max/len(spectrum_files)'''
     f = get_fit_results()
     reduced_chi_sq = f.rstat
     reset(get_model())
@@ -242,7 +242,7 @@ def FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,group
 def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,output_file,bin_spec_dir,multi=False):
     energy_min = 0.5
     energy_max = 8.0
-    grouping = 1
+    grouping = 5
     plot_dir = base_directory+'/FitPlots/'
     output_file = output_file.split('.')[0]
     os.chdir(base_directory)
@@ -252,7 +252,7 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
     if os.path.isfile(file_name) == True:
         os.remove(file_name) #remove it
     file_to_write = open(output_file+".txt",'w+')
-    if multi == False:
+    if multi.lower() == 'false':
         file_to_write.write("BinNumber Temperature Temp_min Temp_max Abundance Ab_min Ab_max Norm Norm_min Norm_max ReducedChiSquare \n")
     else:
         file_to_write.write("BinNumber Temperature1 Temperature2 Abundance1 Abundance2 ReducedChiSquare \n")
@@ -271,7 +271,7 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
         #try:
             #if multi.lower() == 'false':
         Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq = FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
-        file_to_write.write("%i %f %f %f %f %f %f %f %f %f %f\n"%(i,Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_maxreduced_chi_sq))
+        file_to_write.write("%i %f %f %f %f %f %f %f %f %f %f\n"%(i,Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq))
             #else:
             #    Temperature1,Temperature2,Abundance1,Abundance2,reduced_chi_sq = FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
             #    file_to_write.write(str(i) + " " + str(Temperature1)+ " " + str(Temperature2) + " " + str(Abundance1) + " " + str(Abundance2)+ " " + str(reduced_chi_sq) + " \n")

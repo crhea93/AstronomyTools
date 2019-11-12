@@ -83,6 +83,20 @@ def get_filenames(dir):
         if file.endswith("bpix1.fits"):
             filenames['bpix1'] = file
     return filenames
+
+def update_header(ann,ann_values):
+    '''
+    Must update header for DSDEPROJ
+    '''
+    dmhedit.punlearn()
+    dmhedit.infile = 'Annuli/Annulus_'+str(ann)+'.pi'
+    dmhedit.filelist = None
+    dmhedit.operation = "add"
+    dmhedit.key = "XFLT0001"
+    dmhedit.value = ann_values[ann-1]
+    dmhedit()
+    return None
+
 #---------------------------------------------------#
 #---------------------------------------------------#
 # specextract_run
@@ -105,6 +119,7 @@ def specextract_run(obsid,filenames,file_to_convert,outfile_from_convert,output_
     specextract.energy_wmap = '500:14000'
     print("     Running Specextract...")
     specextract()
+
     return True
 #---------------------------------------------------#
 #---------------------------------------------------#
@@ -236,9 +251,10 @@ def split_fits(obsid,filenames,file_to_split,output_file,output_dir,pix_in_bin_n
     output =  output_file+"_"+str(bin_number)+"_"
     regions = []
     file_to_convert = file_to_split+'.fits'
-    create_reg_comb(pix_in_bin_num,file_to_split,bin_number,output_dir)
+    #create_reg_comb(pix_in_bin_num,file_to_split,bin_number,output_dir)
     create_evt(file_to_split,bin_number,output_dir)
     specextract_run(obsid,filenames,file_to_convert,output,output_dir)
+    update_header()
     return None
 #---------------------------------------------------#
 #---------------------------------------------------#

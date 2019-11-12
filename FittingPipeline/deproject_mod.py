@@ -44,7 +44,6 @@ def projectionVolume(R1, R2, y1, y2):
             return math.sqrt(x)
         else:
             return 0.
-
     p1 = truncSqrt(R1**2 - y2**2)
     p2 = truncSqrt(R1**2 - y1**2)
     p3 = truncSqrt(R2**2 - y2**2)
@@ -52,7 +51,7 @@ def projectionVolume(R1, R2, y1, y2):
 
     return (2./3.) * math.pi * ((p1**3 - p2**3) + (p4**3 - p3**3))
 
-def autoGrouping(specfilelist, mincts=10):
+def autoGrouping(specfilelist, mincts=1):
     """Automatically determine grouping using sets of spectra files.
 
     Ensures there are a minimum of mincts in each group in each spectrum
@@ -265,7 +264,6 @@ def deprojectSpectra(spectra):
         #deprojspec = totalspec-(
         #    spec.backspec.spec*(spec.backscal/spec.backspec.backscal))-projspec
         deprojspec = totalspec-projspec
-        #print(spec.maxradius)
         # this is the volume the spectrum is from
         thisvol = projectionVolume(spec.minradius, spec.maxradius,
                                    spec.minradius, spec.maxradius) * 2
@@ -427,6 +425,7 @@ def doDeprojection(spectra, iterations, minspec, outprefix, outsuffix):
 
 
 def deproj_final(prefix,suffix,minspec,numspecs,minradius,outprefix,outsuffix):
+    print(prefix,suffix,minspec,numspecs,minradius,outprefix,outsuffix)
     spectra = readSpectra(prefix, suffix, int(minspec), int(numspecs), float(minradius))
     doDeprojection(spectra, 6000, minspec, outprefix, outsuffix)
     ## Fix header file

@@ -7,6 +7,28 @@ from ciao_contrib.runtool import *
 #-------------------------------INPUTS-----------------------------------------#
 energy_range = "500:7000"
 #------------------------------------------------------------------------------#
+def update_header(src_reg):
+    '''
+    Must update header for DSDEPROJ
+    '''
+    # Get outer annulus value for region
+    ann_value = 0
+    with open(src_reg+'.reg') as f:
+        # The last line with have the value I need
+        lines = f.read().splitlines()
+        ann_value = lines[-2].split(',')[2]
+        # Now we have to clean up the value due to formatting....
+        ann_value = ann_value.split('"')[0]
+    print(ann_value)
+    dmhedit.punlearn()
+    dmhedit.infile = str(src_reg)+'.pi'
+    dmhedit.filelist = None
+    dmhedit.operation = "add"
+    dmhedit.key = "XFLT0001"
+    dmhedit.value = ann_value
+    dmhedit()
+    return None
+
 def spec_basic(evt_file,src_reg,obsid):
     #Create basic spectrum with normal arf file (un-corrected)
     specextract.punlearn()
@@ -68,4 +90,5 @@ def main_extract(chandra_dir,source_dir,OBSIDS,source_reg):
         spec_basic(evt_file,source_reg,obsid)
         #Make fits and image files for region
         fits_and_img(evt_file,source_reg)
+        update_header(source_reg)
     return None

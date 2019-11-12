@@ -62,7 +62,7 @@ def plot_Ab(bin_file,temp_file,file_dir,filename,color_map,stn,wcs_image):
     Bins_fail = [] #Bins that failed the sigma screening
     step_val = 1
     for bin in Bins:
-        if bin.abund < 1.5:#median_temp +step_val*std_temp and bin.temp > median_temp - step_val*std_temp:
+        if bin.abund < 2.5:#median_temp +step_val*std_temp and bin.temp > median_temp - step_val*std_temp:
             Bins_flush.append(bin)
         else:
             Bins_fail.append(bin)
@@ -236,8 +236,8 @@ def read_in(bin_data,temp_data):
     #Add temperatures and Reduced Chi Squares to bins
     for line in temp_d:
         bins[int(int(line.split(" ")[0]))].add_temp(float(line.split(" ")[1]))
-        bins[int(int(line.split(" ")[0]))].add_abund(float(line.split(" ")[2]))
-        bins[int(int(line.split(" ")[0]))].add_stat(float(line.split(" ")[3]))
+        bins[int(int(line.split(" ")[0]))].add_abund(float(line.split(" ")[4]))
+        bins[int(int(line.split(" ")[0]))].add_stat(float(line.split(" ")[-1]))
     temp_d.close()
     bin_d.close()
     min_x = np.min([pixel.pix_x for pixel in pixels])
@@ -263,6 +263,6 @@ def create_image_fits(fits_img,outroot,min_x,max_x,min_y,max_y,bins,filename,stn
     # Change image
     hdu = fits.PrimaryHDU(temp_array)
     hdul = fits.HDUList([hdu])
-    fits.writeto(outroot+'/temp_WVT'+filename+'_'+str(stn)+'.fits', temp_array.T, hdr, overwrite=True)
+    fits.writeto(outroot+'/temp_'+filename+'_'+str(stn)+'.fits', temp_array.T, hdr, overwrite=True)
     hdu = fits.PrimaryHDU(abund_array)
-    fits.writeto(outroot+'/abund_WVT'+filename+'_'+str(stn)+'.fits', abund_array.T, hdr, overwrite=True)
+    fits.writeto(outroot+'/abund_'+filename+'_'+str(stn)+'.fits', abund_array.T, hdr, overwrite=True)

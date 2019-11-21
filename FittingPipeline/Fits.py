@@ -86,16 +86,17 @@ def obsid_set(src_model_dict,bkg_model_dict,obsid,bkg_src, obs_count,redshift,nH
         get_model_component('apec'+str(obs_count)).kT = get_model_component('apec1').kT #link to first kT
         get_model_component('apec' + str(obs_count)).redshift = redshift
         get_model_component('apec' + str(obs_count)).Abundanc = get_model_component('apec1').Abundanc  # link to first kT
-
-    bkg_model_dict[obsid] = xsapec('bkgApec'+str(obs_count))+get_model_component('abs1')*xsbremss('brem'+str(obs_count))
     set_source(obs_count, src_model_dict[obsid]) #set model to source
     set_bkg(obs_count, unpack_pha(bkg_src))
+    '''bkg_model_dict[obsid] = xsapec('bkgApec'+str(obs_count))+get_model_component('abs1')*xsbremss('brem'+str(obs_count))
     set_bkg_model(obs_count,bkg_model_dict[obsid])
     #Change bkg model component values
-    get_model_component('bkgApec' + str(obs_count)).kT = 0.18
+    et_model_component('bkgApec' + str(obs_count)).kT = 0.18
     freeze(get_model_component('bkgApec'+str(obs_count)).kT)
     get_model_component('brem' + str(obs_count)).kT = 40.0
-    freeze(get_model_component('brem' + str(obs_count)).kT)
+    freeze(get_model_component('brem' + str(obs_count)).kT)'''
+    # Subtract the background
+    # subtract(obs_count)
     return None
 #------------------------------------------------------------------------------#
 #Dynamically set source for OBSID
@@ -160,13 +161,13 @@ def flux_prep(src_model_dict,bkg_model_dict,src_spec,bkg_spec,obs_count,agn,depr
     freeze(get_model_component('apec' + str(obs_count)).kT)
     freeze(get_model_component('apec' + str(obs_count)).Abundanc)
     # Change bkg model component values
-    bkg_model_dict[bkg_spec] = get_model_component('bkgApec' + str(obs_count)) + get_model_component('abs1') * get_model_component(
+    '''bkg_model_dict[bkg_spec] = get_model_component('bkgApec' + str(obs_count)) + get_model_component('abs1') * get_model_component(
         'brem' + str(obs_count))
     set_bkg_model(obs_count, bkg_model_dict[bkg_spec])
     get_model_component('bkgApec' + str(obs_count)).kT = 0.18
     freeze(get_model_component('bkgApec' + str(obs_count)).kT)
     get_model_component('brem' + str(obs_count)).kT = 40.0
-    freeze(get_model_component('brem' + str(obs_count)).kT)
+    freeze(get_model_component('brem' + str(obs_count)).kT)'''
 
     return None
 
@@ -194,16 +195,11 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,sp
     for ob_num in range(obs_count-1):
         if deproj == False:
             group_counts(ob_num+1,grouping)
-        notice_id(ob_num+1,0.5,7.0)
+        notice_id(ob_num+1,0.5,8.0)
     fit()
     set_log_sherpa()
-    #plot("fit", 1, "fit", 2)
-    #print_window(plot_dir+"%s.ps"%spec_count,['clobber','yes'])
-    set_covar_opt("sigma",3)
+    set_covar_opt("sigma",1)
     covar(get_model_component('apec1').kT,get_model_component('apec1').Abundanc)
-    #with open(os.getcwd()+'/Fits/Params/%s_err_agn_%s.out'%(spec_count,agn_ct),'w+') as res_out:
-    #    res_out.write(str(get_covar_results()))
-    #----------Calculate min/max values---------#
     mins = list(get_covar_results().parmins)
     maxes = list(get_covar_results().parmaxes)
     for val in range(len(mins)):
@@ -240,6 +236,7 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,sp
     Norm = Norm/len(spectrum_files)
     Norm_min = Norm+Norm_min/len(spectrum_files)
     Norm_max = Norm+Norm_max/len(spectrum_files)
+    print(Norm,Norm_min,Norm_max)
     f = get_fit_results()
     reduced_chi_sq = f.rstat
     #---------Set up Flux Calculation----------#
@@ -248,8 +245,8 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,sp
     for src_spec in spectrum_files:
         flux_prep(src_model_dict,bkg_model_dict, src_spec, background_files[int(obs_count-1)],obs_count, False, deproj)
         obs_count += 1
-    set_method('neldermead')
-    cflux.lg10Flux.val = -13.5  # initial guess
+    set_method('moncar')
+    cflux.lg10Flux.val = -13.5 # initial guess
     fit()
     Flux = cflux.lg10Flux.val
     reset(get_model())
@@ -271,9 +268,7 @@ def FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,group
         group_counts(ob_num+1,grouping)
         notice_id(ob_num+1,0.5,8.0)
     fit()
-    #set_log_sherpa()
-    #plot("fit", 1, "fit", 2)
-    #print_window(plot_dir+"%s.ps"%spec_count,['clobber','yes'])
+
     Temperature1 = apec1_1.kT.val
     Temperature2 = apec2_1.kT.val
     Abundance1 = apec1_1.Abundanc.val
@@ -284,6 +279,8 @@ def FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,group
     reset(get_source())
     clean()
     return Temperature1,Temperature2,Abundance1,Abundance2,reduced_chi_sq
+
+
 #PrimeFitting
 # Step through spectra to fit
 #   parameters:
@@ -296,7 +293,7 @@ def FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,group
 #       Temp_guess = Guess for Temperature value
 def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,output_file,multi=False):
     energy_min = 0.5
-    energy_max = 7.0
+    energy_max = 8.0
     grouping = 5
     plot_dir = base_directory+'/FitPlots/'
     output_file = output_file.split('.')[0]
@@ -307,7 +304,7 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
     if os.path.isfile(file_name) == True:
         os.remove(file_name) #remove it
     # Non Deprojected Fits
-    file_to_write = open(output_file+".txt",'w+')
+    '''file_to_write = open(output_file+".txt",'w+')
     if multi.lower() == 'false':
         file_to_write.write("BinNumber Temperature Temp_min Temp_max Abundance Ab_min Ab_max Norm Norm_min Norm_max ReducedChiSquare Flux \n")
     else:
@@ -333,9 +330,17 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
             file_to_write.write(str(i) + " " + str(Temperature1)+ " " + str(Temperature2) + " " + str(Abundance1) + " " + str(Abundance2)+ " " + str(reduced_chi_sq) + " \n")
         #except:
         #    print("No spectra was fit")
-
+    file_to_write.close()
+    '''
     # Deprojected Fits
-    '''print('Fitting Deprojected Spectra')
+    # Read in non-deprojected temperature values to use as initial guesses
+    proj_temps = []
+    with open(output_file+".txt",'r') as f:
+        next(f)
+        for line in f.readlines():
+            temp = float(line.split(" ")[1])
+            proj_temps.append(temp)
+    print('Fitting Deprojected Spectra')
     file_to_write = open(output_file+"_deproj.txt",'w+')
     if multi.lower() == 'false':
         file_to_write.write("BinNumber Temperature Temp_min Temp_max Abundance Ab_min Ab_max Norm Norm_min Norm_max ReducedChiSquare Flux \n")
@@ -355,11 +360,11 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
                 pass
         #try:
         if multi.lower() == 'false':
-            Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux = FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir,deproj=True)
-            file_to_write.write("%i %f %f %f %f %f %f %f %f %f %f %f\n"%(i,Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux))
+            Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux = FitXSPEC(spectrum_files,background_files,redshift,n_H,proj_temps[i],grouping,i,plot_dir,deproj=True)
+            file_to_write.write("%i %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E\n"%(i,Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux))
         else:
             Temperature1,Temperature2,Abundance1,Abundance2,reduced_chi_sq = FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
             file_to_write.write(str(i) + " " + str(Temperature1)+ " " + str(Temperature2) + " " + str(Abundance1) + " " + str(Abundance2)+ " " + str(reduced_chi_sq) + " \n")
         #except:
         #    print("No spectra was fit")
-    file_to_write.close()'''
+    file_to_write.close()

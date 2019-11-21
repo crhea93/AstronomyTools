@@ -44,7 +44,7 @@ class Annulus:
         self.temp = [temp_min,temp,temp_max]
         self.temp_ergs = [val*1.60218e-9 for val in self.temp]
         self.abund = [abund_min,abund,abund_max]
-        self.norm = [norm_min,norm,norm_max]
+        self.norm = [abs(norm_min),norm,abs(norm_max)]
         self.flux = flux
         self.agn_act = agn
         self.deproj = deproj
@@ -78,6 +78,7 @@ class Annulus:
         for i in range(3):
             norm_vol = np.sqrt((1.2*self.norm[i])/self.vol)
             self.dens.append(const*red_dep*norm_vol)
+        print(self.dens)
     def calc_press(self):
         '''
         Calculate pressure and errors

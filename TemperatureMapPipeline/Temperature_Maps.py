@@ -38,4 +38,4 @@ if inputs['plot'].lower() == 'true':
     else:
         plot_Bins(base+'/'+inputs['WVT_data']+'.txt',base+'/'+inputs['Temp_data'],base,inputs['Name'],inputs['Colormap'],inputs['stn_target'],base+'/'+inputs['source_file']+'.img')
         plot_Ab(base+'/'+inputs['WVT_data']+'.txt',base+'/'+inputs['Temp_data'],base,inputs['Name'],inputs['Colormap'],inputs['stn_target'],base+'/'+inputs['source_file']+'.img')
-    hardness_ratio(base,inputs['Name'],inputs['ObsIDs'][0],inputs['stn_target'],num_bins,inputs['output_dir'],inputs['Colormap'],base+'/'+inputs['source_file']+'.fits',base+'/'+inputs['WVT_data']+'.txt')
+    #hardness_ratio(base,inputs['Name'],inputs['ObsIDs'][0],inputs['stn_target'],num_bins,inputs['output_dir'],inputs['Colormap'],base+'/'+inputs['source_file']+'.fits',base+'/'+inputs['WVT_data']+'.txt')

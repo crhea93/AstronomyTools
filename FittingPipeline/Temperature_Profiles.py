@@ -29,9 +29,9 @@ if inputs['fit_spec'].lower() == 'true':
     if num_bins > 1:
         for obsid_ in inputs['ObsIDs']:
             prefix = inputs['base_dir']+'/'+obsid_+'/repro/el_'
-            deproj_final(prefix,'.pi',0,num_bins,0.0,prefix,'.deproj')
+            deproj_final(prefix,'.pi',0,num_bins,17.5,prefix,'.deproj')
     PrimeFitting( inputs['base_dir']+'/'+inputs['Name'],inputs['ObsIDs'],inputs['source_file'],int(num_bins),inputs['redshift'],inputs['n_H'],inputs['Temp_Guess'],inputs['Temp_data'],inputs['multi'])
 #-----------------------------------------------PLOT FITS-----------------------------------------------#
 if inputs['plot'].lower() == 'true':
     plot_data(base+'/'+inputs['Temp_data'],base+'/regions/',inputs['reg_files'],base,'standard',inputs['redshift'])
-    #plot_data(base+'/'+inputs['Temp_data'].split('.')[0]+'_deproj.txt',base+'/regions/',inputs['reg_files'],base,'deproj',inputs['redshift'])
+    plot_data(base+'/'+inputs['Temp_data'].split('.')[0]+'_deproj.txt',base+'/regions/',inputs['reg_files'],base,'deproj',inputs['redshift'])

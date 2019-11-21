@@ -32,7 +32,9 @@ from sherpa.astro.all import *
 from sherpa.astro.ui import *
 from pychips.all import *
 from sherpa.all import *
-
+from multiprocessing import Process, JoinableQueue
+from joblib import Parallel, delayed
+from tqdm import tqdm
 #TURN OFF ON-SCREEN OUTPUT FROM SHERPA
 import logging
 logger = logging.getLogger("sherpa")
@@ -78,7 +80,7 @@ def obsid_set(src_model_dict,bkg_model_dict,obsid, bkg_spec,obs_count,redshift,n
         get_model_component('apec' + str(obs_count)).Abundanc = get_model_component('apec1').Abundanc  # link to first kT
 
     bkg_model_dict[obsid] = xsapec('bkgApec'+str(obs_count))+get_model_component('abs1')*xsbremss('brem'+str(obs_count))
-    #set_bkg(obs_count, unpack_pha(bkg_spec))
+    set_bkg(obs_count, unpack_pha(bkg_spec))
     set_source(obs_count, src_model_dict[obsid]) #set model to source
     set_bkg_model(obs_count,bkg_model_dict[obsid])
     #Change bkg model component values
@@ -200,6 +202,7 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,sp
     reset(get_model())
     reset(get_source())
     clean()
+
     return Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq
 
 def FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,spec_count,plot_dir):
@@ -229,6 +232,46 @@ def FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,group
     reset(get_source())
     clean()
     return Temperature1,Temperature2,Abundance1,Abundance2,reduced_chi_sq
+#---------------------------------------------------------#
+def fit_loop(dir,bin_spec_dir,file_name,redshift,n_H,Temp_guess,grouping,plot_dir,base_directory,i):
+    #print("Fitting model to spectrum number "+str(i+1))
+    os.chdir(base_directory)
+    spectrum_files = []
+    background_files = []
+    arf_files = []
+    resp_file = []
+    for directory in dir:
+        try:
+            spectrum_files.append(directory+'/repro/'+bin_spec_dir+file_name+"_"+str(i)+".pi")
+            background_files.append(directory+'/repro/'+bin_spec_dir+file_name+"_"+str(i)+"_bkg.pi")
+        except:
+            pass
+    #try:
+        #if multi.lower() == 'false':
+    Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq = FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
+    with open('temp_'+str(i)+'.txt','w+') as out_temp:
+        out_temp.write("%i %f %f %f %f %f %f %f %f %f %f\n"%(i,Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq))
+        #file_to_write.write("%i %f %f %f %f %f %f %f %f %f %f\n"%(i,Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq))
+        #else:
+        #    Temperature1,Temperature2,Abundance1,Abundance2,reduced_chi_sq = FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
+        #    file_to_write.write(str(i) + " " + str(Temperature1)+ " " + str(Temperature2) + " " + str(Abundance1) + " " + str(Abundance2)+ " " + str(reduced_chi_sq) + " \n")
+    #except:
+    #    print("No spectra was fit")
+    return None
+#--------------------------------------------------------------------#
+def concat_temp_data(num_spec, output_file):
+    file_to_write = open(output_file+".txt",'w+')
+    file_to_write.write("BinNumber Temperature Temp_min Temp_max Abundance Ab_min Ab_max Norm Norm_min Norm_max ReducedChiSquare \n")
+    # Get the data for each temporary file and then delete
+    for spec_i in range(num_spec):
+        with open('temp_'+str(spec_i)+'.txt', 'r') as temp_file:
+            for line in temp_file.readlines():
+                file_to_write.write(line)
+    file_to_write.close()
+    return None
+#--------------------------------------------------------------------#
+
+#--------------------------------------------------------------------#
 #PrimeFitting
 # Step through spectra to fit
 #   parameters:
@@ -251,12 +294,20 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
             os.makedirs(plot_dir)
     if os.path.isfile(file_name) == True:
         os.remove(file_name) #remove it
-    file_to_write = open(output_file+".txt",'w+')
+    '''file_to_write = open(output_file+".txt",'w+')
     if multi.lower() == 'false':
         file_to_write.write("BinNumber Temperature Temp_min Temp_max Abundance Ab_min Ab_max Norm Norm_min Norm_max ReducedChiSquare \n")
     else:
-        file_to_write.write("BinNumber Temperature1 Temperature2 Abundance1 Abundance2 ReducedChiSquare \n")
-    for i in range(num_files):
+        file_to_write.write("BinNumber Temperature1 Temperature2 Abundance1 Abundance2 ReducedChiSquare \n")'''
+    #q = JoinableQueue()
+    #p = Process(target=saver, args=(q,output_file,))
+    #p.start()
+    Parallel(n_jobs=4,prefer="processes")(delayed(fit_loop)(dir,bin_spec_dir,file_name,redshift,n_H,Temp_guess,grouping,plot_dir,base_directory,i) for i in tqdm(range(num_files)))
+    concat_temp_data(num_files, output_file)
+    #q.put(None) # Poison pill
+    #q.join()
+    #p.join()
+    '''for i in range(0,num_files):
         print("Fitting model to spectrum number "+str(i+1))
         spectrum_files = []
         background_files = []
@@ -268,15 +319,15 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
                 background_files.append(directory+'/repro/'+bin_spec_dir+file_name+"_"+str(i)+"_bkg.pi")
             except:
                 pass
-        #try:
+        try:
             #if multi.lower() == 'false':
-        Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq = FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
-        file_to_write.write("%i %f %f %f %f %f %f %f %f %f %f\n"%(i,Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq))
+            Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq = FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
+            file_to_write.write("%i %f %f %f %f %f %f %f %f %f %f\n"%(i,Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq))
             #else:
             #    Temperature1,Temperature2,Abundance1,Abundance2,reduced_chi_sq = FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
             #    file_to_write.write(str(i) + " " + str(Temperature1)+ " " + str(Temperature2) + " " + str(Abundance1) + " " + str(Abundance2)+ " " + str(reduced_chi_sq) + " \n")
-        #except:
-        #    print("No spectra was fit")
+        except:
+            print("No spectra was fit")'''
 
 
-    file_to_write.close()
+    #file_to_write.close()

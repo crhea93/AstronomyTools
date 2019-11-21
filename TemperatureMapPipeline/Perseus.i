@@ -1,29 +1,28 @@
 #----------------------------WVT-----------------------------#
-image_fits = All.img
+image_fits = North_filament.img
 exposure_map = none
 stn_target = 80
 pixel_radius = 0.5
 tol = 1e-4
 roundness_crit = 0.3
-WVT_data = WVT_data_All_stn80
+WVT_data = WVT_data_NorthFilament_stn80
 #--------------------------FITTING---------------------------#
 #----------INPUT DATA------------#
-base_dir = /mnt/1895813a-f52b-4ccc-9bab-1ee15fee024b/carterrhea/M87/X-ray
-Name = Data
-ObsIDs = 2707,3717,5826,5827,5828,6186,7210,7211,7212
-#ObsIDs = 5826,5827
-source_file = All
-output_dir = binned_All_80/
-Temp_data = Temp_bin_All_stn80.txt
+base_dir = /mnt/1895813a-f52b-4ccc-9bab-1ee15fee024b/carterrhea/Perseus/Xray
+Name = 
+ObsIDs = 11713,12025,12033,12036,11715,11716,12037,11714
+source_file = North_filament
+output_dir = binned_source_80/
+Temp_data = Temp_bin_NorthFilament_stn80.txt
 multi = False
 #----------FIT INFO--------------#
-redshift = 0.00428
-n_H = 0.0194
+redshift = 0.0179
+n_H = 0.137
 Temp_Guess = 2.0
 #----------CHOICES---------------#
 wvt = False
-bin_spec = False
-num_bins = 2433
+bin_spec = True
+num_bins = 2
 fit_spec = True
 plot = True
 Colormap = inferno

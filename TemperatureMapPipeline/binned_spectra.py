@@ -41,6 +41,8 @@ import time
 from ciao_contrib.runtool import *
 from crates_contrib.utils import *
 import shutil
+from joblib import Parallel, delayed
+from tqdm import tqdm
 #-------------------------------------------------#
 #-------------------------------------------------#
 # Bin Class Information
@@ -92,18 +94,18 @@ def get_filenames(dir):
 #       file_to_convert = fits file in string format
 #       outfile_from_convert = pha outroot in string format
 #       output_dir = directory for output file
-def specextract_run(obsid,filenames,file_to_convert,outfile_from_convert,output_dir):
+def specextract_run(obsid,filenames,file_to_convert,outfile_from_convert,output_dir,bin_number):
     specextract.punlearn()
-    specextract.infile = file_to_convert+"[sky=region("+str(output_dir)+"temp.reg)]" #1 to make sure we have enough space. serious overkill!
+    specextract.infile = file_to_convert+"[sky=region("+str(output_dir)+str(bin_number)+"temp.reg)]" #1 to make sure we have enough space. serious overkill!
     specextract.outroot = outfile_from_convert
-    specextract.bkgfile = obsid+'_blank.evt[sky=region('+str(output_dir)+'temp.reg)]'
+    specextract.bkgfile = obsid+'_blank.evt[sky=region('+str(output_dir)+str(bin_number)+'temp.reg)]'
     specextract.bkgresp = False #Necessary if using blank sky
     specextract.badpixfile = filenames['bpix1']
     specextract.grouptype = 'NUM_CTS'
     specextract.binspec = 1
     specextract.clobber = True
     specextract.energy_wmap = '500:14000'
-    print("     Running Specextract...")
+    #print("     Running Specextract...")
     specextract()
     return True
 #---------------------------------------------------#
@@ -114,7 +116,8 @@ def specextract_run(obsid,filenames,file_to_convert,outfile_from_convert,output_
 #       reigons = list of regions to add
 def create_reg(output_dir,regions):
     #Create temporary reg file for split
-    with open(str(output_dir)+"temp.reg","w+") as file:
+    print(str(output_dir)+str(bin_number)+"temp.reg")
+    with open(str(output_dir)+str(bin_number)+"temp.reg","w+") as file:
         file.write("# Region file format: DS9 version 4.1 \n")
         file.write("global color=green dashlist=8 3 width=1 font='helvetica 10 normal' select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1 \n")
         file.write("physical \n")
@@ -132,7 +135,7 @@ def create_reg(output_dir,regions):
 #
 def create_evt(file_to_split,bin_number,output_dir):
     dmcopy.punlearn()
-    dmcopy.infile = file_to_split+'.fits[sky=region('+output_dir+'temp.reg)]'
+    dmcopy.infile = file_to_split+'.fits[sky=region('+output_dir+str(bin_number)+'temp.reg)]'
     dmcopy.outfile = output_dir+'bin_'+str(bin_number)+'.fits'
     dmcopy.clobber = True
     dmcopy()
@@ -158,9 +161,9 @@ def create_reg_comb(pix_in_bin,file_to_split,bin_number,output_dir):
     for x in range(int(x_min),int(x_max)+1):
         if x not in pixels_used.keys():
             pixels_used[x] = []
-    with open(output_dir+'temp.reg','w+') as file:#will create a temporary file used to create spectra
+    with open(output_dir+str(bin_number)+'temp.reg','w+') as file:#will create a temporary file used to create spectra
         file.write("# Region file format: CIAO version 1.0 \n")
-        file_phys = open(output_dir+'temp_phys.reg','w+')
+        file_phys = open(output_dir+str(bin_number)+'temp_phys.reg','w+')
         file_phys.write("# Region file format: CIAO version 1.0 \n")
         #Step through each value to build up rectangle!
         in_count = 0
@@ -216,7 +219,7 @@ def create_reg_comb(pix_in_bin,file_to_split,bin_number,output_dir):
                     #value not in list of pixels
                     pass
         file_phys.close()
-    shutil.copy(output_dir+'temp_phys.reg',output_dir+str(bin_number)+'.reg')
+    shutil.copy(output_dir+str(bin_number)+'temp_phys.reg',output_dir+str(bin_number)+'.reg')
     return None
 #---------------------------------------------------#
 #---------------------------------------------------#
@@ -238,7 +241,7 @@ def split_fits(obsid,filenames,file_to_split,output_file,output_dir,pix_in_bin_n
     file_to_convert = file_to_split+'.fits'
     create_reg_comb(pix_in_bin_num,file_to_split,bin_number,output_dir)
     create_evt(file_to_split,bin_number,output_dir)
-    specextract_run(obsid,filenames,file_to_convert,output,output_dir)
+    specextract_run(obsid,filenames,file_to_convert,output,output_dir,bin_number)
     return None
 #---------------------------------------------------#
 #---------------------------------------------------#
@@ -260,6 +263,46 @@ def coord_trans(pixel_x,pixel_y,file_to_split):
     dec = dmcoords.dec
     return x_center,y_center,ra,dec
 #---------------------------------------------------#
+def source_fits(filenames, source_file, obsid):
+    '''
+    Create fits and image file for primary source region in reprocessed Directory
+    Also create blanksky file
+    :params
+    : filenames: dictionary containing evt2 file
+    : source_file: source region name without extension
+    : obsid: Chandra Observation ID
+    '''
+    dmcopy.punlearn()
+    dmcopy.infile = filenames['evt2']+'[sky=region('+source_file+'.reg)]'
+    dmcopy.outfile = source_file+'.fits'
+    dmcopy.clobber = True
+    dmcopy()
+    dmcopy.punlearn()
+    dmcopy.infile = source_file+'.fits'
+    dmcopy.outfile = source_file+'.img'
+    dmcopy.option = 'IMAGE'
+    dmcopy.clobber = True
+    dmcopy()
+    # Now for the blanksky background file
+    blanksky.punlearn()
+    blanksky.evtfile = filenames['evt2']
+    blanksky.outfile = str(obsid)+'_blank.evt'
+    blanksky.clobber = True
+    blanksky()
+    return None
+#---------------------------------------------------#
+def spec_loop(obsid,filenames,file_to_split,output_file,output_dir,directory_repro,bin_i):
+    '''
+    Parallelized loop for creating spectra for bins
+    '''
+    os.chdir(directory_repro)
+    pix_in_bin = bin_i.pixels
+    #try:
+    split_fits(obsid,filenames,file_to_split,output_file,output_dir,pix_in_bin,bin_i.bin_number)
+    #except:
+    #pass
+
+    return None
 #---------------------------------------------------#
 # Main program to create bin pi/pha files
 #   parameters:
@@ -274,6 +317,9 @@ def create_spectra(base_directory,filename,OBSIDS,source_file,output_dir,wvt_out
         print("We are on obsid %s"%obsid)
         print("#-------------------------------------------------------------------------------------#")
         directory = base_directory+'/'+obsid+'/repro'
+        # Copy region file into current directory
+        shutil.copy(base_directory+'/regions/'+source_file+'.reg', directory)
+        # Create fits and img file for primary region within current directory
         #Just making sure the directory exists and is empty :)
         if not os.path.exists(directory+"/"+output_dir):
             os.makedirs(directory+"/"+output_dir)
@@ -286,6 +332,8 @@ def create_spectra(base_directory,filename,OBSIDS,source_file,output_dir,wvt_out
         file_to_split = directory+'/'+source_file
         #snagging some file names for later...
         filenames = get_filenames(directory)
+        print(' Running Blanksky Background...')
+        #source_fits(filenames, source_file, obsid)
         bins = []
         number_bins = -1
         pix_num = 0
@@ -304,21 +352,23 @@ def create_spectra(base_directory,filename,OBSIDS,source_file,output_dir,wvt_out
                 pix_num += 1
                 # Add pixel to current bin
                 bins[number_bins].add_pixel(new_pix)
-
-        #Get unique bin numbers and order bins ascending
-        for bin_i in bins:#bin_unique: #for each unique_bin
+        # Execute parallel spectral creation
+        Parallel(n_jobs=4,prefer="processes")(delayed(spec_loop)(obsid,filenames,file_to_split,output_file,output_dir,directory,bin_) for bin_ in tqdm(bins))
+        '''#Get unique bin numbers and order bins ascending
+        for bin_i in tqdm(bins):#bin_unique: #for each unique_bin
             pix_in_bin = bin_i.pixels
-            spec_to_combine = []
-            print("  We are combining bin number "+str(bin_i.bin_number+1)+" of "+str(len(bins)))
-            print("     We have %i pixels"%bin_i.total_pixels)
-            start = time.time() #lets do the actual splitting algorithm
+
+            #print("  We are combining bin number "+str(bin_i.bin_number+1)+" of "+str(len(bins)))
+            #print("     We have %i pixels"%bin_i.total_pixels)
+            #start = time.time() #lets do the actual splitting algorithm
             try:
                 split_fits(obsid,filenames,file_to_split,output_file,output_dir,pix_in_bin,bin_i.bin_number)
             except:
-                print("     Not enough counts in the region to create a spectrum")
-            print("     The creation of the spectrum took %.5f seconds"%(time.time()-start))
-            print()
+                pass
+                #print("     Not enough counts in the region to create a spectrum")
+            #print("     The creation of the spectrum took %.5f seconds"%(time.time()-start))
+            #print()
             for item in os.listdir(directory+'/'+output_dir):#we cab get rid of temporary files
-                if item.endswith(("_temp.reg")):
-                    os.remove(os.path.join(directory+'/'+output_dir, item))
+                if item.endswith(("temp.reg")):
+                    os.remove(os.path.join(directory+'/'+output_dir, item))'''
     return len(bins)

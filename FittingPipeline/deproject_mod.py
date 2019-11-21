@@ -51,7 +51,7 @@ def projectionVolume(R1, R2, y1, y2):
 
     return (2./3.) * math.pi * ((p1**3 - p2**3) + (p4**3 - p3**3))
 
-def autoGrouping(specfilelist, mincts=1):
+def autoGrouping(specfilelist, mincts=10):
     """Automatically determine grouping using sets of spectra files.
 
     Ensures there are a minimum of mincts in each group in each spectrum

@@ -236,7 +236,6 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,sp
     Norm = Norm/len(spectrum_files)
     Norm_min = Norm+Norm_min/len(spectrum_files)
     Norm_max = Norm+Norm_max/len(spectrum_files)
-    print(Norm,Norm_min,Norm_max)
     f = get_fit_results()
     reduced_chi_sq = f.rstat
     #---------Set up Flux Calculation----------#
@@ -245,8 +244,10 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,sp
     for src_spec in spectrum_files:
         flux_prep(src_model_dict,bkg_model_dict, src_spec, background_files[int(obs_count-1)],obs_count, False, deproj)
         obs_count += 1
-    set_method('moncar')
+    set_method('neldermead')
     cflux.lg10Flux.val = -13.5 # initial guess
+    cflux.Emin.val = 0.1
+    cflux.Emax.val = 2.4
     fit()
     Flux = cflux.lg10Flux.val
     reset(get_model())
@@ -304,7 +305,7 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
     if os.path.isfile(file_name) == True:
         os.remove(file_name) #remove it
     # Non Deprojected Fits
-    '''file_to_write = open(output_file+".txt",'w+')
+    file_to_write = open(output_file+".txt",'w+')
     if multi.lower() == 'false':
         file_to_write.write("BinNumber Temperature Temp_min Temp_max Abundance Ab_min Ab_max Norm Norm_min Norm_max ReducedChiSquare Flux \n")
     else:
@@ -317,8 +318,12 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
         resp_file = []
         for directory in dir:
             try:
-                spectrum_files.append(directory+'/repro/'+file_name+str(i)+".pi")
-                background_files.append(directory+'/repro/'+file_name+str(i)+"_bkg.pi")
+                if num_files == 1:
+                    spectrum_files.append(directory+'/repro/'+file_name+".pi")
+                    background_files.append(directory+'/repro/'+file_name+"_bkg.pi")
+                else:
+                    spectrum_files.append(directory+'/repro/'+file_name+'_'+str(i)+".pi")
+                    background_files.append(directory+'/repro/'+file_name+'_'+str(i)+"_bkg.pi")
             except:
                 pass
         #try:
@@ -331,10 +336,10 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
         #except:
         #    print("No spectra was fit")
     file_to_write.close()
-    '''
+
     # Deprojected Fits
     # Read in non-deprojected temperature values to use as initial guesses
-    proj_temps = []
+    '''proj_temps = []
     with open(output_file+".txt",'r') as f:
         next(f)
         for line in f.readlines():
@@ -367,4 +372,4 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
             file_to_write.write(str(i) + " " + str(Temperature1)+ " " + str(Temperature2) + " " + str(Abundance1) + " " + str(Abundance2)+ " " + str(reduced_chi_sq) + " \n")
         #except:
         #    print("No spectra was fit")
-    file_to_write.close()
+    file_to_write.close()'''

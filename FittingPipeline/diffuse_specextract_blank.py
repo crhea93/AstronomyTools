@@ -19,7 +19,6 @@ def update_header(src_reg):
         ann_value = lines[-2].split(',')[2]
         # Now we have to clean up the value due to formatting....
         ann_value = ann_value.split('"')[0]
-    print(ann_value)
     dmhedit.punlearn()
     dmhedit.infile = str(src_reg)+'.pi'
     dmhedit.filelist = None
@@ -31,6 +30,7 @@ def update_header(src_reg):
 
 def spec_basic(evt_file,src_reg,obsid):
     #Create basic spectrum with normal arf file (un-corrected)
+    print(os.getcwd())
     specextract.punlearn()
     specextract.infile = evt_file+'[sky=region('+src_reg+'.reg)]'#[energy='+energy_range+']'
     specextract.outroot = src_reg
@@ -90,5 +90,5 @@ def main_extract(chandra_dir,source_dir,OBSIDS,source_reg):
         spec_basic(evt_file,source_reg,obsid)
         #Make fits and image files for region
         fits_and_img(evt_file,source_reg)
-        update_header(source_reg)
+        #update_header(source_reg)
     return None

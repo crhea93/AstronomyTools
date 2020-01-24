@@ -294,13 +294,17 @@ def source_fits(filenames, source_file, obsid):
 def spec_loop(obsid,filenames,file_to_split,output_file,output_dir,directory_repro,bin_i):
     '''
     Parallelized loop for creating spectra for bins
+     :parameters:
+    :filenames = list of files necessary for specextract
+    :file_to_split = fits file in string format
+    :output_file = directory for output
     '''
     os.chdir(directory_repro)
     pix_in_bin = bin_i.pixels
-    #try:
-    split_fits(obsid,filenames,file_to_split,output_file,output_dir,pix_in_bin,bin_i.bin_number)
-    #except:
-    #pass
+    try:
+        split_fits(obsid,filenames,file_to_split,output_file,output_dir,pix_in_bin,bin_i.bin_number)
+    except:
+        pass
 
     return None
 #---------------------------------------------------#
@@ -333,7 +337,7 @@ def create_spectra(base_directory,filename,OBSIDS,source_file,output_dir,wvt_out
         #snagging some file names for later...
         filenames = get_filenames(directory)
         print(' Running Blanksky Background...')
-        #source_fits(filenames, source_file, obsid)
+        source_fits(filenames, source_file, obsid)
         bins = []
         number_bins = -1
         pix_num = 0
@@ -353,22 +357,5 @@ def create_spectra(base_directory,filename,OBSIDS,source_file,output_dir,wvt_out
                 # Add pixel to current bin
                 bins[number_bins].add_pixel(new_pix)
         # Execute parallel spectral creation
-        Parallel(n_jobs=4,prefer="processes")(delayed(spec_loop)(obsid,filenames,file_to_split,output_file,output_dir,directory,bin_) for bin_ in tqdm(bins))
-        '''#Get unique bin numbers and order bins ascending
-        for bin_i in tqdm(bins):#bin_unique: #for each unique_bin
-            pix_in_bin = bin_i.pixels
-
-            #print("  We are combining bin number "+str(bin_i.bin_number+1)+" of "+str(len(bins)))
-            #print("     We have %i pixels"%bin_i.total_pixels)
-            #start = time.time() #lets do the actual splitting algorithm
-            try:
-                split_fits(obsid,filenames,file_to_split,output_file,output_dir,pix_in_bin,bin_i.bin_number)
-            except:
-                pass
-                #print("     Not enough counts in the region to create a spectrum")
-            #print("     The creation of the spectrum took %.5f seconds"%(time.time()-start))
-            #print()
-            for item in os.listdir(directory+'/'+output_dir):#we cab get rid of temporary files
-                if item.endswith(("temp.reg")):
-                    os.remove(os.path.join(directory+'/'+output_dir, item))'''
+        Parallel(n_jobs=1,prefer="processes")(delayed(spec_loop)(obsid,filenames,file_to_split,output_file,output_dir,directory,bin_) for bin_ in tqdm(bins))
     return len(bins)

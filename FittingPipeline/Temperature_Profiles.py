@@ -13,23 +13,23 @@ from Fits import PrimeFitting
 from Plots import plot_data
 from diffuse_specextract_blank import main_extract
 from deproject_mod import deproj_final
+from tqdm import tqdm
 #-----------------------------------------------READ IN--------------------------------------------------#
 inputs = read_input_file(sys.argv[1])
 base = inputs['base_dir']+inputs['Name']
 num_bins = len(inputs['reg_files'])
 #----------------------------------------------------SPECTRA---------------------------------------------------#
 if inputs['extract_spectrum'].lower() == 'true':
-    for reg_file in inputs['reg_files']:
+    for reg_file in tqdm(list(inputs['reg_files'])):
         # For each region extract the spectra in each ObsID
         main_extract(base,base+'/regions',inputs['ObsIDs'],reg_file)
-
 #-----------------------------------------------FIT SPECTRA-------------------------------------------#
 if inputs['fit_spec'].lower() == 'true':
     # Deprojection
     if num_bins > 1:
         for obsid_ in inputs['ObsIDs']:
             prefix = inputs['base_dir']+'/'+obsid_+'/repro/el_'
-            deproj_final(prefix,'.pi',0,num_bins,17.5,prefix,'.deproj')
+            deproj_final(prefix,'.pi',0,num_bins,0.0,prefix,'.deproj')  # May need to change the 5th parameter depending on the inner radius -- in arcsec
     PrimeFitting( inputs['base_dir']+'/'+inputs['Name'],inputs['ObsIDs'],inputs['source_file'],int(num_bins),inputs['redshift'],inputs['n_H'],inputs['Temp_Guess'],inputs['Temp_data'],inputs['multi'])
 #-----------------------------------------------PLOT FITS-----------------------------------------------#
 if inputs['plot'].lower() == 'true':

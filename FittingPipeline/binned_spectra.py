@@ -107,6 +107,7 @@ def update_header(ann,ann_values):
 #       outfile_from_convert = pha outroot in string format
 #       output_dir = directory for output file
 def specextract_run(obsid,filenames,file_to_convert,outfile_from_convert,output_dir):
+    print(os.getcwd())
     specextract.punlearn()
     specextract.infile = file_to_convert+"[sky=region("+str(output_dir)+"temp.reg)]" #1 to make sure we have enough space. serious overkill!
     specextract.outroot = outfile_from_convert

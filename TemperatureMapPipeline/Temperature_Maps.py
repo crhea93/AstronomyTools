@@ -11,7 +11,7 @@ import sys
 from read_input import read_input_file
 from binned_spectra import create_spectra
 from Fits import PrimeFitting
-from Plots import plot_Bins, plot_Ab
+from Plots import plot_Bins, plot_Ab, plot_Bins_ML
 from WVT import wvt_main
 from Hardness_Ratio import hardness_ratio
 from Plots_multi import plot_Bins_multi,plot_Ab_multi
@@ -36,6 +36,7 @@ if inputs['plot'].lower() == 'true':
         plot_Bins_multi(base+'/'+inputs['WVT_data']+'.txt',base+'/'+inputs['Temp_data'],base,inputs['Name'],inputs['Colormap'],inputs['stn_target'],base+'/'+inputs['source_file']+'.img')
         plot_Ab_multi(base+'/'+inputs['WVT_data']+'.txt',base+'/'+inputs['Temp_data'],base,inputs['Name'],inputs['Colormap'],inputs['stn_target'],base+'/'+inputs['source_file']+'.img')
     else:
-        plot_Bins(base+'/'+inputs['WVT_data']+'.txt',base+'/'+inputs['Temp_data'],base,inputs['Name'],inputs['Colormap'],inputs['stn_target'],base+'/'+inputs['source_file']+'.img')
-        plot_Ab(base+'/'+inputs['WVT_data']+'.txt',base+'/'+inputs['Temp_data'],base,inputs['Name'],inputs['Colormap'],inputs['stn_target'],base+'/'+inputs['source_file']+'.img')
+        #plot_Bins(base+'/'+inputs['WVT_data']+'.txt',base+'/'+inputs['Temp_data'],base,inputs['Name'],inputs['Colormap'],inputs['stn_target'],base+'/'+inputs['source_file']+'.img')
+        #plot_Ab(base+'/'+inputs['WVT_data']+'.txt',base+'/'+inputs['Temp_data'],base,inputs['Name'],inputs['Colormap'],inputs['stn_target'],base+'/'+inputs['source_file']+'.img')
+        plot_Bins_ML(base+'/'+inputs['WVT_data']+'.txt',base+'/ml_temps.txt',base,inputs['Name'],inputs['Colormap'],inputs['stn_target'],base+'/'+inputs['source_file']+'.img')
     #hardness_ratio(base,inputs['Name'],inputs['ObsIDs'][0],inputs['stn_target'],num_bins,inputs['output_dir'],inputs['Colormap'],base+'/'+inputs['source_file']+'.fits',base+'/'+inputs['WVT_data']+'.txt')

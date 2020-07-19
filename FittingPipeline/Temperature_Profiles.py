@@ -9,7 +9,7 @@ What should you already have?
 import os
 import sys
 from read_input import read_input_file
-from Fits import PrimeFitting
+from Fits import Fitting
 from Plots import plot_data
 from diffuse_specextract_blank import main_extract
 from deproject_mod import deproj_final
@@ -30,7 +30,7 @@ if inputs['fit_spec'].lower() == 'true':
         for obsid_ in inputs['ObsIDs']:
             prefix = inputs['base_dir']+'/'+obsid_+'/repro/el_'
             deproj_final(prefix,'.pi',0,num_bins,0.0,prefix,'.deproj')  # May need to change the 5th parameter depending on the inner radius -- in arcsec
-    PrimeFitting( inputs['base_dir']+'/'+inputs['Name'],inputs['ObsIDs'],inputs['source_file'],int(num_bins),inputs['redshift'],inputs['n_H'],inputs['Temp_Guess'],inputs['Temp_data'],inputs['multi'])
+    Fitting( inputs['base_dir']+'/'+inputs['Name'],inputs['ObsIDs'],inputs['source_file'],int(num_bins),inputs['redshift'],inputs['n_H'],inputs['Temp_Guess'],inputs['Temp_data'],inputs['multi'])
 #-----------------------------------------------PLOT FITS-----------------------------------------------#
 if inputs['plot'].lower() == 'true':
     plot_data(base+'/'+inputs['Temp_data'],base+'/regions/',inputs['reg_files'],base,'standard',inputs['redshift'])

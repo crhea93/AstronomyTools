@@ -40,10 +40,7 @@ Outputs:
                     pixel (x,y) are CENTER coordinates!
 ---------------------------------------------------
 TO DO:
-    -- Find a better way to get the x and y pixel coordinates
-        in bounding box. Current method SOMETIME (RARELY) incure
-        errors. The errors aren't a big deal and don't actually change
-        the results, but an error is an error!!
+
 ---------------------------------------------------
 ---------------------------------------------------
 Carter Rhea
@@ -73,11 +70,12 @@ from read_input import read_input_file
 #       x_max - maximum x value of pixel
 #       y_min - minimum y value of pixel
 #       x_max - maximum y value of pixel
+#       stn_target - target signal-to-noise value
 #       file_dir - Full Path to location of new image
 #       fileame - name of file to be printed
 def plot_Bins(Bins,x_min,x_max,y_min,y_max,stn_target,file_dir,filename):
+    # Set everything up for the plotting...
     fig = plt.figure()
-    #fig.set_size_inches(7, 6.5)
     ax = plt.axes(xlim=(x_min,x_max), ylim=(y_min,y_max))
     N = len(Bins)
     StN_list = []
@@ -89,6 +87,7 @@ def plot_Bins(Bins,x_min,x_max,y_min,y_max,stn_target,file_dir,filename):
     stand_dev = stats.stdev(StN_list)
     mini_pallete = ['mediumspringgreen','salmon','cyan','orchid','yellow','blue','red','magenta','black','white']
     binNumber  = 0
+    # Step through each bin and assign pixels/create their patch
     for bin in Bins:
         bin_nums.append(bin.bin_number)
         SNR = bin.StN[0]/median_StN
@@ -96,7 +95,6 @@ def plot_Bins(Bins,x_min,x_max,y_min,y_max,stn_target,file_dir,filename):
         for pixel in bin.pixels:
             x_coord = pixel.pix_x
             y_coord = pixel.pix_y
-            #patches.append(Rectangle((x_coord,y_coord),1,1))
             if binNumber%10 == 0:
                 color = mini_pallete[0]
             if binNumber%10 == 1:
@@ -123,6 +121,7 @@ def plot_Bins(Bins,x_min,x_max,y_min,y_max,stn_target,file_dir,filename):
         binNumber += 1
     centroids_x = [Bins[i].centroidx[0] for i in range(len(Bins))]
     centroids_y = [Bins[i].centroidy[0] for i in range(len(Bins))]
+    # Plot
     ax.scatter(centroids_x,centroids_y,marker='+',c="black")
     plt.xlabel("X")
     plt.ylabel("Y")

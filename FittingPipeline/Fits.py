@@ -88,102 +88,32 @@ def obsid_set(src_model_dict,bkg_model_dict,obsid,bkg_src, obs_count,redshift,nH
         get_model_component('apec' + str(obs_count)).Abundanc = get_model_component('apec1').Abundanc  # link to first kT
     set_source(obs_count, src_model_dict[obsid]) #set model to source
     set_bkg(obs_count, unpack_pha(bkg_src))
-    '''bkg_model_dict[obsid] = xsapec('bkgApec'+str(obs_count))+get_model_component('abs1')*xsbremss('brem'+str(obs_count))
+    bkg_model_dict[obsid] = xsapec('bkgApec'+str(obs_count))+get_model_component('abs1')*xsbremss('brem'+str(obs_count))
     set_bkg_model(obs_count,bkg_model_dict[obsid])
     #Change bkg model component values
     et_model_component('bkgApec' + str(obs_count)).kT = 0.18
     freeze(get_model_component('bkgApec'+str(obs_count)).kT)
     get_model_component('brem' + str(obs_count)).kT = 40.0
-    freeze(get_model_component('brem' + str(obs_count)).kT)'''
-    # Subtract the background
-    # subtract(obs_count)
-    return None
-#------------------------------------------------------------------------------#
-#Dynamically set source for OBSID
-def obsid_set2(src_model_dict,bkg_model_dict,obsid, obs_count,redshift,nH_val,Temp_guess):
-    '''
-    Add two thermal emission models
-    '''
-    load_pha(obs_count,obsid,use_errors=True) #Read in
-    if obs_count == 1:
-        src_model_dict[obsid] = xsphabs('abs'+str(obs_count)) * (xsapec('apec1_'+str(obs_count)) + xsapec('apec2_'+str(obs_count))) #set model and name
-        # Change src model component values
-        get_model_component('apec1_' + str(obs_count)).kT = 1
-        get_model_component('apec1_' + str(obs_count)).redshift = redshift  # need to tie all together
-        get_model_component('apec1_' + str(obs_count)).Abundanc = 0.3
-        thaw(get_model_component('apec1_' + str(obs_count)).Abundanc)
-        get_model_component('apec2_' + str(obs_count)).kT = 2.0
-        get_model_component('apec2_' + str(obs_count)).redshift = redshift  # need to tie all together
-        get_model_component('apec2_' + str(obs_count)).Abundanc = 0.3#get_model_component('apec1_1').Abundanc
-        thaw(get_model_component('apec2_' + str(obs_count)).Abundanc)
-        #thaw(get_model_component('apec2_' + str(obs_count)).Abundanc)
-        get_model_component('abs1').nH = nH_val  # change preset value
-        freeze(get_model_component('abs1'))
-    else:
-        src_model_dict[obsid] = get_model_component('abs1') * (xsapec('apec1_'+str(obs_count)) + xsapec('apec2_'+str(obs_count)))
-        get_model_component('apec1_'+str(obs_count)).kT = get_model_component('apec1_1').kT #link to first kT
-        get_model_component('apec1_' + str(obs_count)).redshift = redshift
-        get_model_component('apec1_' + str(obs_count)).Abundanc = get_model_component('apec1_1').Abundanc  # link to first kT
-        get_model_component('apec2_'+str(obs_count)).kT = get_model_component('apec2_1').kT #link to first kT (second thermal)
-        get_model_component('apec2_' + str(obs_count)).redshift = redshift
-        get_model_component('apec2_' + str(obs_count)).Abundanc = get_model_component('apec2_1').Abundanc  # link to first kT (second thermal)
-
-    bkg_model_dict[obsid] = xsapec('bkgApec'+str(obs_count))+get_model_component('abs1')*xsbremss('brem'+str(obs_count))
-    set_source(obs_count, src_model_dict[obsid]) #set model to source
-    set_bkg_model(obs_count,bkg_model_dict[obsid])
-    #Change bkg model component values
-    get_model_component('bkgApec' + str(obs_count)).kT = 0.18
-    freeze(get_model_component('bkgApec'+str(obs_count)).kT)
-    get_model_component('brem' + str(obs_count)).kT = 40.0
     freeze(get_model_component('brem' + str(obs_count)).kT)
-    return None
-
-
-#Get ready for flux calculations
-def flux_prep(src_model_dict,bkg_model_dict,src_spec,bkg_spec,obs_count,agn,deproj):
-    '''
-    Dynamically set source and background model for obsid for FLUX calculation
-    PARAMETERS:
-        src_model_dict - dictionary of source models for each obsid
-        bkg_model_dict - dictionary of background models for each obsid
-        src_spec - source spectra
-        bkg_spec - background spectra
-        obs_count - current number of Chandra observation ID out of all IDs
-        agn - boolean for additional AGN fit
-    '''
-    #freeze(get_model_component('bkgApec'+str(obs_count)).norm)
-    #freeze(get_model_component('brem'+str(obs_count)).norm)
-    if agn == False:
-        src_model_dict[src_spec] = get_model_component('abs1')*cflux(get_model_component('apec'+str(obs_count)))
-    if agn == True:
-        src_model_dict[src_spec] = get_model_component('abs1')*(cflux(get_model_component('apec'+str(obs_count)))+get_model_component('zpwd'+str(obs_count)))
-    set_source(obs_count, src_model_dict[src_spec])  # set model to source
-    freeze(get_model_component('apec' + str(obs_count)).kT)
-    freeze(get_model_component('apec' + str(obs_count)).Abundanc)
-    # Change bkg model component values
-    '''bkg_model_dict[bkg_spec] = get_model_component('bkgApec' + str(obs_count)) + get_model_component('abs1') * get_model_component(
-        'brem' + str(obs_count))
-    set_bkg_model(obs_count, bkg_model_dict[bkg_spec])
-    get_model_component('bkgApec' + str(obs_count)).kT = 0.18
-    freeze(get_model_component('bkgApec' + str(obs_count)).kT)
-    get_model_component('brem' + str(obs_count)).kT = 40.0
-    freeze(get_model_component('brem' + str(obs_count)).kT)'''
 
     return None
-
 #------------------------------------------------------------------------------#
-#FitXSPEC
-# Fit spectra
-#   parameters:
-#       spectrum_file = Name of combined spectra File
-#       background_file = Name of associated background file
-#       arf_file = Name of associated arf file
-#       resp_file = Name of associated rmf file
-#       redshift = redshift of object
-#       n_H = Hydrogen Equivalent Column Density
-#       Temp_guess = Guess for Temperature value
-def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,spec_count,plot_dir,deproj=False,multi=False):
-    #FIX HEADER
+#------------------------------------------------------------------------------#
+def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,spec_count,plot_dir):
+    """
+    Function to fit spectra using sherpa and XSPEC
+    Args:
+        spectrum_files: List of spectrum files for each ObsID
+        background_files: List of background files for each ObsID
+        redshift: Redshift of cluster
+        n_H: Column density
+        temp_guess: Initial temperature guess
+        grouping: Number of counts to bin in sherpa fit
+        spec_count: Bin number
+        plot_dir: Path to plot directory
+    Return:
+        Spectral fit parameters and their errors
+    """
     set_stat('chi2gehrels')
     set_method('levmar')
     hdu_number = 1  #Want evnts so hdu_number = 1
@@ -239,60 +169,35 @@ def FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,sp
     f = get_fit_results()
     reduced_chi_sq = f.rstat
     #---------Set up Flux Calculation----------#
-    freeze(get_model_component('apec1').kT);freeze(get_model_component('apec1').Abundanc);
-    obs_count = 1
-    for src_spec in spectrum_files:
-        flux_prep(src_model_dict,bkg_model_dict, src_spec, background_files[int(obs_count-1)],obs_count, False, deproj)
-        obs_count += 1
-    set_method('neldermead')
-    cflux.lg10Flux.val = -13.5 # initial guess
-    cflux.Emin.val = 0.1
-    cflux.Emax.val = 2.4
-    fit()
-    Flux = cflux.lg10Flux.val
+    flux_calculation = sample_flux(get_model_component('apec1'), 0.01, 50.0, num=1000, confidence=90)[0]
+    Flux = flux_calculation[0]
+    Flux_min = flux_calculation[1]
+    Flux_max = flux_calculation[2]
     reset(get_model())
     reset(get_source())
     clean()
-    return Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux
-
-def FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,spec_count,plot_dir):
-    #FIX HEADER
-    set_stat('cstat')
-    set_method('levmar')
-    hdu_number = 1  #Want evnts so hdu_number = 1
-    src_model_dict = {}; bkg_model_dict = {}
-    obs_count = 1
-    for spec_pha in spectrum_files:
-        obsid_set2(src_model_dict, bkg_model_dict, spec_pha, obs_count, redshift, n_H, Temp_guess)
-        obs_count += 1
-    for ob_num in range(obs_count-1):
-        group_counts(ob_num+1,grouping)
-        notice_id(ob_num+1,0.5,8.0)
-    fit()
-
-    Temperature1 = apec1_1.kT.val
-    Temperature2 = apec2_1.kT.val
-    Abundance1 = apec1_1.Abundanc.val
-    Abundance2 = apec1_1.Abundanc.val
-    f = get_fit_results()
-    reduced_chi_sq = f.rstat
-    reset(get_model())
-    reset(get_source())
-    clean()
-    return Temperature1,Temperature2,Abundance1,Abundance2,reduced_chi_sq
+    return Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux,Flux_min,Flux_max
 
 
-#PrimeFitting
-# Step through spectra to fit
-#   parameters:
-#       dir = main Directory
-#       file_name = FIlename of PI/PHA spectrum
-#       output_file = Filename for output containing temperature information
-#       num_files = number of bins
-#       redshift = redshift of object
-#       n_H = Hydrogen Equivalent Column Density
-#       Temp_guess = Guess for Temperature value
-def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,output_file,multi=False):
+
+def Fitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,output_file:
+    """
+    Fit each region's spectra and create a text file containing the spectral
+    fit information for each bin
+    Args:
+        base_directory: Path to main Directory
+        dir: ObsID
+        file_name: Root name of PI/PHA file
+        num_files: Number of spatial bins
+        redshift: Redshift of cluster
+        n_H: Column density
+        temp_guess: Initial temperature guess
+        output_file: Text file containing each bin's spectral fit information
+        bin_spec_dir: Path to extracted spectra for each bin within an ObsID
+
+    Return:
+        None
+    """
     energy_min = 0.5
     energy_max = 8.0
     grouping = 5
@@ -306,10 +211,7 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
         os.remove(file_name) #remove it
     # Non Deprojected Fits
     file_to_write = open(output_file+".txt",'w+')
-    if multi.lower() == 'false':
-        file_to_write.write("BinNumber Temperature Temp_min Temp_max Abundance Ab_min Ab_max Norm Norm_min Norm_max ReducedChiSquare Flux \n")
-    else:
-        file_to_write.write("BinNumber Temperature1 Temperature2 Abundance1 Abundance2 ReducedChiSquare \n")
+    file_to_write.write("BinNumber Temperature Temp_min Temp_max Abundance Ab_min Ab_max Norm Norm_min Norm_max ReducedChiSquare Flux Flux_min Flux_max\n")
     for i in range(num_files):
         print("Fitting model to spectrum number "+str(i+1))
         spectrum_files = []
@@ -326,50 +228,9 @@ def PrimeFitting(base_directory,dir,file_name,num_files,redshift,n_H,Temp_guess,
                     background_files.append(directory+'/repro/'+file_name+'_'+str(i)+"_bkg.pi")
             except:
                 pass
-        #try:
-        if multi.lower() == 'false':
-            Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux = FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir,deproj=False)
-            file_to_write.write("%i %f %f %f %f %f %f %f %f %f %f %f\n"%(i,Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux))
-        else:
-            Temperature1,Temperature2,Abundance1,Abundance2,reduced_chi_sq = FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
-            file_to_write.write(str(i) + " " + str(Temperature1)+ " " + str(Temperature2) + " " + str(Abundance1) + " " + str(Abundance2)+ " " + str(reduced_chi_sq) + " \n")
-        #except:
-        #    print("No spectra was fit")
+        try:
+            Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux = FitXSPEC(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
+            file_to_write.write("%i %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E\n"%(i,Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux,Flux_min,Flux_max))
+        except:
+            print("No spectra was fit for bin number %i!"%i)
     file_to_write.close()
-
-    # Deprojected Fits
-    # Read in non-deprojected temperature values to use as initial guesses
-    '''proj_temps = []
-    with open(output_file+".txt",'r') as f:
-        next(f)
-        for line in f.readlines():
-            temp = float(line.split(" ")[1])
-            proj_temps.append(temp)
-    print('Fitting Deprojected Spectra')
-    file_to_write = open(output_file+"_deproj.txt",'w+')
-    if multi.lower() == 'false':
-        file_to_write.write("BinNumber Temperature Temp_min Temp_max Abundance Ab_min Ab_max Norm Norm_min Norm_max ReducedChiSquare Flux \n")
-    else:
-        file_to_write.write("BinNumber Temperature1 Temperature2 Abundance1 Abundance2 ReducedChiSquare \n")
-    for i in range(num_files):
-        print(" Fitting model to spectrum number "+str(i+1))
-        spectrum_files = []
-        background_files = []
-        arf_files = []
-        resp_file = []
-        for directory in dir:
-            try:
-                spectrum_files.append(directory+'/repro/'+file_name+str(i)+".deproj")
-                background_files.append(directory+'/repro/'+file_name+str(i)+"_bkg.pi")
-            except:
-                pass
-        #try:
-        if multi.lower() == 'false':
-            Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux = FitXSPEC(spectrum_files,background_files,redshift,n_H,proj_temps[i],grouping,i,plot_dir,deproj=True)
-            file_to_write.write("%i %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E %.2E\n"%(i,Temperature,Temp_min,Temp_max,Abundance,Ab_min,Ab_max,Norm,Norm_min,Norm_max,reduced_chi_sq,Flux))
-        else:
-            Temperature1,Temperature2,Abundance1,Abundance2,reduced_chi_sq = FitXSPEC_multi(spectrum_files,background_files,redshift,n_H,Temp_guess,grouping,i,plot_dir)
-            file_to_write.write(str(i) + " " + str(Temperature1)+ " " + str(Temperature2) + " " + str(Abundance1) + " " + str(Abundance2)+ " " + str(reduced_chi_sq) + " \n")
-        #except:
-        #    print("No spectra was fit")
-    file_to_write.close()'''

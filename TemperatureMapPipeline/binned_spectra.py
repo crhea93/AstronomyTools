@@ -5,14 +5,6 @@ This is only important if you are running X-ray data analysis from Chandra
 Goal: Create binned spectra from Chandra data given
     the WVT of the pixels
 ---------------------------------------------------
-INPUTS:
-    filename - WVT output (e.g.'/home/user/Desktop/WVT_data.txt')
-    base_directory - Directory with Chandra data (e.g.'/home/usr/CHANDRA')
-	source_file - File to read in and used to create bins in WVT (e.g.'source')
-    background - name of background file (e.g. 'background_simple')
-        Set to 'blank' if using a blank-sky background file.
-        Have the file named "obsid_blank.evt"
-    output_dir - Output directory concatenated with dir  (e.g.'binned/')
 ---------------------------------------------------
 List of Functions (In order of appearance):
     specextract_run --> Creates PI file for individually binned images
@@ -294,17 +286,13 @@ def source_fits(filenames, source_file, obsid):
 def spec_loop(obsid,filenames,file_to_split,output_file,output_dir,directory_repro,bin_i):
     '''
     Parallelized loop for creating spectra for bins
-     :parameters:
-    :filenames = list of files necessary for specextract
-    :file_to_split = fits file in string format
-    :output_file = directory for output
     '''
     os.chdir(directory_repro)
     pix_in_bin = bin_i.pixels
     try:
-        split_fits(obsid,filenames,file_to_split,output_file,output_dir,pix_in_bin,bin_i.bin_number)
+    	split_fits(obsid,filenames,file_to_split,output_file,output_dir,pix_in_bin,bin_i.bin_number)
     except:
-        pass
+    	pass
 
     return None
 #---------------------------------------------------#
@@ -357,5 +345,5 @@ def create_spectra(base_directory,filename,OBSIDS,source_file,output_dir,wvt_out
                 # Add pixel to current bin
                 bins[number_bins].add_pixel(new_pix)
         # Execute parallel spectral creation
-        Parallel(n_jobs=1,prefer="processes")(delayed(spec_loop)(obsid,filenames,file_to_split,output_file,output_dir,directory,bin_) for bin_ in tqdm(bins))
+        Parallel(n_jobs=4,prefer="processes")(delayed(spec_loop)(obsid,filenames,file_to_split,output_file,output_dir,directory,bin_) for bin_ in tqdm(bins))
     return len(bins)

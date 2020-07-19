@@ -33,8 +33,6 @@ class Bin:
     def add_hr(self,hr):
         self.hr = hr
 
-
-
 class Pixel:
     def __init__(self, number, pix_x, pix_y):
         self.pix_number = number
@@ -43,8 +41,6 @@ class Pixel:
 #---------------------FUNCTIONS----------------------------#
 
 def calc_vals(wcs_fits,reg_file,region):
-    #need to change from image coordinate system to physical
-    #get_phys_reg(wcs_fits,reg_file,region)
     #Hard then soft
     dmextract.infile = wcs_fits+"[energy=2500:8000][bin sky=region("+region+".reg)]"
     dmextract.outfile = region+'_Hardcounts.fits'
@@ -86,7 +82,6 @@ def hardness_plot(bin_file,hr_file,file_dir,filename,color_map,stn,wcs_fits):
     Bins_flush = [] #Bins that passed the sigma screening
     Bins_fail = [] #Bins that failed the sigma screening
     step_val = 1
-
     max_hr = max([bin.hr for bin in Bins])
     min_hr = min([bin.hr for bin in Bins])
     hr_list = []
@@ -119,24 +114,9 @@ def hardness_plot(bin_file,hr_file,file_dir,filename,color_map,stn,wcs_fits):
         rect_step += 1
     colors = np.linspace(min(hr_norm_list),max(hr_norm_list),N)
 
-    #Set failed bins to black
-    '''for bin in Bins_fail:
-        patches = []
-        bin_nums.append(bin.bin_number)
-        #Color based on signal-to-noise value
-        for pixel in bin.pixels:
-            x_coord = pixel.pix_x
-            y_coord = pixel.pix_y
-            #Shift because x_coord,y_coord are the center points
-            rectangle = plt.Rectangle((x_coord,y_coord),1,1, color='black')
-            patches.append(rectangle)
-            ax.add_patch(rectangle)'''
-
-
 
     plt.xlabel("RA")
     plt.ylabel("DEC")
-    #plt.title("Hardness Ratio Map for "+filename)
     norm = mpl.colors.Normalize(min(hr_norm_list),max(hr_norm_list))
     cax, _ = cbar.make_axes(ax)
     cb2 = cbar.ColorbarBase(cax, cmap=cmap, norm=norm)
@@ -169,7 +149,6 @@ def read_in(bin_data,hardness_data):
         pixel_num += 1
     #Add temperatures and Reduced Chi Squares to bins
     for line in hardness_d:
-        #print(float(line.split(",")[3]))
         bins[int(int(line.split(",")[0]))].add_hr(float(line.split(",")[3]))
     hardness_d.close()
     bin_d.close()

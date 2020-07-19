@@ -9,7 +9,7 @@ energy_range = "500:7000"
 #------------------------------------------------------------------------------#
 def update_header(src_reg):
     '''
-    Must update header for DSDEPROJ
+    Must update header for DSDEPROJ -- Obsolete
     '''
     # Get outer annulus value for region
     ann_value = 0
